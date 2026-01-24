@@ -3,6 +3,7 @@ import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
 import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
 import { Header } from "@/components/Header";
+import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Dog, Cat, Heart } from "lucide-react";
@@ -121,14 +122,7 @@ const Index = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <footer className="py-6 border-t border-border/50 bg-card/30">
-        <div className="container max-w-4xl mx-auto px-4 text-center">
-          <p className="text-sm text-muted-foreground">
-            Made with <Heart className="w-4 h-4 inline text-primary" /> for pet parents everywhere
-          </p>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };
