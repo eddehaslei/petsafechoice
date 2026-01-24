@@ -5,6 +5,7 @@ import { FoodSearch } from "@/components/FoodSearch";
 import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { TrustBar } from "@/components/TrustBar";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -54,27 +55,31 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen hero-gradient relative">
+    <div className="min-h-screen hero-gradient relative flex flex-col">
       <Header />
+      
       {/* Hero Section */}
-      <div className="container max-w-4xl mx-auto px-4 pt-24 md:pt-28 pb-8">
+      <main className="flex-1 container max-w-4xl mx-auto px-4 pt-8 pb-8">
         {/* Header */}
-        <div className="text-center mb-10 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-2 mb-4">
+        <div className="text-center mb-8 animate-fade-in">
+          <div className="inline-flex items-center justify-center gap-3 mb-6">
             <div className="relative">
-              <Dog className="w-10 h-10 text-primary animate-bounce-gentle" />
+              <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
             </div>
-            <Heart className="w-6 h-6 text-primary/60" />
+            <Heart className="w-7 h-7 text-primary/60" />
             <div className="relative">
-              <Cat className="w-10 h-10 text-primary animate-bounce-gentle" style={{ animationDelay: "0.5s" }} />
+              <Cat className="w-12 h-12 text-primary animate-bounce-gentle" style={{ animationDelay: "0.5s" }} />
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-3">
             {t('common.appName')}
           </h1>
-          <p className="text-lg text-muted-foreground max-w-lg mx-auto">
+          <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
             {t('common.tagline')}
           </p>
+          
+          {/* Trust Bar */}
+          <TrustBar />
         </div>
 
         {/* Pet Toggle */}
@@ -104,25 +109,25 @@ const Index = () => {
             </div>
           </div>
         )}
-      </div>
 
-      {/* Results Section */}
-      {(result || isLoading) && (
-        <div className="container max-w-4xl mx-auto px-4 pb-16">
-          {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 animate-fade-in">
-              <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+        {/* Results Section */}
+        {(result || isLoading) && (
+          <div className="mt-8">
+            {isLoading ? (
+              <div className="flex flex-col items-center justify-center py-12 animate-fade-in">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
+                </div>
+                <p className="text-muted-foreground font-medium">
+                  {t('search.checking', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase() })}
+                </p>
               </div>
-              <p className="text-muted-foreground font-medium">
-                {t('search.checking', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase() })}
-              </p>
-            </div>
-          ) : result ? (
-            <SafetyResult data={result} />
-          ) : null}
-        </div>
-      )}
+            ) : result ? (
+              <SafetyResult data={result} />
+            ) : null}
+          </div>
+        )}
+      </main>
 
       <Footer />
     </div>

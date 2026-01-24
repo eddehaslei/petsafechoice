@@ -7,6 +7,10 @@
     "forPets": "for pets everywhere",
     "allRightsReserved": "All rights reserved."
   },
+  "trustBar": {
+    "writtenBy": "Written by {{author}}",
+    "reviewedBy": "Medically Reviewed by {{reviewer}}, {{credentials}}"
+  },
   "nav": {
     "back": "Back",
     "home": "Home",
