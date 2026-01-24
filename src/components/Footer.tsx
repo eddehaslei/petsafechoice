@@ -71,13 +71,13 @@ export const Footer = () => {
           </div>
         </div>
         
-        {/* Medical Disclaimer Banner */}
+        {/* Medical Disclaimer Banner - Phase 20 Legal Requirement */}
         <div className="py-4 px-4 bg-muted/50 rounded-lg border border-border/50 mb-6">
           <p className="text-xs text-muted-foreground text-center leading-relaxed">
-            <strong className="text-foreground">Disclaimer:</strong> This site is for informational purposes only. 
-            Always consult a licensed veterinarian in an emergency.{" "}
+            <strong className="text-foreground">{t('footer.disclaimerTitle', 'Medical Disclaimer')}:</strong>{' '}
+            {t('footer.disclaimerText', 'PetSafeChoice is for educational use only. Always consult a licensed veterinarian before changing your pet\'s diet or in an emergency.')}{' '}
             <Link to="/disclaimer" className="text-primary hover:underline font-medium">
-              Read full disclaimer →
+              {t('footer.readMore', 'Read full disclaimer →')}
             </Link>
           </p>
         </div>

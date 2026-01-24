@@ -77,6 +77,14 @@ serve(async (req) => {
                      req.headers.get("cf-connecting-ip") || 
                      "unknown";
     
+    // Detect country from headers (Vercel, Cloudflare, or custom)
+    const countryCode = req.headers.get("x-vercel-ip-country") ||
+                        req.headers.get("cf-ipcountry") ||
+                        req.headers.get("x-country-code") ||
+                        "US";
+    
+    console.log(`[${clientIP}] Country detected: ${countryCode}`);
+    
     if (isRateLimited(clientIP)) {
       console.log(`Rate limited: ${clientIP}`);
       return new Response(
@@ -130,6 +138,39 @@ serve(async (req) => {
       console.error("Database error:", dbError);
     }
 
+    // STEP 2: Fetch geo-targeted affiliate for this food category
+    let affiliate = null;
+    try {
+      const { data: affiliateData, error: affError } = await supabase
+        .from('affiliates')
+        .select('id, product_name, price_point, image_url')
+        .eq('country_code', countryCode.toUpperCase())
+        .ilike('food_category_link', `%${foodLower}%`)
+        .limit(1)
+        .maybeSingle();
+      
+      if (!affError && affiliateData) {
+        affiliate = affiliateData;
+        console.log(`[${clientIP}] Found affiliate for ${countryCode}: ${affiliateData.product_name}`);
+      } else {
+        // Fallback to US affiliates
+        const { data: usFallback } = await supabase
+          .from('affiliates')
+          .select('id, product_name, price_point, image_url')
+          .eq('country_code', 'US')
+          .ilike('food_category_link', `%${foodLower}%`)
+          .limit(1)
+          .maybeSingle();
+        
+        if (usFallback) {
+          affiliate = usFallback;
+          console.log(`[${clientIP}] Using US fallback affiliate: ${usFallback.product_name}`);
+        }
+      }
+    } catch (affErr) {
+      console.error("Affiliate lookup error:", affErr);
+    }
+
     // If found in database, return immediately (no AI cost!)
     if (dbFood) {
       console.log(`[${clientIP}] ✅ Found in database: ${dbFood.name} (${dbFood.safety_rating}) - FREE`);
@@ -144,7 +185,9 @@ serve(async (req) => {
         recommendations: dbFood.serving_tips 
           ? [dbFood.serving_tips, ...(dbFood.benefits || [])]
           : dbFood.benefits || ["Consult your veterinarian for specific advice."],
-        source: "database" // For debugging
+        source: "database",
+        countryCode: countryCode,
+        affiliate: affiliate
       };
 
       return new Response(JSON.stringify(safetyData), {
@@ -253,7 +296,9 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
     try {
       const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
       safetyData = JSON.parse(cleanContent);
-      safetyData.source = "ai"; // For debugging
+      safetyData.source = "ai";
+      safetyData.countryCode = countryCode;
+      safetyData.affiliate = affiliate;
     } catch (parseError) {
       console.error("Failed to parse AI response:", content);
       return new Response(

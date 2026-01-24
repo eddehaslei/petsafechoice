@@ -27,7 +27,15 @@
     "legal": "Legal",
     "privacy": "Privacy",
     "terms": "Terms",
-    "disclaimer": "Disclaimer"
+    "disclaimer": "Disclaimer",
+    "disclaimerTitle": "Medical Disclaimer",
+    "disclaimerText": "PetSafeChoice is for educational use only. Always consult a licensed veterinarian before changing your pet's diet or in an emergency.",
+    "readMore": "Read full disclaimer →"
+  },
+  "vetBadge": {
+    "verified": "Vet-Verified",
+    "boardName": "PetSafeChoice Veterinary Advisory Board",
+    "reviewedBy": "Medically reviewed by licensed veterinary professionals"
   },
   "petToggle": {
     "dog": "Dog",

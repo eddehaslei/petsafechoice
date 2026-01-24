@@ -8,6 +8,8 @@
     "allRightsReserved": "Todos los derechos reservados."
   },
   "nav": {
+    "back": "Volver",
+    "home": "Inicio",
     "about": "Acerca de",
     "safeFoods": "Alimentos seguros",
     "emergency": "Emergencia",
@@ -21,7 +23,15 @@
     "legal": "Legal",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "disclaimer": "Descargo"
+    "disclaimer": "Descargo",
+    "disclaimerTitle": "Aviso Médico",
+    "disclaimerText": "PetSafeChoice es solo para uso educativo. Consulte siempre a un veterinario autorizado antes de cambiar la dieta de su mascota o en caso de emergencia.",
+    "readMore": "Leer descargo completo →"
+  },
+  "vetBadge": {
+    "verified": "Verificado por Veterinarios",
+    "boardName": "Consejo Veterinario de PetSafeChoice",
+    "reviewedBy": "Revisado médicamente por profesionales veterinarios licenciados"
   },
   "petToggle": {
     "dog": "Perro",
