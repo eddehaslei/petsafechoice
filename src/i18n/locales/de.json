@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "Darf mein Haustier das essen?",
+    "tagline": "Wissenschaftlich fundierte Lebensmittelsicherheitsinformationen für Hunde und Katzen. Wissen Sie, was sicher ist, bevor Sie teilen!",
+    "popularSearches": "Beliebte Suchen:",
+    "madeWithLove": "Mit",
+    "forPets": "für Haustiere überall gemacht",
+    "allRightsReserved": "Alle Rechte vorbehalten."
+  },
+  "nav": {
+    "about": "Über uns",
+    "safeFoods": "Sichere Lebensmittel",
+    "emergency": "Notfall",
+    "faq": "FAQ",
+    "contact": "Kontakt"
+  },
+  "footer": {
+    "company": "Unternehmen",
+    "resources": "Ressourcen",
+    "support": "Support",
+    "legal": "Rechtliches",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen",
+    "disclaimer": "Haftungsausschluss"
+  },
+  "petToggle": {
+    "dog": "Hund",
+    "cat": "Katze"
+  },
+  "search": {
+    "placeholder": "Suchen Sie ein Lebensmittel (z.B. Schokolade, Trauben, Huhn...)",
+    "button": "Sicherheit prüfen",
+    "checking": "Überprüfe, ob es sicher für Ihren {{petType}} ist..."
+  },
+  "safety": {
+    "safe": "Sicher",
+    "caution": "Vorsicht",
+    "dangerous": "Gefährlich",
+    "safeTitle": "Sicher zu essen",
+    "cautionTitle": "Vorsicht geboten",
+    "dangerousTitle": "Gefährlich",
+    "forYour": "für Ihren",
+    "details": "Details",
+    "symptoms": "Symptome, auf die zu achten ist",
+    "recommendations": "Empfehlungen",
+    "disclaimer": "Diese Informationen dienen nur der allgemeinen Orientierung. Konsultieren Sie immer Ihren Tierarzt für spezifische Ernährungsberatung für Ihr Haustier."
+  },
+  "about": {
+    "title": "Über uns",
+    "subtitle": "Wir widmen uns der Sicherheit und Gesundheit Ihrer pelzigen Freunde, indem wir genaue, wissenschaftlich fundierte Informationen zur Lebensmittelsicherheit bereitstellen.",
+    "mission": {
+      "title": "Unsere Mission",
+      "description": "Haustierbesitzer mit zuverlässigen, leicht verständlichen Informationen darüber zu stärken, welche Lebensmittel für ihre Haustiere sicher sind. Wir glauben, dass jedes Haustier eine gesunde Ernährung verdient, und jeder Besitzer verdient Seelenfrieden."
+    },
+    "science": {
+      "title": "Wissenschaftlich fundiert",
+      "description": "Unsere Lebensmittelsicherheitsinformationen werden von KI unterstützt, die auf veterinärmedizinischer Forschung, begutachteten Studien und Expertenempfehlungen von Tierernährungsspezialisten trainiert wurde."
+    },
+    "love": {
+      "title": "Mit Liebe gebaut",
+      "description": "Erstellt von Tierliebhabern für Tierliebhaber. Wir verstehen die besondere Bindung zwischen Ihnen und Ihren pelzigen Begleitern und sind hier, um Ihnen zu helfen, sie glücklich und gesund zu halten."
+    },
+    "community": {
+      "title": "Community-getrieben",
+      "description": "Wir verbessern unsere Plattform kontinuierlich basierend auf dem Feedback von Haustierbesitzern und Tierärzten. Ihr Beitrag hilft uns, die Haustier-Community besser zu bedienen."
+    },
+    "disclaimer": {
+      "title": "Wichtiger Haftungsausschluss",
+      "description": "Obwohl wir uns bemühen, genaue und aktuelle Informationen bereitzustellen, sollte unser Tool nicht den professionellen tierärztlichen Rat ersetzen. Wenn Ihr Haustier etwas potenziell Schädliches konsumiert hat, wenden Sie sich bitte sofort an Ihren Tierarzt oder eine tierärztliche Giftnotrufzentrale."
+    }
+  },
+  "faq": {
+    "title": "Häufig gestellte Fragen",
+    "subtitle": "Finden Sie Antworten auf häufige Fragen zu unserem Lebensmittelsicherheits-Checker für Haustiere.",
+    "stillHaveQuestions": "Haben Sie noch Fragen?",
+    "contactUs": "Kontaktieren Sie uns",
+    "questions": {
+      "accuracy": {
+        "question": "Wie genau sind die Lebensmittelsicherheitsinformationen?",
+        "answer": "Unsere Informationen werden von KI unterstützt, die auf veterinärmedizinischer Forschung, wissenschaftlichen Studien und Expertenempfehlungen trainiert wurde. Wir empfehlen jedoch immer, Ihren Tierarzt bei spezifischen Ernährungsfragen zu konsultieren, insbesondere wenn Ihr Haustier gesundheitliche Probleme oder Allergien hat."
+      },
+      "emergency": {
+        "question": "Kann ich diesem Tool in Notfallsituationen vertrauen?",
+        "answer": "Obwohl unser Tool hilfreiche Informationen liefert, sollte es nicht als Ersatz für professionelle tierärztliche Versorgung in Notfällen verwendet werden. Wenn Ihr Haustier etwas potenziell Schädliches aufgenommen hat, wenden Sie sich sofort an Ihren Tierarzt oder eine tierärztliche Giftnotrufzentrale."
+      },
+      "difference": {
+        "question": "Warum unterscheidet sich die Sicherheitsbewertung zwischen Hunden und Katzen?",
+        "answer": "Hunde und Katzen haben unterschiedliche Verdauungssysteme und Stoffwechselprozesse. Einige Lebensmittel, die für Hunde sicher sind, können für Katzen giftig sein und umgekehrt. Deshalb bieten wir artspezifische Sicherheitsbewertungen für genaue Orientierung."
+      },
+      "levels": {
+        "question": "Was bedeuten die Sicherheitsstufen?",
+        "answer": "Wir verwenden drei Sicherheitsstufen: Sicher (grün) bedeutet, dass das Lebensmittel im Allgemeinen in angemessenen Mengen sicher zu konsumieren ist. Vorsicht (gelb) bedeutet, dass das Lebensmittel in kleinen Mengen in Ordnung sein kann, aber einige Risiken birgt. Gefährlich (rot) bedeutet, dass das Lebensmittel giftig oder schädlich ist und vollständig vermieden werden sollte."
+      },
+      "updates": {
+        "question": "Wie oft werden die Informationen aktualisiert?",
+        "answer": "Unser KI-Modell wird regelmäßig mit den neuesten veterinärmedizinischen Forschungen und Ernährungsstudien aktualisiert. Wir arbeiten kontinuierlich daran, die Genauigkeit und Vollständigkeit unserer Lebensmittelsicherheitsdatenbank zu verbessern."
+      },
+      "suggest": {
+        "question": "Kann ich ein Lebensmittel zum Hinzufügen vorschlagen?",
+        "answer": "Absolut! Wir sind immer bestrebt, unsere Datenbank zu erweitern. Nutzen Sie unser Kontaktformular, um Lebensmittel vorzuschlagen, die Sie gerne abgedeckt hätten, und wir werden daran arbeiten, sie unserem System hinzuzufügen."
+      },
+      "free": {
+        "question": "Ist dieser Service kostenlos?",
+        "answer": "Ja! Unser grundlegender Lebensmittelsicherheits-Checker ist völlig kostenlos zu nutzen. Wir glauben, dass jeder Haustierbesitzer Zugang zu wichtigen Informationen zur Lebensmittelsicherheit haben sollte."
+      },
+      "dangerous": {
+        "question": "Was soll ich tun, wenn mein Haustier etwas Gefährliches frisst?",
+        "answer": "Wenn Ihr Haustier ein gefährliches Lebensmittel konsumiert, geraten Sie nicht in Panik. Notieren Sie, was es gefressen hat und wie viel, und wenden Sie sich dann sofort an Ihren Tierarzt oder rufen Sie das ASPCA Animal Poison Control Center unter (888) 426-4435 (USA) an. Zeit ist bei Vergiftungsfällen entscheidend."
+      }
+    }
+  },
+  "contact": {
+    "title": "Kontaktieren Sie uns",
+    "subtitle": "Haben Sie Fragen, Vorschläge oder Feedback? Wir würden gerne von Ihnen hören!",
+    "email": {
+      "title": "E-Mail an uns",
+      "description": "Für allgemeine Anfragen und Support"
+    },
+    "feedback": {
+      "title": "Feedback senden",
+      "description": "Helfen Sie uns, unseren Service zu verbessern"
+    },
+    "form": {
+      "name": "Ihr Name",
+      "namePlaceholder": "Geben Sie Ihren Namen ein",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "Geben Sie Ihre E-Mail ein",
+      "message": "Nachricht",
+      "messagePlaceholder": "Teilen Sie uns mit, was Sie denken...",
+      "submit": "Nachricht senden",
+      "sending": "Wird gesendet...",
+      "success": "Nachricht gesendet! Wir werden uns bald bei Ihnen melden."
+    }
+  },
+  "safeFoods": {
+    "title": "Leitfaden für sichere Lebensmittel",
+    "subtitle": "Eine umfassende Liste von Lebensmitteln, die für Ihre Haustiere im Allgemeinen sicher sind, wenn sie in angemessenen Mengen gegeben werden.",
+    "dogsTab": "Hunde",
+    "catsTab": "Katzen",
+    "benefits": "Vorteile:",
+    "note": "Hinweis:",
+    "warning": {
+      "title": "Wichtige Erinnerung",
+      "description": "Obwohl diese Lebensmittel im Allgemeinen sicher sind, führen Sie neue Lebensmittel immer schrittweise und in Maßen ein. Jedes Haustier ist einzigartig, und einige können individuelle Empfindlichkeiten oder Allergien haben. Im Zweifelsfall konsultieren Sie Ihren Tierarzt."
+    }
+  },
+  "emergency": {
+    "title": "Notfallkontakte",
+    "subtitle": "Wichtige Nummern, die Sie zur Hand haben sollten, wenn Ihr Haustier etwas Schädliches aufnimmt."
+  }
+}

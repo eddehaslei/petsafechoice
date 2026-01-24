@@ -1,0 +1,151 @@
+{
+  "common": {
+    "appName": "Mon animal peut-il manger ça ?",
+    "tagline": "Informations sur la sécurité alimentaire basées sur la science pour les chiens et les chats. Sachez ce qui est sûr avant de partager !",
+    "popularSearches": "Recherches populaires :",
+    "madeWithLove": "Fait avec",
+    "forPets": "pour les animaux partout",
+    "allRightsReserved": "Tous droits réservés."
+  },
+  "nav": {
+    "about": "À propos",
+    "safeFoods": "Aliments sûrs",
+    "emergency": "Urgence",
+    "faq": "FAQ",
+    "contact": "Contact"
+  },
+  "footer": {
+    "company": "Entreprise",
+    "resources": "Ressources",
+    "support": "Support",
+    "legal": "Mentions légales",
+    "privacy": "Confidentialité",
+    "terms": "Conditions",
+    "disclaimer": "Avertissement"
+  },
+  "petToggle": {
+    "dog": "Chien",
+    "cat": "Chat"
+  },
+  "search": {
+    "placeholder": "Rechercher un aliment (ex: chocolat, raisins, poulet...)",
+    "button": "Vérifier la sécurité",
+    "checking": "Vérification de la sécurité pour votre {{petType}}..."
+  },
+  "safety": {
+    "safe": "Sûr",
+    "caution": "Prudence",
+    "dangerous": "Dangereux",
+    "safeTitle": "Sûr à manger",
+    "cautionTitle": "Prudence requise",
+    "dangerousTitle": "Dangereux",
+    "forYour": "pour votre",
+    "details": "Détails",
+    "symptoms": "Symptômes à surveiller",
+    "recommendations": "Recommandations",
+    "disclaimer": "Ces informations sont fournies à titre indicatif uniquement. Consultez toujours votre vétérinaire pour des conseils alimentaires spécifiques à votre animal."
+  },
+  "about": {
+    "title": "À propos de nous",
+    "subtitle": "Nous nous engageons à garder vos amis à fourrure en sécurité et en bonne santé en fournissant des informations précises et basées sur la science sur la sécurité alimentaire.",
+    "mission": {
+      "title": "Notre mission",
+      "description": "Donner aux propriétaires d'animaux des informations fiables et faciles à comprendre sur les aliments sûrs pour leurs animaux. Nous croyons que chaque animal mérite une alimentation saine, et chaque propriétaire mérite la tranquillité d'esprit."
+    },
+    "science": {
+      "title": "Basé sur la science",
+      "description": "Nos informations sur la sécurité alimentaire sont alimentées par l'IA formée sur la recherche vétérinaire, les études évaluées par des pairs et les recommandations d'experts en nutrition animale."
+    },
+    "love": {
+      "title": "Construit avec amour",
+      "description": "Créé par des amoureux des animaux, pour des amoureux des animaux. Nous comprenons le lien spécial entre vous et vos compagnons à fourrure, et nous sommes là pour vous aider à les garder heureux et en bonne santé."
+    },
+    "community": {
+      "title": "Axé sur la communauté",
+      "description": "Nous améliorons continuellement notre plateforme en fonction des retours des propriétaires d'animaux et des professionnels vétérinaires. Votre contribution nous aide à mieux servir la communauté des animaux de compagnie."
+    },
+    "disclaimer": {
+      "title": "Avertissement important",
+      "description": "Bien que nous nous efforcions de fournir des informations précises et à jour, notre outil ne doit pas remplacer les conseils vétérinaires professionnels. Si votre animal a consommé quelque chose de potentiellement nocif, veuillez contacter votre vétérinaire ou un centre antipoison animal d'urgence immédiatement."
+    }
+  },
+  "faq": {
+    "title": "Questions fréquentes",
+    "subtitle": "Trouvez des réponses aux questions courantes sur notre vérificateur de sécurité alimentaire pour animaux.",
+    "stillHaveQuestions": "Vous avez encore des questions ?",
+    "contactUs": "Contactez-nous",
+    "questions": {
+      "accuracy": {
+        "question": "Quelle est la précision des informations sur la sécurité alimentaire ?",
+        "answer": "Nos informations sont alimentées par l'IA formée sur la recherche vétérinaire, les études scientifiques et les recommandations d'experts. Cependant, nous recommandons toujours de consulter votre vétérinaire pour des préoccupations alimentaires spécifiques, surtout si votre animal a des conditions de santé ou des allergies."
+      },
+      "emergency": {
+        "question": "Puis-je faire confiance à cet outil en cas d'urgence ?",
+        "answer": "Bien que notre outil fournisse des informations utiles, il ne doit pas être utilisé comme substitut aux soins vétérinaires professionnels en cas d'urgence. Si votre animal a ingéré quelque chose de potentiellement nocif, contactez immédiatement votre vétérinaire ou un centre antipoison animal d'urgence."
+      },
+      "difference": {
+        "question": "Pourquoi la note de sécurité diffère-t-elle entre les chiens et les chats ?",
+        "answer": "Les chiens et les chats ont des systèmes digestifs et des processus métaboliques différents. Certains aliments sûrs pour les chiens peuvent être toxiques pour les chats, et vice versa. C'est pourquoi nous fournissons des notes de sécurité spécifiques à chaque espèce pour des conseils précis."
+      },
+      "levels": {
+        "question": "Que signifient les niveaux de sécurité ?",
+        "answer": "Nous utilisons trois niveaux de sécurité : Sûr (vert) signifie que l'aliment est généralement sûr à consommer en quantités appropriées. Prudence (jaune) signifie que l'aliment peut être acceptable en petites quantités mais présente certains risques. Dangereux (rouge) signifie que l'aliment est toxique ou nocif et doit être évité complètement."
+      },
+      "updates": {
+        "question": "À quelle fréquence les informations sont-elles mises à jour ?",
+        "answer": "Notre modèle d'IA est régulièrement mis à jour avec les dernières recherches vétérinaires et études nutritionnelles. Nous travaillons continuellement pour améliorer la précision et l'exhaustivité de notre base de données sur la sécurité alimentaire."
+      },
+      "suggest": {
+        "question": "Puis-je suggérer un aliment à ajouter ?",
+        "answer": "Absolument ! Nous cherchons toujours à élargir notre base de données. Utilisez notre formulaire de contact pour suggérer des aliments que vous aimeriez que nous couvrions, et nous travaillerons à les ajouter à notre système."
+      },
+      "free": {
+        "question": "Ce service est-il gratuit ?",
+        "answer": "Oui ! Notre vérificateur de sécurité alimentaire de base est entièrement gratuit. Nous croyons que chaque propriétaire d'animal devrait avoir accès aux informations importantes sur la sécurité alimentaire."
+      },
+      "dangerous": {
+        "question": "Que dois-je faire si mon animal mange quelque chose de dangereux ?",
+        "answer": "Si votre animal consomme un aliment dangereux, ne paniquez pas. Notez ce qu'il a mangé et en quelle quantité, puis contactez immédiatement votre vétérinaire ou appelez le Centre Antipoison Animal ASPCA au (888) 426-4435 (États-Unis). Le temps est crucial dans les cas d'empoisonnement."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "subtitle": "Vous avez des questions, des suggestions ou des commentaires ? Nous aimerions avoir de vos nouvelles !",
+    "email": {
+      "title": "Envoyez-nous un email",
+      "description": "Pour les demandes générales et le support"
+    },
+    "feedback": {
+      "title": "Envoyer des commentaires",
+      "description": "Aidez-nous à améliorer notre service"
+    },
+    "form": {
+      "name": "Votre nom",
+      "namePlaceholder": "Entrez votre nom",
+      "email": "Adresse email",
+      "emailPlaceholder": "Entrez votre email",
+      "message": "Message",
+      "messagePlaceholder": "Dites-nous ce que vous avez en tête...",
+      "submit": "Envoyer le message",
+      "sending": "Envoi en cours...",
+      "success": "Message envoyé ! Nous vous répondrons bientôt."
+    }
+  },
+  "safeFoods": {
+    "title": "Guide des aliments sûrs",
+    "subtitle": "Une liste complète des aliments généralement sûrs pour vos animaux lorsqu'ils sont donnés en quantités appropriées.",
+    "dogsTab": "Chiens",
+    "catsTab": "Chats",
+    "benefits": "Avantages :",
+    "note": "Note :",
+    "warning": {
+      "title": "Rappel important",
+      "description": "Bien que ces aliments soient généralement sûrs, introduisez toujours les nouveaux aliments progressivement et avec modération. Chaque animal est unique, et certains peuvent avoir des sensibilités ou des allergies individuelles. En cas de doute, consultez votre vétérinaire."
+    }
+  },
+  "emergency": {
+    "title": "Contacts d'urgence",
+    "subtitle": "Numéros importants à avoir sous la main si votre animal ingère quelque chose de nocif."
+  }
+}

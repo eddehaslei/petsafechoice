@@ -1,5 +1,6 @@
 import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export type SafetyLevel = "safe" | "caution" | "dangerous";
 
@@ -17,34 +18,36 @@ interface SafetyResultProps {
   data: SafetyResultData;
 }
 
-const safetyConfig = {
-  safe: {
-    icon: CheckCircle2,
-    title: "Safe to Eat",
-    bgClass: "bg-safe-bg",
-    borderClass: "border-safe/30",
-    iconClass: "text-safe",
-    badgeClass: "safety-badge-safe",
-  },
-  caution: {
-    icon: AlertTriangle,
-    title: "Use Caution",
-    bgClass: "bg-caution-bg",
-    borderClass: "border-caution/30",
-    iconClass: "text-caution",
-    badgeClass: "safety-badge-caution",
-  },
-  dangerous: {
-    icon: XCircle,
-    title: "Dangerous",
-    bgClass: "bg-danger-bg",
-    borderClass: "border-danger/30",
-    iconClass: "text-danger",
-    badgeClass: "safety-badge-danger",
-  },
-};
-
 export function SafetyResult({ data }: SafetyResultProps) {
+  const { t } = useTranslation();
+
+  const safetyConfig = {
+    safe: {
+      icon: CheckCircle2,
+      title: t('safety.safeTitle'),
+      bgClass: "bg-safe-bg",
+      borderClass: "border-safe/30",
+      iconClass: "text-safe",
+      badgeClass: "safety-badge-safe",
+    },
+    caution: {
+      icon: AlertTriangle,
+      title: t('safety.cautionTitle'),
+      bgClass: "bg-caution-bg",
+      borderClass: "border-caution/30",
+      iconClass: "text-caution",
+      badgeClass: "safety-badge-caution",
+    },
+    dangerous: {
+      icon: XCircle,
+      title: t('safety.dangerousTitle'),
+      bgClass: "bg-danger-bg",
+      borderClass: "border-danger/30",
+      iconClass: "text-danger",
+      badgeClass: "safety-badge-danger",
+    },
+  };
+
   const config = safetyConfig[data.safetyLevel];
   const Icon = config.icon;
 
@@ -70,7 +73,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
             <Icon className={cn("w-8 h-8", config.iconClass)} />
           </div>
           <div className="flex-1">
-            <div className="flex items-center gap-3 mb-1">
+            <div className="flex items-center gap-3 mb-1 flex-wrap">
               <h2 className="text-2xl font-heading font-bold capitalize">
                 {data.food}
               </h2>
@@ -84,7 +87,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
               </span>
             </div>
             <p className="text-sm text-muted-foreground">
-              For {data.petType === "dog" ? "dogs" : "cats"}
+              {t('safety.forYour')} {data.petType === "dog" ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase()}
             </p>
           </div>
         </div>
@@ -112,7 +115,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
           {data.symptoms && data.symptoms.length > 0 && (
             <div className="bg-card/60 rounded-2xl p-4 border border-border/30">
               <h4 className="font-heading font-semibold text-sm mb-2 text-foreground">
-                Potential Symptoms to Watch For:
+                {t('safety.symptoms')}:
               </h4>
               <ul className="space-y-1">
                 {data.symptoms.map((symptom, index) => (
@@ -132,7 +135,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
           {data.recommendations && data.recommendations.length > 0 && (
             <div className="bg-card/60 rounded-2xl p-4 border border-border/30">
               <h4 className="font-heading font-semibold text-sm mb-2 text-foreground">
-                Recommendations:
+                {t('safety.recommendations')}:
               </h4>
               <ul className="space-y-1">
                 {data.recommendations.map((rec, index) => (
@@ -152,8 +155,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
 
       {/* Disclaimer */}
       <p className="text-center text-xs text-muted-foreground mt-4 px-4">
-        This information is for educational purposes only. Always consult with
-        your veterinarian before making dietary changes for your pet.
+        {t('safety.disclaimer')}
       </p>
     </div>
   );
