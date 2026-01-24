@@ -63,7 +63,10 @@ serve(async (req) => {
     const safeLimit = Math.min(Math.max(1, limit), 10);
 
     // Validate country code (ISO 3166-1 alpha-2)
-    const validCountryCode = country_code?.toUpperCase().match(/^[A-Z]{2}$/) ? country_code.toUpperCase() : 'US';
+    // Supported geo-targeted countries: US, ES, DE (with Amazon affiliate programs)
+    const supportedCountries = ['US', 'ES', 'DE', 'GB', 'FR'];
+    const detectedCountry = country_code?.toUpperCase().match(/^[A-Z]{2}$/) ? country_code.toUpperCase() : 'US';
+    const validCountryCode = supportedCountries.includes(detectedCountry) ? detectedCountry : 'US';
 
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
