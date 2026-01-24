@@ -5,17 +5,112 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+// Simple in-memory rate limiting (resets when function cold starts)
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 10; // requests per window
+const RATE_WINDOW_MS = 60 * 1000; // 1 minute
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW_MS });
+    return false;
+  }
+  
+  record.count++;
+  if (record.count > RATE_LIMIT) {
+    return true;
+  }
+  return false;
+}
+
+// Validate that input looks like a food item
+function isValidFoodQuery(food: string): { valid: boolean; reason?: string } {
+  // Trim and check length
+  const trimmed = food.trim();
+  
+  if (trimmed.length < 2) {
+    return { valid: false, reason: "Food name too short" };
+  }
+  
+  if (trimmed.length > 100) {
+    return { valid: false, reason: "Food name too long" };
+  }
+  
+  // Check for question patterns that aren't about food
+  const nonFoodPatterns = [
+    /^(what|when|where|who|why|how)\s+(is|are|was|were|did|do|does|can|could|would|will|should)\s+(the|a|an)?\s*(time|date|day|weather|news|city|country|president|capital|age|old|year|meaning|definition)/i,
+    /^(tell me about|explain|describe|what's the)\s+(history|geography|politics|science|math)/i,
+    /\b(calculate|solve|compute|translate)\b/i,
+    /\b(years? old|how old|born in|founded|established)\b/i,
+    /\b(capital of|president of|population of|weather in)\b/i,
+  ];
+  
+  for (const pattern of nonFoodPatterns) {
+    if (pattern.test(trimmed)) {
+      return { valid: false, reason: "Please enter a food item, not a general question" };
+    }
+  }
+  
+  // Check for obvious non-food items
+  const nonFoodItems = [
+    /\b(phone|computer|car|house|building|city|country|person|money|bitcoin|crypto)\b/i,
+  ];
+  
+  for (const pattern of nonFoodItems) {
+    if (pattern.test(trimmed)) {
+      return { valid: false, reason: "That doesn't appear to be a food item" };
+    }
+  }
+  
+  return { valid: true };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
+    // Get client IP for rate limiting
+    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("cf-connecting-ip") || 
+                     "unknown";
+    
+    // Check rate limit
+    if (isRateLimited(clientIP)) {
+      console.log(`Rate limited: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please wait a minute and try again." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
     const { food, petType } = await req.json();
 
     if (!food || !petType) {
       return new Response(
         JSON.stringify({ error: "Food and pet type are required" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate pet type
+    if (petType !== "dog" && petType !== "cat") {
+      return new Response(
+        JSON.stringify({ error: "Pet type must be 'dog' or 'cat'" }),
+        { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
+    }
+
+    // Validate food input
+    const validation = isValidFoodQuery(food);
+    if (!validation.valid) {
+      console.log(`Invalid food query rejected: "${food}" - ${validation.reason}`);
+      return new Response(
+        JSON.stringify({ error: validation.reason }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -37,12 +132,13 @@ IMPORTANT RULES:
 3. Consider species-specific differences (dogs vs cats)
 4. If a food is toxic, clearly state the toxic compounds and mechanisms
 5. Be specific about quantities and risk levels
+6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown" and explain it's not a food item.
 
 You must respond with a JSON object matching this exact structure:
 {
   "food": "the food item",
   "petType": "dog" or "cat",
-  "safetyLevel": "safe" | "caution" | "dangerous",
+  "safetyLevel": "safe" | "caution" | "dangerous" | "unknown",
   "summary": "A clear 1-2 sentence summary of whether this food is safe",
   "details": "2-3 sentences with scientific explanation of why the food is safe/unsafe, including any toxic compounds or nutritional benefits",
   "symptoms": ["array", "of", "potential", "symptoms"] (optional, include if there are risks),
@@ -53,12 +149,13 @@ Safety levels:
 - "safe": The food is generally safe and can be given in moderation
 - "caution": The food has some risks or conditions (e.g., only in small amounts, certain preparations, or specific circumstances)
 - "dangerous": The food is toxic or harmful and should never be given
+- "unknown": The input is not a recognizable food item
 
 Always respond with ONLY the JSON object, no additional text.`;
 
     const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat? Provide detailed, scientifically accurate information.`;
 
-    console.log(`Checking food safety for: ${food} (${petType})`);
+    console.log(`[${clientIP}] Checking food safety for: ${food} (${petType})`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -123,7 +220,7 @@ Always respond with ONLY the JSON object, no additional text.`;
       );
     }
 
-    console.log("Food safety result:", safetyData.safetyLevel);
+    console.log(`[${clientIP}] Food safety result: ${safetyData.safetyLevel}`);
 
     return new Response(JSON.stringify(safetyData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
