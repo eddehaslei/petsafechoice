@@ -6,9 +6,14 @@ import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TrustBar } from "@/components/TrustBar";
+import { DynamicSEO } from "@/components/DynamicSEO";
+import { DynamicResultHeader } from "@/components/DynamicResultHeader";
+import { EmergencyBanner } from "@/components/EmergencyBanner";
+import { SafeFoodWidget } from "@/components/SafeFoodWidget";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { cn } from "@/lib/utils";
 
 type PetType = "dog" | "cat";
 
@@ -54,33 +59,57 @@ const Index = () => {
     }
   };
 
+  // Dynamic background based on safety level
+  const getBackgroundClass = () => {
+    if (!result) return "hero-gradient";
+    switch (result.safetyLevel) {
+      case "safe":
+        return "bg-gradient-to-b from-safe-bg via-background to-background";
+      case "caution":
+        return "bg-gradient-to-b from-caution-bg via-background to-background";
+      case "dangerous":
+        return "bg-gradient-to-b from-danger-bg via-background to-background";
+      default:
+        return "hero-gradient";
+    }
+  };
+
   return (
-    <div className="min-h-screen hero-gradient relative flex flex-col">
+    <div className={cn("min-h-screen relative flex flex-col transition-colors duration-500", getBackgroundClass())}>
+      {/* Dynamic SEO - updates page title and meta tags */}
+      <DynamicSEO result={result} />
+      
       <Header />
       
       {/* Hero Section */}
       <main className="flex-1 container max-w-4xl mx-auto px-4 pt-4 pb-8">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-3 mb-4">
-            <div className="relative">
-              <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
+        {/* Header - show default or dynamic based on result */}
+        {!result ? (
+          <div className="text-center mb-8 animate-fade-in">
+            <div className="inline-flex items-center justify-center gap-3 mb-4">
+              <div className="relative">
+                <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
+              </div>
+              <Heart className="w-7 h-7 text-primary/60" />
+              <div className="relative">
+                <Cat className="w-12 h-12 text-primary animate-bounce-gentle" style={{ animationDelay: "0.5s" }} />
+              </div>
             </div>
-            <Heart className="w-7 h-7 text-primary/60" />
-            <div className="relative">
-              <Cat className="w-12 h-12 text-primary animate-bounce-gentle" style={{ animationDelay: "0.5s" }} />
-            </div>
+            <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-3">
+              {t('common.appName')}
+            </h1>
+            <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
+              {t('common.tagline')}
+            </p>
+            
+            {/* Trust Bar */}
+            <TrustBar />
           </div>
-          <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-3">
-            {t('common.appName')}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
-            {t('common.tagline')}
-          </p>
-          
-          {/* Trust Bar */}
-          <TrustBar />
-        </div>
+        ) : (
+          <div className="mb-6 animate-fade-in">
+            <DynamicResultHeader data={result} />
+          </div>
+        )}
 
         {/* Pet Toggle */}
         <div className="flex justify-center mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
@@ -123,7 +152,24 @@ const Index = () => {
                 </p>
               </div>
             ) : result ? (
-              <SafetyResult data={result} />
+              <>
+                <SafetyResult data={result} />
+                
+                {/* Conversion hooks based on safety level */}
+                {result.safetyLevel === "dangerous" && (
+                  <EmergencyBanner 
+                    foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
+                    petType={result.petType} 
+                  />
+                )}
+                
+                {result.safetyLevel === "safe" && (
+                  <SafeFoodWidget 
+                    foodName={result.food} 
+                    petType={result.petType} 
+                  />
+                )}
+              </>
             ) : null}
           </div>
         )}
