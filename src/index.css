@@ -42,6 +42,11 @@
     --danger-foreground: 0 0% 100%;
     --danger-bg: 0 72% 96%;
 
+    --sage: 140 12% 68%;
+    --sage-foreground: 140 20% 20%;
+    --cream: 30 60% 97%;
+    --cream-foreground: 20 30% 30%;
+
     --border: 30 25% 88%;
     --input: 30 25% 88%;
     --ring: 12 76% 61%;
@@ -97,6 +102,11 @@
     --danger: 0 72% 55%;
     --danger-foreground: 0 0% 100%;
     --danger-bg: 0 40% 15%;
+
+    --sage: 140 15% 45%;
+    --sage-foreground: 140 10% 90%;
+    --cream: 30 20% 25%;
+    --cream-foreground: 30 30% 90%;
 
     --border: 20 20% 20%;
     --input: 20 20% 20%;

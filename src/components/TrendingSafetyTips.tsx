@@ -1,7 +1,5 @@
 import { useState } from "react";
-import { TrendingUp, Sparkles, Leaf, Fish, AlertTriangle, ChevronRight } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { Sparkles, Leaf, Fish, Heart, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface TrendingTopic {
@@ -11,45 +9,36 @@ interface TrendingTopic {
   keyword: string;
   summary: string;
   badge: string;
-  badgeVariant: "default" | "secondary" | "destructive" | "outline";
+  badgeColor: "coral" | "sage" | "cream";
 }
 
 const trendingTopics: TrendingTopic[] = [
   {
     id: "salmon-oil",
     icon: <Fish className="w-5 h-5" />,
-    title: "Salmon Oil Benefits",
+    title: "The Salmon Oil Secret",
     keyword: "Best Salmon Oil 2026",
     summary: "Liquid gold for fur health. Safe in daily small doses for both dogs and cats.",
-    badge: "Trending",
-    badgeVariant: "default",
+    badge: "Popular",
+    badgeColor: "coral",
   },
   {
     id: "mushrooms",
     icon: <Sparkles className="w-5 h-5" />,
-    title: "Medicinal Mushrooms",
+    title: "Mushroom Immunity",
     keyword: "Medicinal Mushrooms Dogs",
     summary: "Lion's Mane and Reishi support senior pet brain health and cognitive function.",
-    badge: "New Research",
-    badgeVariant: "secondary",
-  },
-  {
-    id: "spring-safety",
-    icon: <AlertTriangle className="w-5 h-5" />,
-    title: "Spring Flower Toxicity",
-    keyword: "Toxic Spring Flowers",
-    summary: "Lilies and Tulips are high-risk for cats and dogs. Keep pets away from spring bouquets.",
-    badge: "Seasonal Alert",
-    badgeVariant: "destructive",
+    badge: "New 2026",
+    badgeColor: "sage",
   },
   {
     id: "air-dried",
     icon: <Leaf className="w-5 h-5" />,
     title: "Air-Dried Raw Food",
     keyword: "Air-Dried Raw Food",
-    summary: "The safest middle ground between kibble and raw diets. Retains nutrients without bacteria risk.",
-    badge: "Diet Trend",
-    badgeVariant: "outline",
+    summary: "The safest middle ground between kibble and raw diets. Retains nutrients naturally.",
+    badge: "Trending",
+    badgeColor: "cream",
   },
 ];
 
@@ -60,55 +49,75 @@ interface TrendingSafetyTipsProps {
 export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
 
+  const getBadgeClasses = (color: TrendingTopic["badgeColor"]) => {
+    switch (color) {
+      case "coral":
+        return "bg-primary/90 text-primary-foreground";
+      case "sage":
+        return "bg-sage text-sage-foreground";
+      case "cream":
+        return "bg-cream text-cream-foreground";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
+
   return (
     <section className="mt-12 animate-fade-in" style={{ animationDelay: "0.4s" }}>
       <div className="flex items-center gap-2 mb-6">
-        <TrendingUp className="w-5 h-5 text-primary" />
+        <Heart className="w-5 h-5 text-primary" />
         <h2 className="text-xl font-heading font-bold text-foreground">
-          Trending Safety Tips
+          Trending Now
         </h2>
-        <Badge variant="secondary" className="ml-2">2026</Badge>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
         {trendingTopics.map((topic) => (
-          <Card
+          <div
             key={topic.id}
             className={cn(
-              "cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1",
-              "bg-card/50 backdrop-blur-sm border-border/50",
-              hoveredId === topic.id && "border-primary/50 shadow-primary/10"
+              "group cursor-pointer rounded-3xl p-6",
+              "bg-white/70 dark:bg-card/50 backdrop-blur-md",
+              "border border-primary/10 dark:border-border/30",
+              "transition-all duration-300 ease-out",
+              "hover:-translate-y-1.5 hover:shadow-[0_20px_40px_rgba(0,0,0,0.05)]",
+              "dark:hover:shadow-[0_20px_40px_rgba(0,0,0,0.2)]"
             )}
             onMouseEnter={() => setHoveredId(topic.id)}
             onMouseLeave={() => setHoveredId(null)}
             onClick={() => onTopicClick?.(topic.keyword)}
           >
-            <CardHeader className="pb-2">
-              <div className="flex items-start justify-between">
-                <div className="flex items-center gap-2">
-                  <div className="p-2 rounded-full bg-primary/10 text-primary">
-                    {topic.icon}
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{topic.title}</h3>
-                    <p className="text-xs text-muted-foreground">{topic.keyword}</p>
-                  </div>
-                </div>
-                <Badge variant={topic.badgeVariant} className="text-xs">
-                  {topic.badge}
-                </Badge>
+            {/* Badge */}
+            <span
+              className={cn(
+                "inline-block px-3 py-1 rounded-full text-xs font-medium mb-4",
+                getBadgeClasses(topic.badgeColor)
+              )}
+            >
+              {topic.badge}
+            </span>
+
+            {/* Icon & Title */}
+            <div className="flex items-center gap-3 mb-3">
+              <div className="p-2.5 rounded-2xl bg-primary/10 text-primary">
+                {topic.icon}
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {topic.summary}
-              </p>
-              <div className="flex items-center gap-1 mt-3 text-xs text-primary font-medium">
-                <span>Learn more</span>
-                <ChevronRight className="w-3 h-3" />
-              </div>
-            </CardContent>
-          </Card>
+              <h3 className="font-heading font-semibold text-foreground text-lg leading-tight">
+                {topic.title}
+              </h3>
+            </div>
+
+            {/* Summary */}
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              {topic.summary}
+            </p>
+
+            {/* CTA */}
+            <div className="flex items-center gap-1 text-sm text-primary font-medium opacity-80 group-hover:opacity-100 transition-opacity">
+              <span>Discover</span>
+              <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
+            </div>
+          </div>
         ))}
       </div>
 
