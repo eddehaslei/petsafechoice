@@ -6,6 +6,27 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Rate limiting to prevent scraping the vet directory
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
+const RATE_LIMIT = 30; // requests per window (1 per 2 seconds)
+const RATE_WINDOW_MS = 60 * 1000; // 1 minute
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now();
+  const record = rateLimitMap.get(ip);
+  
+  if (!record || now > record.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + RATE_WINDOW_MS });
+    return false;
+  }
+  
+  record.count++;
+  if (record.count > RATE_LIMIT) {
+    return true;
+  }
+  return false;
+}
+
 // Curated list of emergency vet clinics by city (3.5+ Google reviews)
 const emergencyVetsByCity: Record<string, Array<{
   name: string;
@@ -86,6 +107,23 @@ serve(async (req) => {
   }
 
   try {
+    // Rate limit check
+    const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
+                     req.headers.get("cf-connecting-ip") || 
+                     "unknown";
+    
+    if (isRateLimited(clientIP)) {
+      console.log(`Rate limited vet lookup: ${clientIP}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please wait a moment.",
+          clinics: [],
+          emergencyNumbers: emergencyNumbersByCountry['US']
+        }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const { city, countryCode, lat, lon } = await req.json();
 
     // Normalize city name for lookup
