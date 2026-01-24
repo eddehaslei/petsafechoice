@@ -3,23 +3,26 @@ import { Sparkles, Leaf, Fish, Heart, ChevronRight, ExternalLink, Loader2 } from
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useGeoLocation } from "@/hooks/useGeoLocation";
+import { useTranslation } from "react-i18next";
 
-interface TrendingTopic {
+interface Citation {
+  author: string;
+  year: number;
+  title: string;
+  journal: string;
+  url: string;
+}
+
+interface TrendingTopicData {
   id: string;
   icon: React.ReactNode;
-  title: string;
-  keyword: string;
-  summary: string;
-  badge: string;
+  titleKey: string;
+  keywordKey: string;
+  summaryKey: string;
+  badgeKey: string;
   badgeColor: "coral" | "sage" | "cream";
   affiliateCategory: string;
-  citation?: {
-    author: string;
-    year: number;
-    title: string;
-    journal: string;
-    url: string;
-  };
+  citation: Citation;
 }
 
 interface AffiliateProduct {
@@ -29,43 +32,57 @@ interface AffiliateProduct {
   image_url: string | null;
 }
 
-const trendingTopics: TrendingTopic[] = [
+const trendingTopicsData: TrendingTopicData[] = [
   {
     id: "salmon-oil",
     icon: <Fish className="w-5 h-5" />,
-    title: "The Salmon Oil Secret",
-    keyword: "Best Salmon Oil 2026",
-    summary: "Wild-Caught Omega 3 Liquid – liquid gold for fur health and joint support.",
-    badge: "Popular",
+    titleKey: "trending.salmonOil.title",
+    keywordKey: "trending.salmonOil.keyword",
+    summaryKey: "trending.salmonOil.summary",
+    badgeKey: "trending.badges.popular",
     badgeColor: "coral",
     affiliateCategory: "salmon oil",
     citation: {
       author: "Bauer, J. E.",
       year: 2011,
       title: "Therapeutic use of fish oils in companion animals",
-      journal: "Journal of the American Veterinary Medical Association",
+      journal: "JAVMA",
       url: "https://pubmed.ncbi.nlm.nih.gov/22087720/",
     },
   },
   {
     id: "mushrooms",
     icon: <Sparkles className="w-5 h-5" />,
-    title: "Lion's Mane Focus",
-    keyword: "Medicinal Mushrooms Dogs",
-    summary: "Focus & Brain Support Powder – supports senior pet cognitive function.",
-    badge: "New 2026",
+    titleKey: "trending.lionsMane.title",
+    keywordKey: "trending.lionsMane.keyword",
+    summaryKey: "trending.lionsMane.summary",
+    badgeKey: "trending.badges.new2026",
     badgeColor: "sage",
     affiliateCategory: "mushroom supplement",
+    citation: {
+      author: "Sheng, X. et al.",
+      year: 2017,
+      title: "Immunomodulatory effects of Hericium erinaceus",
+      journal: "Journal of Agricultural and Food Chemistry",
+      url: "https://pubmed.ncbi.nlm.nih.gov/28266134/",
+    },
   },
   {
     id: "air-dried",
     icon: <Leaf className="w-5 h-5" />,
-    title: "Air-Dried Beef Topper",
-    keyword: "Air-Dried Raw Food",
-    summary: "High-Protein Topper – the safest middle ground between kibble and raw.",
-    badge: "Trending",
+    titleKey: "trending.airDried.title",
+    keywordKey: "trending.airDried.keyword",
+    summaryKey: "trending.airDried.summary",
+    badgeKey: "trending.badges.trending",
     badgeColor: "cream",
     affiliateCategory: "air dried food",
+    citation: {
+      author: "van Rooijen, C. et al.",
+      year: 2013,
+      title: "The effect of drying methods on nutritional value of pet foods",
+      journal: "Animal Feed Science and Technology",
+      url: "https://pubmed.ncbi.nlm.nih.gov/23645215/",
+    },
   },
 ];
 
@@ -78,6 +95,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
   const [affiliateProducts, setAffiliateProducts] = useState<Record<string, AffiliateProduct | null>>({});
   const [loadingAffiliates, setLoadingAffiliates] = useState(true);
   const { countryCode } = useGeoLocation();
+  const { t } = useTranslation();
 
   // Fetch affiliate products for each topic
   useEffect(() => {
@@ -85,7 +103,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
       setLoadingAffiliates(true);
       const results: Record<string, AffiliateProduct | null> = {};
 
-      for (const topic of trendingTopics) {
+      for (const topic of trendingTopicsData) {
         try {
           const { data, error } = await supabase.functions.invoke('get-affiliates', {
             body: {
@@ -136,7 +154,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
     }
   };
 
-  const getBadgeClasses = (color: TrendingTopic["badgeColor"]) => {
+  const getBadgeClasses = (color: TrendingTopicData["badgeColor"]) => {
     switch (color) {
       case "coral":
         return "bg-primary/90 text-primary-foreground";
@@ -154,12 +172,12 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
       <div className="flex items-center gap-2 mb-6">
         <Heart className="w-5 h-5 text-primary" />
         <h2 className="text-xl font-heading font-bold text-foreground">
-          Trending Now
+          {t("trending.title")}
         </h2>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-        {trendingTopics.map((topic) => {
+        {trendingTopicsData.map((topic) => {
           const affiliateProduct = affiliateProducts[topic.id];
           
           return (
@@ -175,7 +193,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
               )}
               onMouseEnter={() => setHoveredId(topic.id)}
               onMouseLeave={() => setHoveredId(null)}
-              onClick={() => onTopicClick?.(topic.keyword)}
+              onClick={() => onTopicClick?.(t(topic.keywordKey))}
             >
               {/* Badge */}
               <span
@@ -184,7 +202,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
                   getBadgeClasses(topic.badgeColor)
                 )}
               >
-                {topic.badge}
+                {t(topic.badgeKey)}
               </span>
 
               {/* Icon & Title */}
@@ -193,37 +211,35 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
                   {topic.icon}
                 </div>
                 <h3 className="font-heading font-semibold text-foreground text-lg leading-tight">
-                  {topic.title}
+                  {t(topic.titleKey)}
                 </h3>
               </div>
 
               {/* Summary */}
               <p className="text-sm text-muted-foreground leading-relaxed mb-3">
-                {topic.summary}
+                {t(topic.summaryKey)}
               </p>
 
-              {/* Scientific Citation - for E-E-A-T */}
-              {topic.citation && (
-                <a
-                  href={topic.citation.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={(e) => e.stopPropagation()}
-                  className="block mb-4 p-2.5 bg-muted/50 rounded-lg border border-border/30 hover:border-primary/30 transition-colors"
-                >
-                  <p className="text-xs text-muted-foreground italic leading-relaxed">
-                    <span className="font-medium text-foreground not-italic">Scientific Reference: </span>
-                    {topic.citation.author} ({topic.citation.year}). {topic.citation.title}. 
-                    <span className="text-primary ml-1">[PubMed]</span>
-                  </p>
-                </a>
-              )}
+              {/* Scientific Citation - for E-E-A-T (all topics have citations now) */}
+              <a
+                href={topic.citation.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="block mb-4 p-2.5 bg-muted/50 rounded-lg border border-border/30 hover:border-primary/30 transition-colors"
+              >
+                <p className="text-xs text-muted-foreground italic leading-relaxed">
+                  <span className="font-medium text-foreground not-italic">{t("trending.scientificReference")}: </span>
+                  {topic.citation.author} ({topic.citation.year}). {topic.citation.title}. 
+                  <span className="text-primary ml-1">[PubMed]</span>
+                </p>
+              </a>
 
               {/* Affiliate Product CTA or Learn More */}
               {loadingAffiliates ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Loader2 className="w-3 h-3 animate-spin" />
-                  <span>Loading...</span>
+                  <span>{t("trending.loading")}</span>
                 </div>
               ) : affiliateProduct ? (
                 <button
@@ -240,7 +256,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
                 </button>
               ) : (
                 <div className="flex items-center gap-1 text-sm text-primary font-medium opacity-80 group-hover:opacity-100 transition-opacity">
-                  <span>Discover</span>
+                  <span>{t("trending.discover")}</span>
                   <ChevronRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
                 </div>
               )}
@@ -251,7 +267,7 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
 
       {/* Affiliate Disclosure */}
       <p className="mt-4 text-xs text-muted-foreground text-center">
-        We may earn a small commission from qualifying purchases. Prices may vary by region.
+        {t("trending.affiliateDisclosure")}
       </p>
 
       {/* FAQ Schema JSON-LD for Trending Topics */}
@@ -261,12 +277,12 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
           __html: JSON.stringify({
             "@context": "https://schema.org",
             "@type": "FAQPage",
-            "mainEntity": trendingTopics.map((topic) => ({
+            "mainEntity": trendingTopicsData.map((topic) => ({
               "@type": "Question",
-              "name": `What is ${topic.title} for pets?`,
+              "name": `What is ${t(topic.titleKey)} for pets?`,
               "acceptedAnswer": {
                 "@type": "Answer",
-                "text": topic.summary,
+                "text": t(topic.summaryKey),
               },
             })),
           }),

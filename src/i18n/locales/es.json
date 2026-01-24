@@ -147,5 +147,32 @@
   "emergency": {
     "title": "Contactos de emergencia",
     "subtitle": "Números importantes que debe tener a mano si su mascota ingiere algo dañino."
+  },
+  "trending": {
+    "title": "Tendencias Ahora",
+    "scientificReference": "Referencia Científica",
+    "loading": "Cargando...",
+    "discover": "Descubrir",
+    "affiliateDisclosure": "Podemos ganar una pequeña comisión de compras que califican. Los precios pueden variar según la región.",
+    "badges": {
+      "popular": "Popular",
+      "new2026": "Nuevo 2026",
+      "trending": "Tendencia"
+    },
+    "salmonOil": {
+      "title": "El Secreto del Aceite de Salmón",
+      "keyword": "Mejor Aceite de Salmón 2026",
+      "summary": "Omega 3 Líquido de Captura Silvestre – oro líquido para la salud del pelaje y las articulaciones."
+    },
+    "lionsMane": {
+      "title": "Melena de León Focus",
+      "keyword": "Hongos Medicinales Perros",
+      "summary": "Polvo de Apoyo Cerebral – apoya la función cognitiva de mascotas mayores."
+    },
+    "airDried": {
+      "title": "Topper de Res Secada al Aire",
+      "keyword": "Comida Cruda Secada al Aire",
+      "summary": "Topper Alto en Proteínas – el punto medio más seguro entre croquetas y crudo."
+    }
   }
 }

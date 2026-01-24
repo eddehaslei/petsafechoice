@@ -147,5 +147,32 @@
   "emergency": {
     "title": "Notfallkontakte",
     "subtitle": "Wichtige Nummern, die Sie zur Hand haben sollten, wenn Ihr Haustier etwas Schädliches aufnimmt."
+  },
+  "trending": {
+    "title": "Jetzt im Trend",
+    "scientificReference": "Wissenschaftliche Referenz",
+    "loading": "Laden...",
+    "discover": "Entdecken",
+    "affiliateDisclosure": "Wir erhalten möglicherweise eine kleine Provision bei qualifizierten Käufen. Preise können je nach Region variieren.",
+    "badges": {
+      "popular": "Beliebt",
+      "new2026": "Neu 2026",
+      "trending": "Im Trend"
+    },
+    "salmonOil": {
+      "title": "Das Lachsöl-Geheimnis",
+      "keyword": "Bestes Lachsöl 2026",
+      "summary": "Wildgefangenes Omega-3-Öl – flüssiges Gold für Fell- und Gelenkgesundheit."
+    },
+    "lionsMane": {
+      "title": "Löwenmähne Fokus",
+      "keyword": "Heilpilze Hunde",
+      "summary": "Gehirnunterstützungspulver – unterstützt die kognitive Funktion älterer Haustiere."
+    },
+    "airDried": {
+      "title": "Luftgetrocknetes Rind-Topper",
+      "keyword": "Luftgetrocknetes Rohfutter",
+      "summary": "Proteinreicher Topper – der sicherste Mittelweg zwischen Trockenfutter und roh."
+    }
   }
 }
