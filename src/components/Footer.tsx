@@ -70,6 +70,18 @@ export const Footer = () => {
             </ul>
           </div>
         </div>
+        
+        {/* Medical Disclaimer Banner */}
+        <div className="py-4 px-4 bg-muted/50 rounded-lg border border-border/50 mb-6">
+          <p className="text-xs text-muted-foreground text-center leading-relaxed">
+            <strong className="text-foreground">Disclaimer:</strong> This site is for informational purposes only. 
+            Always consult a licensed veterinarian in an emergency.{" "}
+            <Link to="/disclaimer" className="text-primary hover:underline font-medium">
+              Read full disclaimer →
+            </Link>
+          </p>
+        </div>
+
         <div className="pt-6 border-t border-border/50 text-center">
           <p className="text-sm text-muted-foreground">
             {t('common.madeWithLove')} <Heart className="w-4 h-4 inline text-primary" /> {t('common.forPets')}
