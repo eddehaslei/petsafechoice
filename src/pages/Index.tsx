@@ -57,7 +57,7 @@ const Index = () => {
     <div className="min-h-screen hero-gradient relative">
       <Header />
       {/* Hero Section */}
-      <div className="container max-w-4xl mx-auto px-4 pt-16 pb-8">
+      <div className="container max-w-4xl mx-auto px-4 pt-24 md:pt-28 pb-8">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
           <div className="inline-flex items-center justify-center gap-2 mb-4">
