@@ -1,0 +1,4 @@
+project_id = "yvznzqvzkoiommrzwufr"
+
+[functions.check-food-safety]
+verify_jwt = false
