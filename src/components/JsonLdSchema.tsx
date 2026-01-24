@@ -137,10 +137,16 @@ export function JsonLdSchema({ result }: JsonLdSchemaProps) {
         "name": `${foodName} consumption in ${petName}`,
         "possibleTreatment": result.recommendations?.join('. ') || "Consult a veterinarian"
       },
-      "lastReviewed": currentDate,
+      "lastReviewed": "2026-01-24",
+      "dateModified": "2026-01-24",
       "reviewedBy": {
         "@type": "Organization",
-        "name": "PetSafeChoice Veterinary Review Board"
+        "name": "PetSafeChoice Veterinary Advisory Board",
+        "url": `${window.location.origin}/about`
+      },
+      "medicalAudience": {
+        "@type": "MedicalAudience",
+        "audienceType": "Pet Owners"
       }
     };
 
