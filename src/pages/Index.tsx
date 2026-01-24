@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Dog, Cat, Heart } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
@@ -10,6 +10,8 @@ import { DynamicSEO } from "@/components/DynamicSEO";
 import { DynamicResultHeader } from "@/components/DynamicResultHeader";
 import { EmergencyBanner } from "@/components/EmergencyBanner";
 import { SafeFoodWidget } from "@/components/SafeFoodWidget";
+import { SocialShareCard } from "@/components/SocialShareCard";
+import { RelatedFoods } from "@/components/RelatedFoods";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -155,6 +157,9 @@ const Index = () => {
               <>
                 <SafetyResult data={result} />
                 
+                {/* Social Share */}
+                <SocialShareCard data={result} />
+                
                 {/* Conversion hooks based on safety level */}
                 {result.safetyLevel === "dangerous" && (
                   <EmergencyBanner 
@@ -169,6 +174,13 @@ const Index = () => {
                     petType={result.petType} 
                   />
                 )}
+                
+                {/* Related Foods - drives engagement */}
+                <RelatedFoods 
+                  currentFood={result.food} 
+                  petType={result.petType}
+                  onFoodClick={handleSearch}
+                />
               </>
             ) : null}
           </div>
