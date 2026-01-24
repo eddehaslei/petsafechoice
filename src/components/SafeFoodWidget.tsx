@@ -1,45 +1,103 @@
-import { Gift, ShoppingBag, ExternalLink, Sparkles } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Gift, ShoppingBag, ExternalLink, Sparkles, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
+import { useGeoLocation } from "@/hooks/useGeoLocation";
 
 interface SafeFoodWidgetProps {
   foodName: string;
   petType: "dog" | "cat";
 }
 
-// Affiliate product recommendations based on food type and pet
-const getRecommendations = (food: string, petType: "dog" | "cat") => {
-  const recommendations: Record<string, { title: string; description: string; icon: React.ReactNode }[]> = {
-    dog: [
-      {
-        title: "Premium Training Treats",
-        description: "Healthy, bite-sized rewards for positive reinforcement",
-        icon: <Gift className="w-5 h-5" />,
-      },
-      {
-        title: "Natural Freeze-Dried Snacks",
-        description: "Single-ingredient treats with no additives",
-        icon: <Sparkles className="w-5 h-5" />,
-      },
-    ],
-    cat: [
-      {
-        title: "Gourmet Cat Treats",
-        description: "Irresistible flavors cats love",
-        icon: <Gift className="w-5 h-5" />,
-      },
-      {
-        title: "Dental Health Treats",
-        description: "Crunchy treats that support oral health",
-        icon: <Sparkles className="w-5 h-5" />,
-      },
-    ],
-  };
+interface AffiliateProduct {
+  id: string;
+  product_name: string;
+  price_point: string | null;
+  image_url: string | null;
+  food_category_link: string | null;
+}
 
-  return recommendations[petType] || recommendations.dog;
-};
+// Fallback recommendations if API fails
+const getFallbackRecommendations = (petType: "dog" | "cat") => [
+  {
+    id: "fallback-1",
+    product_name: petType === "dog" ? "Premium Training Treats" : "Gourmet Cat Treats",
+    price_point: null,
+    image_url: null,
+    food_category_link: petType,
+  },
+  {
+    id: "fallback-2", 
+    product_name: petType === "dog" ? "Natural Freeze-Dried Snacks" : "Dental Health Treats",
+    price_point: null,
+    image_url: null,
+    food_category_link: petType,
+  },
+];
 
 export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
-  const recommendations = getRecommendations(foodName, petType);
+  const [products, setProducts] = useState<AffiliateProduct[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { countryCode } = useGeoLocation();
+
+  useEffect(() => {
+    const fetchAffiliates = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke('get-affiliates', {
+          body: { 
+            pet_type: petType,
+            country_code: countryCode || 'US',
+            limit: 4
+          }
+        });
+
+        if (error) throw error;
+        
+        if (data?.products && data.products.length > 0) {
+          setProducts(data.products);
+        } else {
+          setProducts(getFallbackRecommendations(petType));
+        }
+      } catch (err) {
+        console.error('Error fetching affiliates:', err);
+        setProducts(getFallbackRecommendations(petType));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAffiliates();
+  }, [petType, countryCode]);
+
+  const handleProductClick = async (productId: string) => {
+    // Only redirect for real affiliate products (not fallbacks)
+    if (productId.startsWith('fallback-')) return;
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('affiliate-redirect', {
+        body: {},
+      });
+      
+      // Use query param approach since body doesn't work for redirects
+      const response = await fetch(
+        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/affiliate-redirect?id=${productId}`,
+        {
+          headers: {
+            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
+          }
+        }
+      );
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.url) {
+          window.open(result.url, '_blank', 'noopener,noreferrer');
+        }
+      }
+    } catch (err) {
+      console.error('Error redirecting:', err);
+    }
+  };
   
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
@@ -62,29 +120,46 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
           </div>
           
-          <div className="grid gap-3 sm:grid-cols-2">
-            {recommendations.map((rec, index) => (
-              <div
-                key={index}
-                className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
-              >
-                <div className="flex items-start gap-3">
-                  <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
-                    {rec.icon}
+          {isLoading ? (
+            <div className="flex items-center justify-center py-8">
+              <Loader2 className="w-6 h-6 animate-spin text-safe" />
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => handleProductClick(product.id)}
+                  className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
+                      {product.image_url ? (
+                        <img 
+                          src={product.image_url} 
+                          alt="" 
+                          className="w-6 h-6 object-contain rounded"
+                        />
+                      ) : (
+                        <Gift className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm text-foreground mb-0.5">
+                        {product.product_name}
+                      </h4>
+                      {product.price_point && (
+                        <p className="text-xs text-muted-foreground">
+                          {product.price_point}
+                        </p>
+                      )}
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-safe transition-colors shrink-0" />
                   </div>
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-sm text-foreground mb-0.5">
-                      {rec.title}
-                    </h4>
-                    <p className="text-xs text-muted-foreground">
-                      {rec.description}
-                    </p>
-                  </div>
-                  <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-safe transition-colors shrink-0" />
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
           
           {/* Affiliate disclosure */}
           <p className="mt-4 text-xs text-muted-foreground text-center">

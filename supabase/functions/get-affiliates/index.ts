@@ -57,23 +57,45 @@ serve(async (req) => {
       );
     }
 
-    const { food_category, limit = 4 } = await req.json();
+    const { food_category, pet_type, country_code, limit = 4 } = await req.json();
 
     // Validate limit to prevent bulk downloads
     const safeLimit = Math.min(Math.max(1, limit), 10);
+
+    // Validate country code (ISO 3166-1 alpha-2)
+    const validCountryCode = country_code?.toUpperCase().match(/^[A-Z]{2}$/) ? country_code.toUpperCase() : 'US';
 
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    let query = supabase.from('affiliates').select('*').limit(safeLimit);
+    // First try to find geo-targeted affiliates for user's country
+    let query = supabase.from('affiliates').select('*').eq('country_code', validCountryCode).limit(safeLimit);
     
     if (food_category) {
       query = query.ilike('food_category_link', `%${food_category}%`);
     }
+    if (pet_type) {
+      query = query.or(`food_category_link.ilike.%${pet_type}%,food_category_link.is.null`);
+    }
 
-    const { data: affiliates, error } = await query;
+    let { data: affiliates, error } = await query;
+
+    // Fallback to US links if no country-specific affiliates found
+    if (!error && (!affiliates || affiliates.length === 0) && validCountryCode !== 'US') {
+      console.log(`No affiliates for ${validCountryCode}, falling back to US`);
+      let fallbackQuery = supabase.from('affiliates').select('*').eq('country_code', 'US').limit(safeLimit);
+      if (food_category) {
+        fallbackQuery = fallbackQuery.ilike('food_category_link', `%${food_category}%`);
+      }
+      if (pet_type) {
+        fallbackQuery = fallbackQuery.or(`food_category_link.ilike.%${pet_type}%,food_category_link.is.null`);
+      }
+      const fallbackResult = await fallbackQuery;
+      affiliates = fallbackResult.data;
+      error = fallbackResult.error;
+    }
 
     if (error) {
       console.error("Database error:", error);

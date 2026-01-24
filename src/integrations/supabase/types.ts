@@ -17,6 +17,7 @@ export type Database = {
       affiliates: {
         Row: {
           affiliate_url: string
+          country_code: string | null
           created_at: string
           food_category_link: string | null
           id: string
@@ -26,6 +27,7 @@ export type Database = {
         }
         Insert: {
           affiliate_url: string
+          country_code?: string | null
           created_at?: string
           food_category_link?: string | null
           id?: string
@@ -35,6 +37,7 @@ export type Database = {
         }
         Update: {
           affiliate_url?: string
+          country_code?: string | null
           created_at?: string
           food_category_link?: string | null
           id?: string
