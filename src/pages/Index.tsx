@@ -145,7 +145,7 @@ const Index = () => {
 
         {/* Search */}
         <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
-          <FoodSearch onSearch={handleSearch} isLoading={isLoading} />
+          <FoodSearch onSearch={(food) => handleSearch(food, "search")} isLoading={isLoading} />
         </div>
 
         {/* Popular Foods */}
@@ -157,7 +157,7 @@ const Index = () => {
                 {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
                   <button
                     key={food}
-                    onClick={() => handleSearch(food)}
+                    onClick={() => handleSearch(food, "search")}
                     className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5"
                   >
                     {food}

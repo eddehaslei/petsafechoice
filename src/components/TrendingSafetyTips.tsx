@@ -13,6 +13,13 @@ interface TrendingTopic {
   badge: string;
   badgeColor: "coral" | "sage" | "cream";
   affiliateCategory: string;
+  citation?: {
+    author: string;
+    year: number;
+    title: string;
+    journal: string;
+    url: string;
+  };
 }
 
 interface AffiliateProduct {
@@ -32,6 +39,13 @@ const trendingTopics: TrendingTopic[] = [
     badge: "Popular",
     badgeColor: "coral",
     affiliateCategory: "salmon oil",
+    citation: {
+      author: "Bauer, J. E.",
+      year: 2011,
+      title: "Therapeutic use of fish oils in companion animals",
+      journal: "Journal of the American Veterinary Medical Association",
+      url: "https://pubmed.ncbi.nlm.nih.gov/22087720/",
+    },
   },
   {
     id: "mushrooms",
@@ -184,9 +198,26 @@ export function TrendingSafetyTips({ onTopicClick }: TrendingSafetyTipsProps) {
               </div>
 
               {/* Summary */}
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              <p className="text-sm text-muted-foreground leading-relaxed mb-3">
                 {topic.summary}
               </p>
+
+              {/* Scientific Citation - for E-E-A-T */}
+              {topic.citation && (
+                <a
+                  href={topic.citation.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
+                  className="block mb-4 p-2.5 bg-muted/50 rounded-lg border border-border/30 hover:border-primary/30 transition-colors"
+                >
+                  <p className="text-xs text-muted-foreground italic leading-relaxed">
+                    <span className="font-medium text-foreground not-italic">Scientific Reference: </span>
+                    {topic.citation.author} ({topic.citation.year}). {topic.citation.title}. 
+                    <span className="text-primary ml-1">[PubMed]</span>
+                  </p>
+                </a>
+              )}
 
               {/* Affiliate Product CTA or Learn More */}
               {loadingAffiliates ? (
