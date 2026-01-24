@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
 
 interface FoodSearchProps {
   onSearch: (query: string) => void;
@@ -10,6 +11,7 @@ interface FoodSearchProps {
 
 export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
   const [query, setQuery] = useState("");
+  const { t } = useTranslation();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,13 +24,13 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
     <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto">
       <div className="relative flex gap-3">
         <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
+          <Search className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Enter a food (e.g., kiwi, chocolate, grapes...)"
+            placeholder={t('search.placeholder')}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            className="pl-12 pr-4 h-14 text-lg rounded-2xl border-2 border-border bg-card input-shadow focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
+            className="ps-12 pe-4 h-14 text-lg rounded-2xl border-2 border-border bg-card input-shadow focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all"
             disabled={isLoading}
           />
         </div>
@@ -40,7 +42,7 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
           ) : (
-            "Check"
+            t('search.button')
           )}
         </Button>
       </div>

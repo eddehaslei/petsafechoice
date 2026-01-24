@@ -1,8 +1,9 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Dog, Cat, Check, X } from "lucide-react";
+import { Dog, Cat, Check } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useTranslation } from "react-i18next";
 
 interface FoodItem {
   name: string;
@@ -58,6 +59,7 @@ const catSafeFoods: FoodItem[] = [
 
 const SafeFoods = () => {
   const [activeTab, setActiveTab] = useState("dogs");
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen hero-gradient relative flex flex-col">
@@ -66,10 +68,10 @@ const SafeFoods = () => {
       <main className="flex-1 container max-w-4xl mx-auto px-4 pt-20 pb-12">
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-4">
-            Safe Foods Guide
+            {t('safeFoods.title')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Top 20 veterinary-approved safe foods for your pets, backed by scientific research.
+            {t('safeFoods.subtitle')}
           </p>
         </div>
 
@@ -77,11 +79,11 @@ const SafeFoods = () => {
           <TabsList className="grid w-full max-w-md mx-auto grid-cols-2 mb-8">
             <TabsTrigger value="dogs" className="flex items-center gap-2">
               <Dog className="w-4 h-4" />
-              Dogs
+              {t('safeFoods.dogsTab')}
             </TabsTrigger>
             <TabsTrigger value="cats" className="flex items-center gap-2">
               <Cat className="w-4 h-4" />
-              Cats
+              {t('safeFoods.catsTab')}
             </TabsTrigger>
           </TabsList>
 
@@ -92,8 +94,8 @@ const SafeFoods = () => {
                   <Check className="w-6 h-6 text-green-500" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-foreground">Safe Foods for Dogs</h2>
-                  <p className="text-sm text-muted-foreground">Always introduce new foods gradually</p>
+                  <h2 className="text-xl font-semibold text-foreground">{t('safeFoods.title')} - {t('safeFoods.dogsTab')}</h2>
+                  <p className="text-sm text-muted-foreground">{t('safeFoods.warning.description')}</p>
                 </div>
               </div>
               
@@ -108,9 +110,9 @@ const SafeFoods = () => {
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-foreground">{food.name}</h3>
-                      <p className="text-sm text-muted-foreground">{food.benefits}</p>
+                      <p className="text-sm text-muted-foreground">{t('safeFoods.benefits')} {food.benefits}</p>
                       {food.notes && (
-                        <p className="text-xs text-primary/80 mt-1">💡 {food.notes}</p>
+                        <p className="text-xs text-primary/80 mt-1">💡 {t('safeFoods.note')} {food.notes}</p>
                       )}
                     </div>
                   </div>
@@ -126,8 +128,8 @@ const SafeFoods = () => {
                   <Check className="w-6 h-6 text-green-500" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold text-foreground">Safe Foods for Cats</h2>
-                  <p className="text-sm text-muted-foreground">Cats are obligate carnivores - meat should be primary</p>
+                  <h2 className="text-xl font-semibold text-foreground">{t('safeFoods.title')} - {t('safeFoods.catsTab')}</h2>
+                  <p className="text-sm text-muted-foreground">{t('safeFoods.warning.description')}</p>
                 </div>
               </div>
               
@@ -142,9 +144,9 @@ const SafeFoods = () => {
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-foreground">{food.name}</h3>
-                      <p className="text-sm text-muted-foreground">{food.benefits}</p>
+                      <p className="text-sm text-muted-foreground">{t('safeFoods.benefits')} {food.benefits}</p>
                       {food.notes && (
-                        <p className="text-xs text-primary/80 mt-1">💡 {food.notes}</p>
+                        <p className="text-xs text-primary/80 mt-1">💡 {t('safeFoods.note')} {food.notes}</p>
                       )}
                     </div>
                   </div>
@@ -156,8 +158,7 @@ const SafeFoods = () => {
 
         <div className="mt-8 p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
           <p className="text-sm text-muted-foreground text-center">
-            <strong className="text-foreground">⚠️ Important:</strong> This list is for general guidance only. 
-            Always consult your veterinarian before introducing new foods, especially if your pet has health conditions.
+            <strong className="text-foreground">⚠️ {t('safeFoods.warning.title')}:</strong> {t('safeFoods.warning.description')}
           </p>
         </div>
       </main>

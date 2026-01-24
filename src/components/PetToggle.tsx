@@ -1,5 +1,6 @@
 import { Dog, Cat } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 type PetType = "dog" | "cat";
 
@@ -9,6 +10,8 @@ interface PetToggleProps {
 }
 
 export function PetToggle({ value, onChange }: PetToggleProps) {
+  const { t } = useTranslation();
+
   return (
     <div className="inline-flex items-center bg-secondary rounded-full p-1.5 gap-1">
       <button
@@ -21,7 +24,7 @@ export function PetToggle({ value, onChange }: PetToggleProps) {
         )}
       >
         <Dog className="w-5 h-5" />
-        Dog
+        {t('petToggle.dog')}
       </button>
       <button
         onClick={() => onChange("cat")}
@@ -33,7 +36,7 @@ export function PetToggle({ value, onChange }: PetToggleProps) {
         )}
       >
         <Cat className="w-5 h-5" />
-        Cat
+        {t('petToggle.cat')}
       </button>
     </div>
   );

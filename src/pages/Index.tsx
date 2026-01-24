@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 type PetType = "dog" | "cat";
 
@@ -14,6 +15,7 @@ const Index = () => {
   const [petType, setPetType] = useState<PetType>("dog");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SafetyResultData | null>(null);
+  const { t } = useTranslation();
 
   const handleSearch = async (food: string) => {
     setIsLoading(true);
@@ -68,10 +70,10 @@ const Index = () => {
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-3">
-            Can My Pet Eat This?
+            {t('common.appName')}
           </h1>
           <p className="text-lg text-muted-foreground max-w-lg mx-auto">
-            Science-backed food safety information for dogs and cats. Know what's safe before you share!
+            {t('common.tagline')}
           </p>
         </div>
 
@@ -88,7 +90,7 @@ const Index = () => {
         {/* Popular Foods */}
         {!result && !isLoading && (
           <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <p className="text-sm text-muted-foreground mb-3">Popular searches:</p>
+            <p className="text-sm text-muted-foreground mb-3">{t('common.popularSearches')}</p>
             <div className="flex flex-wrap justify-center gap-2">
               {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
                 <button
@@ -113,7 +115,7 @@ const Index = () => {
                 <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
               </div>
               <p className="text-muted-foreground font-medium">
-                Checking if it's safe for your {petType}...
+                {t('search.checking', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase() })}
               </p>
             </div>
           ) : result ? (
