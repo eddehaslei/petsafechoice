@@ -1,0 +1,160 @@
+import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
+import { cn } from "@/lib/utils";
+
+export type SafetyLevel = "safe" | "caution" | "dangerous";
+
+export interface SafetyResultData {
+  food: string;
+  petType: "dog" | "cat";
+  safetyLevel: SafetyLevel;
+  summary: string;
+  details: string;
+  symptoms?: string[];
+  recommendations?: string[];
+}
+
+interface SafetyResultProps {
+  data: SafetyResultData;
+}
+
+const safetyConfig = {
+  safe: {
+    icon: CheckCircle2,
+    title: "Safe to Eat",
+    bgClass: "bg-safe-bg",
+    borderClass: "border-safe/30",
+    iconClass: "text-safe",
+    badgeClass: "safety-badge-safe",
+  },
+  caution: {
+    icon: AlertTriangle,
+    title: "Use Caution",
+    bgClass: "bg-caution-bg",
+    borderClass: "border-caution/30",
+    iconClass: "text-caution",
+    badgeClass: "safety-badge-caution",
+  },
+  dangerous: {
+    icon: XCircle,
+    title: "Dangerous",
+    bgClass: "bg-danger-bg",
+    borderClass: "border-danger/30",
+    iconClass: "text-danger",
+    badgeClass: "safety-badge-danger",
+  },
+};
+
+export function SafetyResult({ data }: SafetyResultProps) {
+  const config = safetyConfig[data.safetyLevel];
+  const Icon = config.icon;
+
+  return (
+    <div className="w-full max-w-2xl mx-auto animate-slide-up">
+      <div
+        className={cn(
+          "rounded-3xl border-2 overflow-hidden card-shadow-lg",
+          config.bgClass,
+          config.borderClass
+        )}
+      >
+        {/* Header */}
+        <div className="p-6 pb-4 flex items-center gap-4">
+          <div
+            className={cn(
+              "w-16 h-16 rounded-2xl flex items-center justify-center",
+              data.safetyLevel === "safe" && "bg-safe/20",
+              data.safetyLevel === "caution" && "bg-caution/20",
+              data.safetyLevel === "dangerous" && "bg-danger/20"
+            )}
+          >
+            <Icon className={cn("w-8 h-8", config.iconClass)} />
+          </div>
+          <div className="flex-1">
+            <div className="flex items-center gap-3 mb-1">
+              <h2 className="text-2xl font-heading font-bold capitalize">
+                {data.food}
+              </h2>
+              <span
+                className={cn(
+                  "px-3 py-1 rounded-full text-sm font-semibold",
+                  config.badgeClass
+                )}
+              >
+                {config.title}
+              </span>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              For {data.petType === "dog" ? "dogs" : "cats"}
+            </p>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="px-6 pb-6 space-y-4">
+          {/* Summary */}
+          <div className="bg-card/80 backdrop-blur rounded-2xl p-4 border border-border/50">
+            <p className="text-foreground font-medium leading-relaxed">
+              {data.summary}
+            </p>
+          </div>
+
+          {/* Details */}
+          <div className="bg-card/60 rounded-2xl p-4 border border-border/30">
+            <div className="flex items-start gap-3">
+              <Info className="w-5 h-5 text-muted-foreground mt-0.5 shrink-0" />
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                {data.details}
+              </p>
+            </div>
+          </div>
+
+          {/* Symptoms */}
+          {data.symptoms && data.symptoms.length > 0 && (
+            <div className="bg-card/60 rounded-2xl p-4 border border-border/30">
+              <h4 className="font-heading font-semibold text-sm mb-2 text-foreground">
+                Potential Symptoms to Watch For:
+              </h4>
+              <ul className="space-y-1">
+                {data.symptoms.map((symptom, index) => (
+                  <li
+                    key={index}
+                    className="text-sm text-muted-foreground flex items-center gap-2"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-muted-foreground/50" />
+                    {symptom}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          {/* Recommendations */}
+          {data.recommendations && data.recommendations.length > 0 && (
+            <div className="bg-card/60 rounded-2xl p-4 border border-border/30">
+              <h4 className="font-heading font-semibold text-sm mb-2 text-foreground">
+                Recommendations:
+              </h4>
+              <ul className="space-y-1">
+                {data.recommendations.map((rec, index) => (
+                  <li
+                    key={index}
+                    className="text-sm text-muted-foreground flex items-start gap-2"
+                  >
+                    <span className="w-1.5 h-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
+                    {rec}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Disclaimer */}
+      <p className="text-center text-xs text-muted-foreground mt-4 px-4">
+        This information is for educational purposes only. Always consult with
+        your veterinarian before making dietary changes for your pet.
+      </p>
+    </div>
+  );
+}
