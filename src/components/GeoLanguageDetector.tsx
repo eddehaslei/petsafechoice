@@ -10,7 +10,6 @@ export function GeoLanguageDetector() {
   useEffect(() => {
     // Only set language once, and only if user hasn't manually selected a language
     if (!isLoading && countryCode && !hasSetLanguage.current) {
-      const storedLanguage = localStorage.getItem('i18nextLng');
       const isManuallySet = localStorage.getItem('languageManuallySet');
       
       // If user has manually set a language, don't override it
@@ -20,12 +19,16 @@ export function GeoLanguageDetector() {
       }
 
       const recommendedLang = getRecommendedLanguage();
+      console.log('[GeoLanguageDetector] Country:', countryCode, 'Recommended:', recommendedLang, 'Current:', i18n.language);
       
-      if (recommendedLang && recommendedLang !== i18n.language) {
+      if (recommendedLang) {
         // Only change if the detected language is different and supported
         const supportedLanguages = ['en', 'ar', 'fr', 'es', 'de'];
-        if (supportedLanguages.includes(recommendedLang)) {
+        if (supportedLanguages.includes(recommendedLang) && recommendedLang !== i18n.language) {
+          console.log('[GeoLanguageDetector] Changing language to:', recommendedLang);
           i18n.changeLanguage(recommendedLang);
+          // Save to localStorage so it persists
+          localStorage.setItem('i18nextLng', recommendedLang);
         }
       }
       

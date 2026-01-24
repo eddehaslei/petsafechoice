@@ -1,6 +1,5 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
 
 import en from './locales/en.json';
 import ar from './locales/ar.json';
@@ -18,8 +17,17 @@ export const languages = [
 
 export type LanguageCode = typeof languages[number]['code'];
 
+// Get initial language from localStorage or default to English
+// GeoLanguageDetector will override this based on IP if user hasn't manually selected
+const getInitialLanguage = (): string => {
+  const stored = localStorage.getItem('i18nextLng');
+  if (stored && ['en', 'ar', 'fr', 'es', 'de'].includes(stored)) {
+    return stored;
+  }
+  return 'en'; // Default to English, GeoLanguageDetector will update based on IP
+};
+
 i18n
-  .use(LanguageDetector)
   .use(initReactI18next)
   .init({
     resources: {
@@ -29,13 +37,10 @@ i18n
       es: { translation: es },
       de: { translation: de },
     },
+    lng: getInitialLanguage(),
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false,
-    },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      caches: ['localStorage'],
     },
   });
 

@@ -17,11 +17,11 @@ const emergencyVetsByCity: Record<string, Array<{
 }>> = {
   // Spain - Barcelona
   "barcelona": [
-    { name: "Hospital Veterinari de Catalunya", address: "Carrer de Víctor Hugo, 21, 08174 Sant Cugat del Vallès", phone: "+34 935 83 47 00", rating: 4.5, open24h: true, website: "https://hvcat.com" },
-    { name: "ARS Veterinaria Hospital", address: "Carrer de Cardedeu, 3, 08023 Barcelona", phone: "+34 932 52 21 11", rating: 4.6, open24h: true, website: "https://arsveterinaria.com" },
-    { name: "Hospital Veterinari del Maresme", address: "Riera de Sant Simó, 35, 08310 Argentona", phone: "+34 937 56 04 00", rating: 4.4, open24h: true },
-    { name: "Centre Veterinari de Gracia", address: "Carrer Gran de Gràcia, 211, 08012 Barcelona", phone: "+34 932 17 80 00", rating: 4.3, open24h: true },
-    { name: "Urgències Veterinàries Barcelona", address: "Carrer de València, 469, 08013 Barcelona", phone: "+34 934 57 55 83", rating: 4.2, open24h: true },
+    { name: "Hospital Veterinari de Catalunya", address: "Carrer de Víctor Hugo, 21, 08174 Sant Cugat del Vallès", phone: "+34 935 83 00 00", rating: 4.5, open24h: true, website: "https://www.hfrancesc.com" },
+    { name: "ARS Veterinaria Hospital", address: "Carrer de Cardedeu, 3, 08023 Barcelona", phone: "+34 932 52 21 11", rating: 4.6, open24h: true, website: "https://www.arsveterinaria.es" },
+    { name: "Hospital Veterinari del Maresme", address: "Riera de Sant Simó, 35, 08310 Argentona", phone: "+34 937 97 15 00", rating: 4.4, open24h: true, website: "https://www.hvmaresme.com" },
+    { name: "Canis Hospital Veterinari", address: "Avinguda Diagonal, 339, 08037 Barcelona", phone: "+34 934 59 78 14", rating: 4.3, open24h: true, website: "https://www.canishv.com" },
+    { name: "Hospital Veterinari Glòries", address: "Carrer del Dos de Maig, 230, 08013 Barcelona", phone: "+34 932 65 45 55", rating: 4.2, open24h: true, website: "https://www.hvglories.com" },
   ],
   // Spain - Madrid
   "madrid": [
@@ -72,7 +72,7 @@ const emergencyVetsByCity: Record<string, Array<{
 const emergencyNumbersByCountry: Record<string, { poison: string; general: string }> = {
   US: { poison: "ASPCA: (888) 426-4435", general: "911" },
   GB: { poison: "Animal PoisonLine: 01onal2 509 000", general: "999" },
-  ES: { poison: "Toxicología: 915 62 04 20", general: "112" },
+  ES: { poison: "Instituto Nacional de Toxicología: 915 62 04 20", general: "112" },
   FR: { poison: "Centre Antipoison: 01 40 05 48 48", general: "15" },
   DE: { poison: "Giftnotruf: 030 192 40", general: "112" },
   AE: { poison: "Dubai Municipality: 800 900", general: "999" },
