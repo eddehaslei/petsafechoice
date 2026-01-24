@@ -1,14 +1,88 @@
-import { AlertTriangle, Phone, ExternalLink } from "lucide-react";
+import { useState, useEffect } from "react";
+import { AlertTriangle, Phone, ExternalLink, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import { useGeoLocation } from "@/hooks/useGeoLocation";
 
 interface EmergencyBannerProps {
   foodName: string;
   petType: "dog" | "cat";
 }
 
+// Country-specific poison control information
+const poisonControlByCountry: Record<string, {
+  name: string;
+  phone: string;
+  phoneFormatted: string;
+  website?: string;
+  note?: string;
+}> = {
+  ES: {
+    name: "Instituto Nacional de Toxicología",
+    phone: "+34915620420",
+    phoneFormatted: "915 62 04 20",
+    note: "Servicio 24h en España",
+  },
+  FR: {
+    name: "Centre Antipoison",
+    phone: "+33140054848",
+    phoneFormatted: "01 40 05 48 48",
+    note: "Disponible 24h/24 en France",
+  },
+  DE: {
+    name: "Giftnotruf Berlin",
+    phone: "+493019240",
+    phoneFormatted: "030 192 40",
+    note: "24 Stunden erreichbar",
+  },
+  GB: {
+    name: "Animal PoisonLine",
+    phone: "+441onal2509000",
+    phoneFormatted: "01onal2 509 000",
+    website: "https://www.animalpoisonline.co.uk",
+    note: "UK 24/7 service, fees may apply",
+  },
+  US: {
+    name: "ASPCA Animal Poison Control",
+    phone: "+18884264435",
+    phoneFormatted: "(888) 426-4435",
+    website: "https://www.aspca.org/pet-care/animal-poison-control",
+    note: "US - available 24/7, fees may apply",
+  },
+  AE: {
+    name: "Dubai Municipality",
+    phone: "+971800900",
+    phoneFormatted: "800 900",
+    note: "UAE Emergency Line",
+  },
+  AU: {
+    name: "Animal Poisons Helpline",
+    phone: "+611300869738",
+    phoneFormatted: "1300 869 738",
+    note: "Australia 24/7",
+  },
+  CA: {
+    name: "Pet Poison Helpline",
+    phone: "+18557647661",
+    phoneFormatted: "(855) 764-7661",
+    note: "Canada 24/7, fees may apply",
+  },
+};
+
+// Default to US if country not found
+const defaultPoisonControl = poisonControlByCountry.US;
+
 export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
   const { t } = useTranslation();
+  const { countryCode, city, isLoading } = useGeoLocation();
+  
+  // Get country-specific poison control info
+  const poisonControl = countryCode && poisonControlByCountry[countryCode] 
+    ? poisonControlByCountry[countryCode] 
+    : defaultPoisonControl;
+
+  // Get the appropriate website link
+  const websiteUrl = poisonControl.website || "https://www.aspca.org/pet-care/animal-poison-control";
   
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
@@ -30,6 +104,14 @@ export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
                 Time is critical in poisoning cases. Contact a veterinarian immediately if you suspect your pet has ingested this food.
               </p>
               
+              {/* Location indicator */}
+              {city && !isLoading && (
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>Showing emergency info for {city}</span>
+                </div>
+              )}
+              
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/emergency"
@@ -40,27 +122,38 @@ export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
                 </Link>
                 
                 <a
-                  href="https://www.aspca.org/pet-care/animal-poison-control"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`tel:${poisonControl.phone}`}
                   className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card hover:bg-accent border border-danger/30 rounded-xl font-semibold text-sm text-foreground transition-all duration-200 hover:-translate-y-0.5"
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  ASPCA Poison Control
+                  <Phone className="w-4 h-4" />
+                  Call {poisonControl.phoneFormatted}
                 </a>
               </div>
             </div>
           </div>
           
-          {/* Emergency hotline callout */}
+          {/* Emergency hotline callout - now geo-aware */}
           <div className="mt-4 pt-4 border-t border-danger/20">
             <p className="text-xs text-muted-foreground text-center">
-              <strong>ASPCA Animal Poison Control:</strong>{" "}
-              <a href="tel:+18884264435" className="text-danger font-semibold hover:underline">
-                (888) 426-4435
+              <strong>{poisonControl.name}:</strong>{" "}
+              <a href={`tel:${poisonControl.phone}`} className="text-danger font-semibold hover:underline">
+                {poisonControl.phoneFormatted}
               </a>{" "}
-              (US - available 24/7, fees may apply)
+              {poisonControl.note && <span>({poisonControl.note})</span>}
             </p>
+            {poisonControl.website && (
+              <p className="text-xs text-muted-foreground text-center mt-1">
+                <a 
+                  href={poisonControl.website} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-primary hover:underline inline-flex items-center gap-1"
+                >
+                  <ExternalLink className="w-3 h-3" />
+                  Visit Website
+                </a>
+              </p>
+            )}
           </div>
         </div>
       </div>
