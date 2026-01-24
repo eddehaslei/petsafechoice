@@ -45,6 +45,12 @@
     "recommendations": "Empfehlungen",
     "disclaimer": "Diese Informationen dienen nur der allgemeinen Orientierung. Konsultieren Sie immer Ihren Tierarzt für spezifische Ernährungsberatung für Ihr Haustier."
   },
+  "featuredSnippet": {
+    "safeAnswer": "Ja, {{petType}} können {{food}} sicher essen!",
+    "cautionAnswer": "{{food}} sollte {{petType}} mit Vorsicht gegeben werden.",
+    "dangerousAnswer": "Nein! {{food}} ist giftig für {{petType}}.",
+    "updated": "Aktualisiert {{date}}"
+  },
   "about": {
     "title": "Über uns",
     "subtitle": "Wir widmen uns der Sicherheit und Gesundheit Ihrer pelzigen Freunde, indem wir genaue, wissenschaftlich fundierte Informationen zur Lebensmittelsicherheit bereitstellen.",

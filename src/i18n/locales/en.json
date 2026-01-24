@@ -59,6 +59,12 @@
     "recommendations": "Recommendations",
     "disclaimer": "This information is for general guidance only. Always consult with your veterinarian for specific dietary advice for your pet."
   },
+  "featuredSnippet": {
+    "safeAnswer": "Yes, {{petType}} can safely eat {{food}}.",
+    "cautionAnswer": "{{food}} should be given to {{petType}} with caution.",
+    "dangerousAnswer": "No! {{food}} is toxic to {{petType}}.",
+    "updated": "Updated {{date}}"
+  },
   "about": {
     "title": "About Us",
     "subtitle": "We're dedicated to keeping your furry friends safe and healthy by providing accurate, science-backed food safety information.",
