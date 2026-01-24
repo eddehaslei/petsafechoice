@@ -90,8 +90,8 @@ const SafeFoods = () => {
           <TabsContent value="dogs">
             <div className="bg-card rounded-2xl border border-border p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
-                  <Check className="w-6 h-6 text-green-500" />
+                <div className="w-12 h-12 bg-safe/10 rounded-xl flex items-center justify-center">
+                  <Check className="w-6 h-6 text-safe" />
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-foreground">{t('safeFoods.title')} - {t('safeFoods.dogsTab')}</h2>
@@ -103,16 +103,19 @@ const SafeFoods = () => {
                 {dogSafeFoods.map((food, index) => (
                   <div 
                     key={food.name}
-                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-primary/30 transition-colors"
+                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
                   >
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">
+                    <span className="flex-shrink-0 w-8 h-8 bg-safe/10 rounded-full flex items-center justify-center text-sm font-semibold text-safe">
                       {index + 1}
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-foreground">{food.name}</h3>
                       <p className="text-sm text-muted-foreground">{t('safeFoods.benefits')} {food.benefits}</p>
                       {food.notes && (
-                        <p className="text-xs text-primary/80 mt-1">💡 {t('safeFoods.note')} {food.notes}</p>
+                        <p className="text-xs text-safe mt-1 flex items-center gap-1">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-safe"></span>
+                          {t('safeFoods.note')} {food.notes}
+                        </p>
                       )}
                     </div>
                   </div>
@@ -124,8 +127,8 @@ const SafeFoods = () => {
           <TabsContent value="cats">
             <div className="bg-card rounded-2xl border border-border p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 bg-green-500/10 rounded-xl flex items-center justify-center">
-                  <Check className="w-6 h-6 text-green-500" />
+                <div className="w-12 h-12 bg-safe/10 rounded-xl flex items-center justify-center">
+                  <Check className="w-6 h-6 text-safe" />
                 </div>
                 <div>
                   <h2 className="text-xl font-semibold text-foreground">{t('safeFoods.title')} - {t('safeFoods.catsTab')}</h2>
@@ -137,16 +140,19 @@ const SafeFoods = () => {
                 {catSafeFoods.map((food, index) => (
                   <div 
                     key={food.name}
-                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-primary/30 transition-colors"
+                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
                   >
-                    <span className="flex-shrink-0 w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">
+                    <span className="flex-shrink-0 w-8 h-8 bg-safe/10 rounded-full flex items-center justify-center text-sm font-semibold text-safe">
                       {index + 1}
                     </span>
                     <div className="flex-1 min-w-0">
                       <h3 className="font-semibold text-foreground">{food.name}</h3>
                       <p className="text-sm text-muted-foreground">{t('safeFoods.benefits')} {food.benefits}</p>
                       {food.notes && (
-                        <p className="text-xs text-primary/80 mt-1">💡 {t('safeFoods.note')} {food.notes}</p>
+                        <p className="text-xs text-safe mt-1 flex items-center gap-1">
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-safe"></span>
+                          {t('safeFoods.note')} {food.notes}
+                        </p>
                       )}
                     </div>
                   </div>
