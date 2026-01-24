@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Dog, Cat, Heart } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
 import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
@@ -6,7 +7,6 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { Dog, Cat, Heart } from "lucide-react";
 
 type PetType = "dog" | "cat";
 
