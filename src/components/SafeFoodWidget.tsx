@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
+import { Gift, ShoppingBag, ExternalLink, Loader2, Star } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useGeoLocation } from "@/hooks/useGeoLocation";
@@ -21,6 +21,8 @@ interface MatchedAffiliate {
   id: string;
   product_name: string;
   affiliate_url: string;
+  price_point?: string | null;
+  image_url?: string | null;
 }
 
 // Fallback recommendations if API fails
@@ -50,25 +52,11 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
 
   useEffect(() => {
     const fetchAffiliates = async () => {
+      setIsLoading(true);
+      setMatchedAffiliate(null);
+      
       try {
-        // Fetch general affiliates for recommendations
-        const { data, error } = await supabase.functions.invoke('get-affiliates', {
-          body: { 
-            pet_type: petType,
-            country_code: countryCode || 'US',
-            limit: 4
-          }
-        });
-
-        if (error) throw error;
-        
-        if (data?.products && data.products.length > 0) {
-          setProducts(data.products);
-        } else {
-          setProducts(getFallbackRecommendations(petType));
-        }
-
-        // Check for a matching affiliate product by food name
+        // First, check for a matching affiliate product by food name
         const matchResponse = await supabase.functions.invoke('get-affiliate-match', {
           body: { 
             food_name: foodName,
@@ -77,7 +65,26 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
         });
 
         if (!matchResponse.error && matchResponse.data?.affiliate) {
+          // Match found - use this as the primary recommendation
           setMatchedAffiliate(matchResponse.data.affiliate);
+          setProducts([]); // Clear generic products
+        } else {
+          // No match - fetch general affiliates as fallback
+          const { data, error } = await supabase.functions.invoke('get-affiliates', {
+            body: { 
+              pet_type: petType,
+              country_code: countryCode || 'US',
+              limit: 4
+            }
+          });
+
+          if (error) throw error;
+          
+          if (data?.products && data.products.length > 0) {
+            setProducts(data.products);
+          } else {
+            setProducts(getFallbackRecommendations(petType));
+          }
         }
       } catch (err) {
         console.error('Error fetching affiliates:', err);
@@ -91,7 +98,6 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   }, [petType, countryCode, foodName]);
 
   const handleProductClick = async (productId: string) => {
-    // Only redirect for real affiliate products (not fallbacks)
     if (productId.startsWith('fallback-')) return;
     
     try {
@@ -134,10 +140,16 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
             <div>
               <h3 className="font-heading font-bold text-foreground">
-                {t('safeFoodWidget.title', 'Treat Recommendations')}
+                {matchedAffiliate 
+                  ? t('safeFoodWidget.recommendedProduct', 'Recommended Product')
+                  : t('safeFoodWidget.title', 'Treat Recommendations')
+                }
               </h3>
               <p className="text-xs text-muted-foreground">
-                {t('safeFoodWidget.subtitle', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase(), defaultValue: `Vet-approved options your ${petType} will love` })}
+                {matchedAffiliate
+                  ? t('safeFoodWidget.matchFound', 'We found a great option for you!')
+                  : t('safeFoodWidget.subtitle', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase(), defaultValue: `Vet-approved options your ${petType} will love` })
+                }
               </p>
             </div>
           </div>
@@ -146,58 +158,72 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
-          ) : (
-            <>
-              {/* Matched Affiliate - Prominent Amazon Button */}
-              {matchedAffiliate && (
-                <div className="mb-4">
-                  <button
-                    onClick={handleAmazonClick}
-                    className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
-                    style={{ backgroundColor: '#F28C74' }}
-                  >
-                    <ShoppingBag className="w-5 h-5" />
-                    <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}: {matchedAffiliate.product_name}</span>
-                    <ExternalLink className="w-4 h-4" />
-                  </button>
-                </div>
-              )}
-
-              <div className="grid gap-3 sm:grid-cols-2">
-                {products.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => handleProductClick(product.id)}
-                    className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
-                        {product.image_url ? (
-                          <img 
-                            src={product.image_url} 
-                            alt="" 
-                            className="w-6 h-6 object-contain rounded"
-                          />
-                        ) : (
-                          <Gift className="w-5 h-5" />
-                        )}
-                      </div>
-                      <div className="flex-1">
-                        <h4 className="font-semibold text-sm text-foreground mb-0.5">
-                          {product.product_name}
-                        </h4>
-                        {product.price_point && (
-                          <p className="text-xs text-muted-foreground">
-                            {product.price_point}
-                          </p>
-                        )}
-                      </div>
-                      <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-safe transition-colors shrink-0" />
-                    </div>
-                  </div>
-                ))}
+          ) : matchedAffiliate ? (
+            /* Matched Affiliate - Custom Featured Card */
+            <div className="bg-card rounded-2xl border-2 border-primary/30 p-6 shadow-lg">
+              <div className="flex items-center gap-2 mb-3">
+                <Star className="w-4 h-4 text-primary fill-primary" />
+                <span className="text-xs font-medium text-primary uppercase tracking-wide">
+                  {t('safeFoodWidget.bestMatch', 'Best Match')}
+                </span>
               </div>
-            </>
+              
+              <h4 className="text-xl font-heading font-bold text-foreground mb-2">
+                {matchedAffiliate.product_name}
+              </h4>
+              
+              {matchedAffiliate.price_point && (
+                <p className="text-sm text-muted-foreground mb-4">
+                  {matchedAffiliate.price_point}
+                </p>
+              )}
+              
+              <button
+                onClick={handleAmazonClick}
+                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
+                style={{ backgroundColor: '#F28C74' }}
+              >
+                <ShoppingBag className="w-5 h-5" />
+                <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}</span>
+                <ExternalLink className="w-4 h-4" />
+              </button>
+            </div>
+          ) : (
+            /* Fallback: Generic Recommendations Grid */
+            <div className="grid gap-3 sm:grid-cols-2">
+              {products.map((product) => (
+                <div
+                  key={product.id}
+                  onClick={() => handleProductClick(product.id)}
+                  className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
+                >
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
+                      {product.image_url ? (
+                        <img 
+                          src={product.image_url} 
+                          alt="" 
+                          className="w-6 h-6 object-contain rounded"
+                        />
+                      ) : (
+                        <Gift className="w-5 h-5" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-semibold text-sm text-foreground mb-0.5">
+                        {product.product_name}
+                      </h4>
+                      {product.price_point && (
+                        <p className="text-xs text-muted-foreground">
+                          {product.price_point}
+                        </p>
+                      )}
+                    </div>
+                    <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-safe transition-colors shrink-0" />
+                  </div>
+                </div>
+              ))}
+            </div>
           )}
           
           {/* Affiliate disclosure */}
