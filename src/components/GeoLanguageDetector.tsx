@@ -5,18 +5,18 @@ import { useGeoLocation } from '@/hooks/useGeoLocation';
 export function GeoLanguageDetector() {
   const { i18n } = useTranslation();
   const { countryCode, isLoading, getRecommendedLanguage } = useGeoLocation();
-  const hasSetLanguage = useRef(false);
+  // Check localStorage immediately on mount to prevent any geo-override
+  const hasSetLanguage = useRef(localStorage.getItem('languageManuallySet') === 'true');
 
   useEffect(() => {
-    // Only set language once, and only if user hasn't manually selected a language
+    // If user has manually set a language, never override it
+    if (localStorage.getItem('languageManuallySet') === 'true') {
+      hasSetLanguage.current = true;
+      return;
+    }
+    
+    // Only set language once based on geo-detection
     if (!isLoading && countryCode && !hasSetLanguage.current) {
-      const isManuallySet = localStorage.getItem('languageManuallySet');
-      
-      // If user has manually set a language, don't override it
-      if (isManuallySet === 'true') {
-        hasSetLanguage.current = true;
-        return;
-      }
 
       const recommendedLang = getRecommendedLanguage();
       console.log('[GeoLanguageDetector] Country:', countryCode, 'Recommended:', recommendedLang, 'Current:', i18n.language);
