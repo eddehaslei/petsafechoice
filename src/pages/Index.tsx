@@ -29,7 +29,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SafetyResultData | null>(null);
   const [searchSource, setSearchSource] = useState<"trending" | "search" | null>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const handleSearch = async (food: string, source: "trending" | "search" = "search") => {
     setIsLoading(true);
@@ -38,7 +38,7 @@ const Index = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
-        body: { food, petType },
+        body: { food, petType, language: i18n.language },
       });
 
       if (error) {
