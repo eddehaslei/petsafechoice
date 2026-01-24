@@ -16,6 +16,7 @@ import { FeaturedSnippet } from "@/components/FeaturedSnippet";
 import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { VetMapWidget } from "@/components/VetMapWidget";
 import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
+import { TrendingSafetyTips } from "@/components/TrendingSafetyTips";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -132,20 +133,25 @@ const Index = () => {
 
         {/* Popular Foods */}
         {!result && !isLoading && (
-          <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-            <p className="text-sm text-muted-foreground mb-3">{t('common.popularSearches')}</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
-                <button
-                  key={food}
-                  onClick={() => handleSearch(food)}
-                  className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5"
-                >
-                  {food}
-                </button>
-              ))}
+          <>
+            <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
+              <p className="text-sm text-muted-foreground mb-3">{t('common.popularSearches')}</p>
+              <div className="flex flex-wrap justify-center gap-2">
+                {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
+                  <button
+                    key={food}
+                    onClick={() => handleSearch(food)}
+                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5"
+                  >
+                    {food}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+            
+            {/* Trending Safety Tips - Homepage Authority Content */}
+            <TrendingSafetyTips onTopicClick={handleSearch} />
+          </>
         )}
 
         {/* Results Section */}

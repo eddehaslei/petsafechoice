@@ -154,5 +154,28 @@
   "emergency": {
     "title": "Emergency Contacts",
     "subtitle": "Important numbers to have on hand if your pet ingests something harmful."
+  },
+  "trending": {
+    "title": "Trending Safety Tips",
+    "salmonOil": {
+      "title": "Salmon Oil Benefits",
+      "keyword": "Best Salmon Oil 2026",
+      "summary": "Liquid gold for fur health. Safe in daily small doses for both dogs and cats."
+    },
+    "mushrooms": {
+      "title": "Medicinal Mushrooms",
+      "keyword": "Medicinal Mushrooms Dogs",
+      "summary": "Lion's Mane and Reishi support senior pet brain health and cognitive function."
+    },
+    "springFlowers": {
+      "title": "Spring Flower Toxicity",
+      "keyword": "Toxic Spring Flowers",
+      "summary": "Lilies and Tulips are high-risk for cats and dogs. Keep pets away from spring bouquets."
+    },
+    "airDried": {
+      "title": "Air-Dried Raw Food",
+      "keyword": "Air-Dried Raw Food",
+      "summary": "The safest middle ground between kibble and raw diets. Retains nutrients without bacteria risk."
+    }
   }
 }
