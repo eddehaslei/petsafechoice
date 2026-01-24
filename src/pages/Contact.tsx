@@ -46,8 +46,8 @@ const Contact = () => {
               <p className="text-muted-foreground mb-3">
                 For general inquiries and support
               </p>
-              <a href="mailto:hello@canmypeteat.com" className="text-primary hover:underline font-medium">
-                hello@canmypeteat.com
+              <a href="mailto:Hello@petsafechoice.com" className="text-primary hover:underline font-medium">
+                Hello@petsafechoice.com
               </a>
             </div>
 
