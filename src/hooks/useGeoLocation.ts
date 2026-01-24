@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
 
 interface GeoLocationData {
   country: string;
@@ -36,7 +37,7 @@ const countryToLanguage: Record<string, string> = {
   HN: 'es', PY: 'es', SV: 'es', NI: 'es', CR: 'es', PA: 'es',
   UY: 'es', PR: 'es', GQ: 'es',
   // French-speaking countries
-  FR: 'fr', CA: 'fr', BE: 'fr', CH: 'fr', LU: 'fr', MC: 'fr',
+  FR: 'fr', BE: 'fr', CH: 'fr', LU: 'fr', MC: 'fr',
   SN: 'fr', CI: 'fr', ML: 'fr', BF: 'fr', NE: 'fr', TG: 'fr',
   BJ: 'fr', GA: 'fr', CG: 'fr', CD: 'fr', CM: 'fr', MG: 'fr',
   HT: 'fr', RE: 'fr', MQ: 'fr', GP: 'fr', GF: 'fr',
@@ -50,16 +51,19 @@ export function useGeoLocation() {
   useEffect(() => {
     const fetchLocation = async () => {
       try {
-        // Using ip-api.com which is free and doesn't require API key
-        const response = await fetch('http://ip-api.com/json/?fields=status,country,countryCode,regionName,city,lat,lon,timezone');
-        const data = await response.json();
+        // Use our edge function to get location (avoids CORS issues)
+        const { data, error } = await supabase.functions.invoke('get-location');
 
-        if (data.status === 'success') {
+        if (error) {
+          throw error;
+        }
+
+        if (data && data.countryCode) {
           setGeoData({
             country: data.country,
             countryCode: data.countryCode,
             city: data.city,
-            region: data.regionName,
+            region: data.region,
             lat: data.lat,
             lon: data.lon,
             timezone: data.timezone,
@@ -70,29 +74,12 @@ export function useGeoLocation() {
           throw new Error('Failed to get location');
         }
       } catch (error) {
-        // Fallback to ipapi.co if ip-api.com fails (HTTPS support)
-        try {
-          const response = await fetch('https://ipapi.co/json/');
-          const data = await response.json();
-          
-          setGeoData({
-            country: data.country_name,
-            countryCode: data.country_code,
-            city: data.city,
-            region: data.region,
-            lat: data.latitude,
-            lon: data.longitude,
-            timezone: data.timezone,
-            isLoading: false,
-            error: null,
-          });
-        } catch (fallbackError) {
-          setGeoData(prev => ({
-            ...prev,
-            isLoading: false,
-            error: 'Could not detect location',
-          }));
-        }
+        console.error('Error fetching location:', error);
+        setGeoData(prev => ({
+          ...prev,
+          isLoading: false,
+          error: 'Could not detect location',
+        }));
       }
     };
 
