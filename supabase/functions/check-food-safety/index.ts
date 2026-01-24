@@ -85,7 +85,7 @@ serve(async (req) => {
       );
     }
 
-    const { food, petType } = await req.json();
+    const { food, petType, language = "en" } = await req.json();
 
     if (!food || !petType) {
       return new Response(
@@ -164,6 +164,16 @@ serve(async (req) => {
       );
     }
 
+    // Map language codes to full language names for the prompt
+    const languageNames: Record<string, string> = {
+      en: "English",
+      es: "Spanish",
+      fr: "French",
+      de: "German",
+      ar: "Arabic",
+    };
+    const targetLanguage = languageNames[language] || "English";
+
     const systemPrompt = `You are a veterinary nutrition expert. Your job is to provide accurate, science-based information about whether specific foods are safe for pets.
 
 IMPORTANT RULES:
@@ -173,21 +183,22 @@ IMPORTANT RULES:
 4. If a food is toxic, clearly state the toxic compounds and mechanisms
 5. Be specific about quantities and risk levels
 6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown".
+7. CRITICAL: You MUST respond in ${targetLanguage}. All text fields (summary, details, symptoms, recommendations) must be written in ${targetLanguage}.
 
 You must respond with a JSON object matching this exact structure:
 {
-  "food": "the food item",
+  "food": "the food item (keep the original name, do not translate)",
   "petType": "dog" or "cat",
   "safetyLevel": "safe" | "caution" | "dangerous" | "unknown",
-  "summary": "A clear 1-2 sentence summary",
-  "details": "2-3 sentences with scientific explanation",
-  "symptoms": ["array", "of", "potential", "symptoms"],
-  "recommendations": ["array", "of", "recommendations"]
+  "summary": "A clear 1-2 sentence summary IN ${targetLanguage}",
+  "details": "2-3 sentences with scientific explanation IN ${targetLanguage}",
+  "symptoms": ["array", "of", "potential", "symptoms", "IN ${targetLanguage}"],
+  "recommendations": ["array", "of", "recommendations", "IN ${targetLanguage}"]
 }
 
-Always respond with ONLY the JSON object, no additional text.`;
+Always respond with ONLY the JSON object, no additional text. Remember: ALL text content must be in ${targetLanguage}.`;
 
-    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat?`;
+    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat? Please respond in ${targetLanguage}.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
