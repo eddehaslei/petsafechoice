@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -7,7 +8,7 @@ const corsHeaders = {
 
 // Simple in-memory rate limiting (resets when function cold starts)
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-const RATE_LIMIT = 10; // requests per window
+const RATE_LIMIT = 20; // requests per window (increased since DB is free)
 const RATE_WINDOW_MS = 60 * 1000; // 1 minute
 
 function isRateLimited(ip: string): boolean {
@@ -28,7 +29,6 @@ function isRateLimited(ip: string): boolean {
 
 // Validate that input looks like a food item
 function isValidFoodQuery(food: string): { valid: boolean; reason?: string } {
-  // Trim and check length
   const trimmed = food.trim();
   
   if (trimmed.length < 2) {
@@ -54,18 +54,17 @@ function isValidFoodQuery(food: string): { valid: boolean; reason?: string } {
     }
   }
   
-  // Check for obvious non-food items
-  const nonFoodItems = [
-    /\b(phone|computer|car|house|building|city|country|person|money|bitcoin|crypto)\b/i,
-  ];
-  
-  for (const pattern of nonFoodItems) {
-    if (pattern.test(trimmed)) {
-      return { valid: false, reason: "That doesn't appear to be a food item" };
-    }
-  }
-  
   return { valid: true };
+}
+
+// Map database safety_rating to API response format
+function mapSafetyRating(dbRating: string): string {
+  switch (dbRating) {
+    case 'safe': return 'safe';
+    case 'caution': return 'caution';
+    case 'toxic': return 'dangerous';
+    default: return 'caution';
+  }
 }
 
 serve(async (req) => {
@@ -74,12 +73,10 @@ serve(async (req) => {
   }
 
   try {
-    // Get client IP for rate limiting
     const clientIP = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || 
                      req.headers.get("cf-connecting-ip") || 
                      "unknown";
     
-    // Check rate limit
     if (isRateLimited(clientIP)) {
       console.log(`Rate limited: ${clientIP}`);
       return new Response(
@@ -97,7 +94,6 @@ serve(async (req) => {
       );
     }
 
-    // Validate pet type
     if (petType !== "dog" && petType !== "cat") {
       return new Response(
         JSON.stringify({ error: "Pet type must be 'dog' or 'cat'" }),
@@ -105,7 +101,6 @@ serve(async (req) => {
       );
     }
 
-    // Validate food input
     const validation = isValidFoodQuery(food);
     if (!validation.valid) {
       console.log(`Invalid food query rejected: "${food}" - ${validation.reason}`);
@@ -114,6 +109,51 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // STEP 1: Check database first (FREE!)
+    const foodLower = food.toLowerCase().trim();
+    console.log(`[${clientIP}] Checking database for: ${foodLower} (${petType})`);
+
+    const { data: dbFood, error: dbError } = await supabase
+      .from('foods')
+      .select('*')
+      .ilike('name', foodLower)
+      .or(`species.eq.${petType},species.eq.both`)
+      .maybeSingle();
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+    }
+
+    // If found in database, return immediately (no AI cost!)
+    if (dbFood) {
+      console.log(`[${clientIP}] ✅ Found in database: ${dbFood.name} (${dbFood.safety_rating}) - FREE`);
+      
+      const safetyData = {
+        food: dbFood.name,
+        petType: petType,
+        safetyLevel: mapSafetyRating(dbFood.safety_rating),
+        summary: dbFood.short_answer,
+        details: dbFood.long_desc || dbFood.short_answer,
+        symptoms: dbFood.risks || [],
+        recommendations: dbFood.serving_tips 
+          ? [dbFood.serving_tips, ...(dbFood.benefits || [])]
+          : dbFood.benefits || ["Consult your veterinarian for specific advice."],
+        source: "database" // For debugging
+      };
+
+      return new Response(JSON.stringify(safetyData), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // STEP 2: Not in database - use AI (costs credits)
+    console.log(`[${clientIP}] ⚠️ Not in database, using AI for: ${food}`);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) {
@@ -132,30 +172,22 @@ IMPORTANT RULES:
 3. Consider species-specific differences (dogs vs cats)
 4. If a food is toxic, clearly state the toxic compounds and mechanisms
 5. Be specific about quantities and risk levels
-6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown" and explain it's not a food item.
+6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown".
 
 You must respond with a JSON object matching this exact structure:
 {
   "food": "the food item",
   "petType": "dog" or "cat",
   "safetyLevel": "safe" | "caution" | "dangerous" | "unknown",
-  "summary": "A clear 1-2 sentence summary of whether this food is safe",
-  "details": "2-3 sentences with scientific explanation of why the food is safe/unsafe, including any toxic compounds or nutritional benefits",
-  "symptoms": ["array", "of", "potential", "symptoms"] (optional, include if there are risks),
-  "recommendations": ["array", "of", "recommendations"] (always include practical advice)
+  "summary": "A clear 1-2 sentence summary",
+  "details": "2-3 sentences with scientific explanation",
+  "symptoms": ["array", "of", "potential", "symptoms"],
+  "recommendations": ["array", "of", "recommendations"]
 }
-
-Safety levels:
-- "safe": The food is generally safe and can be given in moderation
-- "caution": The food has some risks or conditions (e.g., only in small amounts, certain preparations, or specific circumstances)
-- "dangerous": The food is toxic or harmful and should never be given
-- "unknown": The input is not a recognizable food item
 
 Always respond with ONLY the JSON object, no additional text.`;
 
-    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat? Provide detailed, scientifically accurate information.`;
-
-    console.log(`[${clientIP}] Checking food safety for: ${food} (${petType})`);
+    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat?`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -206,12 +238,11 @@ Always respond with ONLY the JSON object, no additional text.`;
       );
     }
 
-    // Parse the JSON response from the AI
     let safetyData;
     try {
-      // Remove markdown code blocks if present
       const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
       safetyData = JSON.parse(cleanContent);
+      safetyData.source = "ai"; // For debugging
     } catch (parseError) {
       console.error("Failed to parse AI response:", content);
       return new Response(
@@ -220,7 +251,7 @@ Always respond with ONLY the JSON object, no additional text.`;
       );
     }
 
-    console.log(`[${clientIP}] Food safety result: ${safetyData.safetyLevel}`);
+    console.log(`[${clientIP}] AI result: ${safetyData.safetyLevel}`);
 
     return new Response(JSON.stringify(safetyData), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
