@@ -5,17 +5,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
+import { GeoLanguageDetector } from "./components/GeoLanguageDetector";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
 import SafeFoods from "./pages/SafeFoods";
+import Emergency from "./pages/Emergency";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <I18nextProvider i18n={i18n}>
+    <GeoLanguageDetector />
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />
@@ -27,6 +30,7 @@ const App = () => (
             <Route path="/faq" element={<FAQ />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/safe-foods" element={<SafeFoods />} />
+            <Route path="/emergency" element={<Emergency />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

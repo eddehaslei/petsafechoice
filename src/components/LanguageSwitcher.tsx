@@ -17,6 +17,8 @@ export const LanguageSwitcher = () => {
 
   const handleLanguageChange = (langCode: LanguageCode) => {
     i18n.changeLanguage(langCode);
+    // Mark that user has manually selected a language
+    localStorage.setItem('languageManuallySet', 'true');
   };
 
   // Update document direction when language changes
