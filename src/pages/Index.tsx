@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Dog, Cat, Heart } from "lucide-react";
+import { Dog, Cat, Heart, ArrowLeft } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
 import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
@@ -28,11 +28,13 @@ const Index = () => {
   const [petType, setPetType] = useState<PetType>("dog");
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SafetyResultData | null>(null);
+  const [searchSource, setSearchSource] = useState<"trending" | "search" | null>(null);
   const { t } = useTranslation();
 
-  const handleSearch = async (food: string) => {
+  const handleSearch = async (food: string, source: "trending" | "search" = "search") => {
     setIsLoading(true);
     setResult(null);
+    setSearchSource(source);
 
     try {
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
@@ -64,6 +66,11 @@ const Index = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleBackToDiscovery = () => {
+    setResult(null);
+    setSearchSource(null);
   };
 
   // Dynamic background based on safety level
@@ -117,6 +124,16 @@ const Index = () => {
           </div>
         ) : (
           <div className="mb-6 animate-fade-in">
+            {/* Back to Discovery button for trending searches */}
+            {searchSource === "trending" && (
+              <button
+                onClick={handleBackToDiscovery}
+                className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card hover:bg-accent border border-border/50 hover:border-primary/30 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-x-0.5"
+              >
+                <ArrowLeft className="w-4 h-4" />
+                Back to Discovery
+              </button>
+            )}
             <DynamicResultHeader data={result} />
           </div>
         )}
@@ -150,7 +167,7 @@ const Index = () => {
             </div>
             
             {/* Trending Safety Tips - Homepage Authority Content */}
-            <TrendingSafetyTips onTopicClick={handleSearch} />
+            <TrendingSafetyTips onTopicClick={(keyword) => handleSearch(keyword, "trending")} />
           </>
         )}
 

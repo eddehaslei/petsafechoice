@@ -27,6 +27,67 @@ function isRateLimited(ip: string): boolean {
   return false;
 }
 
+// Amazon domain mapping for global monetization
+const AMAZON_DOMAINS: Record<string, string> = {
+  US: "amazon.com",
+  DE: "amazon.de",
+  ES: "amazon.es",
+  FR: "amazon.fr",
+  GB: "amazon.co.uk",
+  IT: "amazon.it",
+  CA: "amazon.ca",
+  AU: "amazon.com.au",
+  JP: "amazon.co.jp",
+};
+
+// Convert amazon.com URLs to localized versions
+function localizeAmazonUrl(url: string, countryCode: string): string {
+  try {
+    const parsedUrl = new URL(url);
+    const hostname = parsedUrl.hostname.toLowerCase();
+    
+    // Check if it's an Amazon URL
+    if (!hostname.includes("amazon.")) {
+      return url; // Not Amazon, return as-is
+    }
+    
+    // Get target domain for country (default to US)
+    const targetDomain = AMAZON_DOMAINS[countryCode] || AMAZON_DOMAINS["US"];
+    
+    // Replace the hostname with localized domain
+    parsedUrl.hostname = targetDomain;
+    
+    console.log(`Localized Amazon URL: ${url} -> ${parsedUrl.toString()} (${countryCode})`);
+    return parsedUrl.toString();
+  } catch {
+    return url; // If parsing fails, return original
+  }
+}
+
+// Detect country from IP using ipapi.co
+async function detectCountryFromIP(ip: string): Promise<string> {
+  try {
+    if (ip === "unknown" || ip === "127.0.0.1") {
+      return "US";
+    }
+    
+    const response = await fetch(`https://ipapi.co/${ip}/country/`, {
+      headers: { "User-Agent": "PetSafeChoice/1.0" },
+    });
+    
+    if (response.ok) {
+      const country = await response.text();
+      if (country && country.length === 2) {
+        console.log(`Detected country ${country} for IP ${ip}`);
+        return country.toUpperCase();
+      }
+    }
+  } catch (err) {
+    console.error("IP detection failed:", err);
+  }
+  return "US";
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -47,6 +108,7 @@ serve(async (req) => {
 
     const url = new URL(req.url);
     const affiliateId = url.searchParams.get('id');
+    const requestedCountry = url.searchParams.get('country'); // Allow override
 
     if (!affiliateId) {
       return new Response(
@@ -63,6 +125,9 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // Detect user's country from IP (or use override)
+    const countryCode = requestedCountry?.toUpperCase() || await detectCountryFromIP(clientIP);
 
     // Initialize Supabase client with service role
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
@@ -83,11 +148,14 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[${clientIP}] Redirect to: ${affiliate.product_name}`);
+    // Localize Amazon URLs for the user's country
+    const localizedUrl = localizeAmazonUrl(affiliate.affiliate_url, countryCode);
 
-    // Return the URL for frontend redirect (more secure than 302)
+    console.log(`[${clientIP}] Redirect to: ${affiliate.product_name} (${countryCode} -> ${localizedUrl})`);
+
+    // Return the localized URL for frontend redirect
     return new Response(
-      JSON.stringify({ url: affiliate.affiliate_url }),
+      JSON.stringify({ url: localizedUrl, country: countryCode }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
     );
   } catch (error) {
