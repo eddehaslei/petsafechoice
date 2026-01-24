@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
 import Contact from "./pages/Contact";
+import SafeFoods from "./pages/SafeFoods";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
