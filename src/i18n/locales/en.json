@@ -8,6 +8,8 @@
     "allRightsReserved": "All rights reserved."
   },
   "nav": {
+    "back": "Back",
+    "home": "Home",
     "about": "About",
     "safeFoods": "Safe Foods",
     "emergency": "Emergency",
@@ -139,6 +141,7 @@
     "catsTab": "Cats",
     "benefits": "Benefits:",
     "note": "Note:",
+    "showMore": "Show More",
     "warning": {
       "title": "Important Reminder",
       "description": "While these foods are generally safe, always introduce new foods gradually and in moderation. Every pet is unique, and some may have individual sensitivities or allergies. When in doubt, consult your veterinarian."

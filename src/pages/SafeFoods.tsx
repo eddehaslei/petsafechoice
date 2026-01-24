@@ -1,9 +1,10 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Dog, Cat, Check } from "lucide-react";
+import { Dog, Cat, Check, ChevronDown } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 
 interface FoodItem {
   name: string;
@@ -32,6 +33,16 @@ const dogSafeFoods: FoodItem[] = [
   { name: "Broccoli", benefits: "Fiber, vitamin C", notes: "Small amounts only" },
   { name: "Strawberries", benefits: "Fiber, vitamin C", notes: "Fresh, stems removed" },
   { name: "Cantaloupe", benefits: "Low calorie, high water content", notes: "No seeds or rind" },
+  { name: "Zucchini", benefits: "Low calorie, vitamins", notes: "Raw or cooked" },
+  { name: "Pears", benefits: "Fiber, vitamins C and K", notes: "No seeds or core" },
+  { name: "Mango", benefits: "Vitamins A, B6, C, E", notes: "Remove pit, small amounts" },
+  { name: "Celery", benefits: "Freshens breath, low calorie", notes: "Cut into small pieces" },
+  { name: "Coconut", benefits: "Healthy fats, immune support", notes: "In moderation, no shell" },
+  { name: "Pineapple", benefits: "Vitamins, bromelain enzyme", notes: "Fresh only, no core" },
+  { name: "Raspberries", benefits: "Antioxidants, low sugar", notes: "In moderation" },
+  { name: "Blackberries", benefits: "Fiber, vitamins C and K", notes: "Fresh or frozen" },
+  { name: "Oranges", benefits: "Vitamin C, potassium", notes: "Small amounts, no peel" },
+  { name: "Lean Beef", benefits: "Protein, iron, zinc", notes: "Cooked, no seasoning" },
 ];
 
 const catSafeFoods: FoodItem[] = [
@@ -55,11 +66,39 @@ const catSafeFoods: FoodItem[] = [
   { name: "Peas", benefits: "Vitamins and protein", notes: "Plain, no pods" },
   { name: "Cranberries", benefits: "Urinary health support", notes: "Plain, small amounts" },
   { name: "Cooked Liver", benefits: "Vitamin A, iron", notes: "Small amounts only" },
+  { name: "Whitefish", benefits: "Lean protein, omega-3s", notes: "Cooked, deboned" },
+  { name: "Shrimp", benefits: "Protein, low calorie", notes: "Cooked, deveined, no shell" },
+  { name: "Duck", benefits: "Protein, novel protein source", notes: "Cooked, no bones" },
+  { name: "Rabbit", benefits: "Lean protein, hypoallergenic", notes: "Cooked, boneless" },
+  { name: "Squash", benefits: "Fiber, vitamins", notes: "Cooked, mashed" },
+  { name: "Asparagus", benefits: "Fiber, vitamins", notes: "Cooked, small pieces" },
+  { name: "Zucchini", benefits: "Low calorie, hydrating", notes: "Cooked, small pieces" },
+  { name: "Oatmeal", benefits: "Fiber, energy", notes: "Plain, cooked, occasional" },
+  { name: "Cheese", benefits: "Protein, calcium", notes: "Small amounts, low lactose" },
+  { name: "Plain Yogurt", benefits: "Probiotics, calcium", notes: "Unsweetened, small amounts" },
 ];
+
+const INITIAL_ITEMS = 10;
+const LOAD_MORE_COUNT = 10;
 
 const SafeFoods = () => {
   const [activeTab, setActiveTab] = useState("dogs");
+  const [dogItemsToShow, setDogItemsToShow] = useState(INITIAL_ITEMS);
+  const [catItemsToShow, setCatItemsToShow] = useState(INITIAL_ITEMS);
   const { t } = useTranslation();
+
+  const handleShowMoreDogs = () => {
+    setDogItemsToShow(prev => Math.min(prev + LOAD_MORE_COUNT, dogSafeFoods.length));
+  };
+
+  const handleShowMoreCats = () => {
+    setCatItemsToShow(prev => Math.min(prev + LOAD_MORE_COUNT, catSafeFoods.length));
+  };
+
+  const visibleDogFoods = dogSafeFoods.slice(0, dogItemsToShow);
+  const visibleCatFoods = catSafeFoods.slice(0, catItemsToShow);
+  const hasMoreDogs = dogItemsToShow < dogSafeFoods.length;
+  const hasMoreCats = catItemsToShow < catSafeFoods.length;
 
   return (
     <div className="min-h-screen hero-gradient relative flex flex-col">
@@ -100,7 +139,7 @@ const SafeFoods = () => {
               </div>
               
               <div className="grid gap-3">
-                {dogSafeFoods.map((food, index) => (
+                {visibleDogFoods.map((food, index) => (
                   <div 
                     key={food.name}
                     className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
@@ -121,6 +160,19 @@ const SafeFoods = () => {
                   </div>
                 ))}
               </div>
+
+              {hasMoreDogs && (
+                <div className="mt-6 text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleShowMoreDogs}
+                    className="gap-2"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                    {t('safeFoods.showMore') || 'Show More'} ({dogSafeFoods.length - dogItemsToShow} remaining)
+                  </Button>
+                </div>
+              )}
             </div>
           </TabsContent>
 
@@ -137,7 +189,7 @@ const SafeFoods = () => {
               </div>
               
               <div className="grid gap-3">
-                {catSafeFoods.map((food, index) => (
+                {visibleCatFoods.map((food, index) => (
                   <div 
                     key={food.name}
                     className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
@@ -158,11 +210,24 @@ const SafeFoods = () => {
                   </div>
                 ))}
               </div>
+
+              {hasMoreCats && (
+                <div className="mt-6 text-center">
+                  <Button 
+                    variant="outline" 
+                    onClick={handleShowMoreCats}
+                    className="gap-2"
+                  >
+                    <ChevronDown className="w-4 h-4" />
+                    {t('safeFoods.showMore') || 'Show More'} ({catSafeFoods.length - catItemsToShow} remaining)
+                  </Button>
+                </div>
+              )}
             </div>
           </TabsContent>
         </Tabs>
 
-        <div className="mt-8 p-4 bg-amber-500/10 rounded-xl border border-amber-500/20">
+        <div className="mt-8 p-4 bg-caution/10 rounded-xl border border-caution/20">
           <p className="text-sm text-muted-foreground text-center">
             <strong className="text-foreground">⚠️ {t('safeFoods.warning.title')}:</strong> {t('safeFoods.warning.description')}
           </p>
