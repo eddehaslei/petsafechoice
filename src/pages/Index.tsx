@@ -2,6 +2,7 @@ import { useState } from "react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
 import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
+import { Header } from "@/components/Header";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Dog, Cat, Heart } from "lucide-react";
@@ -50,9 +51,10 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen hero-gradient">
+    <div className="min-h-screen hero-gradient relative">
+      <Header />
       {/* Hero Section */}
-      <div className="container max-w-4xl mx-auto px-4 pt-12 pb-8">
+      <div className="container max-w-4xl mx-auto px-4 pt-16 pb-8">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
           <div className="inline-flex items-center justify-center gap-2 mb-4">
