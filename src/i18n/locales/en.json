@@ -156,26 +156,30 @@
     "subtitle": "Important numbers to have on hand if your pet ingests something harmful."
   },
   "trending": {
-    "title": "Trending Safety Tips",
+    "title": "Trending Now",
+    "scientificReference": "Scientific Reference",
+    "loading": "Loading...",
+    "discover": "Discover",
+    "affiliateDisclosure": "We may earn a small commission from qualifying purchases. Prices may vary by region.",
+    "badges": {
+      "popular": "Popular",
+      "new2026": "New 2026",
+      "trending": "Trending"
+    },
     "salmonOil": {
-      "title": "Salmon Oil Benefits",
+      "title": "The Salmon Oil Secret",
       "keyword": "Best Salmon Oil 2026",
-      "summary": "Liquid gold for fur health. Safe in daily small doses for both dogs and cats."
+      "summary": "Wild-Caught Omega 3 Liquid – liquid gold for fur health and joint support."
     },
-    "mushrooms": {
-      "title": "Medicinal Mushrooms",
+    "lionsMane": {
+      "title": "Lion's Mane Focus",
       "keyword": "Medicinal Mushrooms Dogs",
-      "summary": "Lion's Mane and Reishi support senior pet brain health and cognitive function."
-    },
-    "springFlowers": {
-      "title": "Spring Flower Toxicity",
-      "keyword": "Toxic Spring Flowers",
-      "summary": "Lilies and Tulips are high-risk for cats and dogs. Keep pets away from spring bouquets."
+      "summary": "Focus & Brain Support Powder – supports senior pet cognitive function."
     },
     "airDried": {
-      "title": "Air-Dried Raw Food",
+      "title": "Air-Dried Beef Topper",
       "keyword": "Air-Dried Raw Food",
-      "summary": "The safest middle ground between kibble and raw diets. Retains nutrients without bacteria risk."
+      "summary": "High-Protein Topper – the safest middle ground between kibble and raw."
     }
   }
 }

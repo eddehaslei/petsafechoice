@@ -147,5 +147,32 @@
   "emergency": {
     "title": "Contacts d'urgence",
     "subtitle": "Numéros importants à avoir sous la main si votre animal ingère quelque chose de nocif."
+  },
+  "trending": {
+    "title": "Tendances du Moment",
+    "scientificReference": "Référence Scientifique",
+    "loading": "Chargement...",
+    "discover": "Découvrir",
+    "affiliateDisclosure": "Nous pouvons recevoir une petite commission sur les achats qualifiants. Les prix peuvent varier selon la région.",
+    "badges": {
+      "popular": "Populaire",
+      "new2026": "Nouveau 2026",
+      "trending": "Tendance"
+    },
+    "salmonOil": {
+      "title": "Le Secret de l'Huile de Saumon",
+      "keyword": "Meilleure Huile de Saumon 2026",
+      "summary": "Oméga 3 Liquide Sauvage – or liquide pour la santé du pelage et des articulations."
+    },
+    "lionsMane": {
+      "title": "Crinière de Lion Focus",
+      "keyword": "Champignons Médicinaux Chiens",
+      "summary": "Poudre de Soutien Cérébral – soutient la fonction cognitive des animaux âgés."
+    },
+    "airDried": {
+      "title": "Topper Bœuf Séché à l'Air",
+      "keyword": "Nourriture Crue Séchée à l'Air",
+      "summary": "Topper Riche en Protéines – le juste milieu le plus sûr entre croquettes et cru."
+    }
   }
 }
