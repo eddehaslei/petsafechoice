@@ -30,11 +30,11 @@ export function VetVerifiedBadge({
       </div>
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-sm font-semibold text-foreground">Vet-Verified Information</span>
+          <span className="text-sm font-semibold text-foreground">Veterinary Advisory Board</span>
           <CheckCircle className="w-4 h-4 text-safe" />
         </div>
         <p className="text-xs text-muted-foreground">
-          Reviewed by licensed veterinary professionals for accuracy
+          Reviewed by our team of licensed veterinary professionals
         </p>
       </div>
     </div>

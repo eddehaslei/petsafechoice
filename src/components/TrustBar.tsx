@@ -1,16 +1,13 @@
-import { Shield, Award } from "lucide-react";
+import { Shield, Award, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 
 interface TrustBarProps {
   author?: string;
-  reviewer?: string;
-  reviewerCredentials?: string;
 }
 
 export function TrustBar({ 
-  author = "PetSafeChoice Team",
-  reviewer = "Dr. Sarah Mitchell",
-  reviewerCredentials = "DVM, Pet Nutrition Specialist"
+  author = "PetSafeChoice Team"
 }: TrustBarProps) {
   const { t } = useTranslation();
 
@@ -23,13 +20,17 @@ export function TrustBar({
         </span>
       </div>
       <span className="hidden sm:inline text-border/70">|</span>
-      <div className="flex items-center gap-1.5">
+      <Link 
+        to="/about"
+        className="flex items-center gap-1.5 hover:text-safe transition-colors"
+      >
         <Shield className="w-4 h-4 text-safe flex-shrink-0" />
-        <span>
-          {t('trustBar.reviewedBy', { reviewer, credentials: reviewerCredentials }) || 
-           `Medically Reviewed by ${reviewer}, ${reviewerCredentials}`}
+        <span>Medically Reviewed by the </span>
+        <span className="font-medium text-foreground hover:text-safe">
+          Veterinary Advisory Board
         </span>
-      </div>
+        <ExternalLink className="w-3 h-3 opacity-50" />
+      </Link>
     </div>
   );
 }
