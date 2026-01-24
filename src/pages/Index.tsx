@@ -59,10 +59,10 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <main className="flex-1 container max-w-4xl mx-auto px-4 pt-8 pb-8">
+      <main className="flex-1 container max-w-4xl mx-auto px-4 pt-4 pb-8">
         {/* Header */}
         <div className="text-center mb-8 animate-fade-in">
-          <div className="inline-flex items-center justify-center gap-3 mb-6">
+          <div className="inline-flex items-center justify-center gap-3 mb-4">
             <div className="relative">
               <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
             </div>
