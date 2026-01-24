@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { Dog, Cat, Heart } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
@@ -12,6 +12,10 @@ import { EmergencyBanner } from "@/components/EmergencyBanner";
 import { SafeFoodWidget } from "@/components/SafeFoodWidget";
 import { SocialShareCard } from "@/components/SocialShareCard";
 import { RelatedFoods } from "@/components/RelatedFoods";
+import { FeaturedSnippet } from "@/components/FeaturedSnippet";
+import { JsonLdSchema } from "@/components/JsonLdSchema";
+import { VetMapWidget } from "@/components/VetMapWidget";
+import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -80,6 +84,9 @@ const Index = () => {
     <div className={cn("min-h-screen relative flex flex-col transition-colors duration-500", getBackgroundClass())}>
       {/* Dynamic SEO - updates page title and meta tags */}
       <DynamicSEO result={result} />
+      
+      {/* JSON-LD Schema for Google rich results */}
+      <JsonLdSchema result={result} />
       
       <Header />
       
@@ -155,17 +162,33 @@ const Index = () => {
               </div>
             ) : result ? (
               <>
+                {/* Featured Snippet - Google-optimized answer box */}
+                <FeaturedSnippet data={result} />
+                
+                {/* Main Safety Result */}
                 <SafetyResult data={result} />
+                
+                {/* Vet-Verified Badge - Trust signal */}
+                <div className="w-full max-w-2xl mx-auto mt-4">
+                  <VetVerifiedBadge variant="full" />
+                </div>
                 
                 {/* Social Share */}
                 <SocialShareCard data={result} />
                 
                 {/* Conversion hooks based on safety level */}
                 {result.safetyLevel === "dangerous" && (
-                  <EmergencyBanner 
-                    foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
-                    petType={result.petType} 
-                  />
+                  <>
+                    <EmergencyBanner 
+                      foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
+                      petType={result.petType} 
+                    />
+                    {/* Vet Map Widget - Phase 7 requirement */}
+                    <VetMapWidget 
+                      foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
+                      petType={result.petType} 
+                    />
+                  </>
                 )}
                 
                 {result.safetyLevel === "safe" && (
