@@ -55,6 +55,12 @@
     "recommendations": "Recomendaciones",
     "disclaimer": "Esta información es solo para orientación general. Siempre consulte con su veterinario para obtener consejos dietéticos específicos para su mascota."
   },
+  "featuredSnippet": {
+    "safeAnswer": "¡Sí, los {{petType}} pueden comer {{food}} con seguridad!",
+    "cautionAnswer": "{{food}} debe darse a los {{petType}} con precaución.",
+    "dangerousAnswer": "¡No! {{food}} es tóxico para los {{petType}}.",
+    "updated": "Actualizado {{date}}"
+  },
   "about": {
     "title": "Sobre nosotros",
     "subtitle": "Estamos dedicados a mantener a tus amigos peludos seguros y saludables proporcionando información precisa y respaldada por la ciencia sobre seguridad alimentaria.",

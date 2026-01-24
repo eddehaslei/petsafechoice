@@ -1,4 +1,5 @@
 import { CheckCircle, XCircle, AlertTriangle } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { SafetyResultData } from "./SafetyResult";
 import { VetVerifiedBadge } from "./VetVerifiedBadge";
 
@@ -7,34 +8,45 @@ interface FeaturedSnippetProps {
 }
 
 export function FeaturedSnippet({ data }: FeaturedSnippetProps) {
-  const petName = data.petType === "dog" ? "dogs" : "cats";
+  const { t, i18n } = useTranslation();
+  
+  const petName = data.petType === "dog" ? t('petToggle.dog').toLowerCase() + "s" : t('petToggle.cat').toLowerCase() + "s";
   const foodName = data.food.charAt(0).toUpperCase() + data.food.slice(1);
+
+  const getAnswer = () => {
+    switch (data.safetyLevel) {
+      case "safe":
+        return t('featuredSnippet.safeAnswer', { petType: petName, food: foodName.toLowerCase() });
+      case "caution":
+        return t('featuredSnippet.cautionAnswer', { petType: petName, food: foodName });
+      case "dangerous":
+        return t('featuredSnippet.dangerousAnswer', { petType: petName, food: foodName });
+    }
+  };
 
   const config = {
     safe: {
       icon: CheckCircle,
-      answer: `Yes, ${petName} can safely eat ${foodName.toLowerCase()}.`,
       bgClass: "bg-safe/5 border-safe/30",
       iconClass: "text-safe",
       answerClass: "text-safe",
     },
     caution: {
       icon: AlertTriangle,
-      answer: `${foodName} should be given to ${petName} with caution.`,
       bgClass: "bg-caution/5 border-caution/30",
       iconClass: "text-caution",
       answerClass: "text-caution",
     },
     dangerous: {
       icon: XCircle,
-      answer: `No! ${foodName} is toxic to ${petName}.`,
       bgClass: "bg-danger/5 border-danger/30",
       iconClass: "text-danger",
       answerClass: "text-danger",
     },
   };
 
-  const { icon: Icon, answer, bgClass, iconClass, answerClass } = config[data.safetyLevel];
+  const { icon: Icon, bgClass, iconClass, answerClass } = config[data.safetyLevel];
+  const formattedDate = new Date().toLocaleDateString(i18n.language, { month: 'short', year: 'numeric' });
 
   return (
     <div className="w-full max-w-2xl mx-auto mb-6 animate-fade-in">
@@ -48,7 +60,7 @@ export function FeaturedSnippet({ data }: FeaturedSnippetProps) {
           <div className="flex-1">
             {/* Primary Answer - Large and scannable */}
             <p className={`text-xl font-bold leading-tight mb-2 ${answerClass}`}>
-              {answer}
+              {getAnswer()}
             </p>
             
             {/* Supporting Summary */}
@@ -60,7 +72,7 @@ export function FeaturedSnippet({ data }: FeaturedSnippetProps) {
             <div className="mt-3 flex items-center gap-2">
               <VetVerifiedBadge variant="compact" />
               <span className="text-xs text-muted-foreground">
-                Updated {new Date().toLocaleDateString('en-US', { month: 'short', year: 'numeric' })}
+                {t('featuredSnippet.updated', { date: formattedDate })}
               </span>
             </div>
           </div>

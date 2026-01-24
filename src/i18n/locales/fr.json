@@ -45,6 +45,12 @@
     "recommendations": "Recommandations",
     "disclaimer": "Ces informations sont fournies à titre indicatif uniquement. Consultez toujours votre vétérinaire pour des conseils alimentaires spécifiques à votre animal."
   },
+  "featuredSnippet": {
+    "safeAnswer": "Oui, les {{petType}} peuvent manger {{food}} en toute sécurité !",
+    "cautionAnswer": "{{food}} doit être donné aux {{petType}} avec prudence.",
+    "dangerousAnswer": "Non ! {{food}} est toxique pour les {{petType}}.",
+    "updated": "Mis à jour {{date}}"
+  },
   "about": {
     "title": "À propos de nous",
     "subtitle": "Nous nous engageons à garder vos amis à fourrure en sécurité et en bonne santé en fournissant des informations précises et basées sur la science sur la sécurité alimentaire.",
