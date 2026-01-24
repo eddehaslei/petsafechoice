@@ -13,36 +13,61 @@ serve(async (req) => {
 
   try {
     // Get client IP from headers (Supabase edge functions provide this)
-    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
-                     req.headers.get('x-real-ip') || 
-                     '';
+    // Try multiple headers in order of preference
+    const xForwardedFor = req.headers.get('x-forwarded-for');
+    const xRealIp = req.headers.get('x-real-ip');
+    const cfConnectingIp = req.headers.get('cf-connecting-ip'); // Cloudflare
+    
+    let clientIP = '';
+    if (xForwardedFor) {
+      // x-forwarded-for can contain multiple IPs, the first one is the client
+      clientIP = xForwardedFor.split(',')[0].trim();
+    } else if (cfConnectingIp) {
+      clientIP = cfConnectingIp;
+    } else if (xRealIp) {
+      clientIP = xRealIp;
+    }
+
+    console.log('[get-location] Headers:', {
+      'x-forwarded-for': xForwardedFor,
+      'x-real-ip': xRealIp,
+      'cf-connecting-ip': cfConnectingIp,
+      'detected-ip': clientIP
+    });
 
     // Use ip-api.com with the client IP
     const apiUrl = clientIP 
-      ? `http://ip-api.com/json/${clientIP}?fields=status,country,countryCode,regionName,city,lat,lon,timezone`
-      : 'http://ip-api.com/json/?fields=status,country,countryCode,regionName,city,lat,lon,timezone';
+      ? `http://ip-api.com/json/${clientIP}?fields=status,message,country,countryCode,regionName,city,lat,lon,timezone`
+      : 'http://ip-api.com/json/?fields=status,message,country,countryCode,regionName,city,lat,lon,timezone';
+
+    console.log('[get-location] Fetching:', apiUrl);
 
     const response = await fetch(apiUrl);
     const data = await response.json();
+    
+    console.log('[get-location] Response:', data);
 
     if (data.status === 'success') {
+      const result = {
+        country: data.country,
+        countryCode: data.countryCode,
+        city: data.city,
+        region: data.regionName,
+        lat: data.lat,
+        lon: data.lon,
+        timezone: data.timezone,
+      };
+      console.log('[get-location] Returning:', result);
       return new Response(
-        JSON.stringify({
-          country: data.country,
-          countryCode: data.countryCode,
-          city: data.city,
-          region: data.regionName,
-          lat: data.lat,
-          lon: data.lon,
-          timezone: data.timezone,
-        }),
+        JSON.stringify(result),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     } else {
-      throw new Error('Failed to get location from ip-api');
+      console.error('[get-location] ip-api failed:', data.message);
+      throw new Error(`ip-api failed: ${data.message}`);
     }
   } catch (error) {
-    console.error('Error in get-location:', error);
+    console.error('[get-location] Error:', error);
     return new Response(
       JSON.stringify({ 
         error: 'Could not detect location',

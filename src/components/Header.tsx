@@ -1,4 +1,4 @@
-import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, Home } from "lucide-react";
+import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, Home, PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -11,35 +11,40 @@ export const Header = () => {
   const isHomePage = location.pathname === "/";
 
   const handleGoHome = () => {
-    navigate("/");
+    if (isHomePage) {
+      // Refresh the page when already on home
+      window.location.reload();
+    } else {
+      navigate("/");
+    }
   };
 
   return (
     <header className="absolute top-0 left-0 right-0 z-10">
       <div className="container max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
-        {/* Left side - Back/Home buttons */}
+        {/* Left side - Logo and Back/Home buttons */}
         <div className="flex items-center gap-1">
+          {/* Logo - always visible */}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            className="text-primary hover:text-primary/80 gap-1.5 font-heading font-bold"
+            onClick={handleGoHome}
+          >
+            <PawPrint className="h-5 w-5" />
+            <span className="hidden sm:inline">PetSafeChoice</span>
+          </Button>
+
           {!isHomePage && (
-            <>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-muted-foreground hover:text-foreground gap-1.5"
-                onClick={handleGoHome}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('nav.back') || 'Back'}</span>
-              </Button>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className="text-muted-foreground hover:text-foreground gap-1.5"
-                onClick={handleGoHome}
-              >
-                <Home className="h-4 w-4" />
-                <span className="hidden sm:inline">{t('nav.home') || 'Home'}</span>
-              </Button>
-            </>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="text-muted-foreground hover:text-foreground gap-1.5"
+              onClick={handleGoHome}
+            >
+              <ArrowLeft className="h-4 w-4" />
+              <span className="hidden sm:inline">{t('nav.back') || 'Back'}</span>
+            </Button>
           )}
         </div>
 
