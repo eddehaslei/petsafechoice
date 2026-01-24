@@ -14,7 +14,120 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      affiliates: {
+        Row: {
+          affiliate_url: string
+          created_at: string
+          food_category_link: string | null
+          id: string
+          image_url: string | null
+          price_point: string | null
+          product_name: string
+        }
+        Insert: {
+          affiliate_url: string
+          created_at?: string
+          food_category_link?: string | null
+          id?: string
+          image_url?: string | null
+          price_point?: string | null
+          product_name: string
+        }
+        Update: {
+          affiliate_url?: string
+          created_at?: string
+          food_category_link?: string | null
+          id?: string
+          image_url?: string | null
+          price_point?: string | null
+          product_name?: string
+        }
+        Relationships: []
+      }
+      foods: {
+        Row: {
+          benefits: string[] | null
+          created_at: string
+          id: string
+          long_desc: string | null
+          name: string
+          risks: string[] | null
+          safety_rating: Database["public"]["Enums"]["safety_rating"]
+          serving_tips: string | null
+          short_answer: string
+          species: string
+          updated_at: string
+        }
+        Insert: {
+          benefits?: string[] | null
+          created_at?: string
+          id?: string
+          long_desc?: string | null
+          name: string
+          risks?: string[] | null
+          safety_rating?: Database["public"]["Enums"]["safety_rating"]
+          serving_tips?: string | null
+          short_answer: string
+          species: string
+          updated_at?: string
+        }
+        Update: {
+          benefits?: string[] | null
+          created_at?: string
+          id?: string
+          long_desc?: string | null
+          name?: string
+          risks?: string[] | null
+          safety_rating?: Database["public"]["Enums"]["safety_rating"]
+          serving_tips?: string | null
+          short_answer?: string
+          species?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      vets: {
+        Row: {
+          city: string
+          country: string
+          created_at: string
+          id: string
+          is_24h: boolean | null
+          lat: number | null
+          lon: number | null
+          name: string
+          phone: string | null
+          rating: number | null
+          website_url: string | null
+        }
+        Insert: {
+          city: string
+          country: string
+          created_at?: string
+          id?: string
+          is_24h?: boolean | null
+          lat?: number | null
+          lon?: number | null
+          name: string
+          phone?: string | null
+          rating?: number | null
+          website_url?: string | null
+        }
+        Update: {
+          city?: string
+          country?: string
+          created_at?: string
+          id?: string
+          is_24h?: boolean | null
+          lat?: number | null
+          lon?: number | null
+          name?: string
+          phone?: string | null
+          rating?: number | null
+          website_url?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +136,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      safety_rating: "safe" | "caution" | "toxic"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +263,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      safety_rating: ["safe", "caution", "toxic"],
+    },
   },
 } as const
