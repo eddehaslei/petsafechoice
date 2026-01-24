@@ -15,13 +15,13 @@ const emergencyVetsByCity: Record<string, Array<{
   open24h: boolean;
   website?: string;
 }>> = {
-  // Spain - Barcelona
+  // Spain - Barcelona (verified January 2026)
   "barcelona": [
-    { name: "Hospital Veterinari de Catalunya", address: "Carrer de Víctor Hugo, 21, 08174 Sant Cugat del Vallès", phone: "+34 935 83 00 00", rating: 4.5, open24h: true, website: "https://www.hfrancesc.com" },
-    { name: "ARS Veterinaria Hospital", address: "Carrer de Cardedeu, 3, 08023 Barcelona", phone: "+34 932 52 21 11", rating: 4.6, open24h: true, website: "https://www.arsveterinaria.es" },
-    { name: "Hospital Veterinari del Maresme", address: "Riera de Sant Simó, 35, 08310 Argentona", phone: "+34 937 97 15 00", rating: 4.4, open24h: true, website: "https://www.hvmaresme.com" },
-    { name: "Canis Hospital Veterinari", address: "Avinguda Diagonal, 339, 08037 Barcelona", phone: "+34 934 59 78 14", rating: 4.3, open24h: true, website: "https://www.canishv.com" },
-    { name: "Hospital Veterinari Glòries", address: "Carrer del Dos de Maig, 230, 08013 Barcelona", phone: "+34 932 65 45 55", rating: 4.2, open24h: true, website: "https://www.hvglories.com" },
+    { name: "Balmesvet Veterinaris 24h", address: "Carrer de Balmes, 205, 08006 Barcelona", phone: "+34 931 173 173", rating: 4.7, open24h: true, website: "https://balmesvet.com" },
+    { name: "Hospital Veterinari del Mar", address: "Carrer de la Marina, 69, 08005 Barcelona", phone: "+34 930 217 812", rating: 4.5, open24h: true, website: "https://veterinariadelmar.com" },
+    { name: "AniCura Ars Veterinaria", address: "Carrer de Cardedeu, 3, 08023 Barcelona", phone: "+34 932 52 21 11", rating: 4.6, open24h: true, website: "https://www.anicura.es/clinicas/ars-veterinaria-hospital-veterinari/" },
+    { name: "SURvet Diagonal", address: "Avinguda Diagonal, 317, 08013 Barcelona", phone: "+34 934 59 45 00", rating: 4.4, open24h: true, website: "https://urgenciesveterinaries.com" },
+    { name: "AniCura Glòries Hospital Veterinari", address: "Carrer de Bailén, 28, 08010 Barcelona", phone: "+34 932 46 08 05", rating: 4.3, open24h: true, website: "https://www.anicura.es/clinicas/anicura-glories-hospital-veterinari/" },
   ],
   // Spain - Madrid
   "madrid": [
