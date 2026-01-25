@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dog, Cat, Heart, ArrowLeft } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
@@ -17,6 +17,7 @@ import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { VetMapWidget } from "@/components/VetMapWidget";
 import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
 import { TrendingSafetyTips } from "@/components/TrendingSafetyTips";
+import { RecentSearches, useRecentSearches } from "@/components/RecentSearches";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
@@ -30,6 +31,7 @@ const Index = () => {
   const [result, setResult] = useState<SafetyResultData | null>(null);
   const [searchSource, setSearchSource] = useState<"trending" | "search" | null>(null);
   const { t, i18n } = useTranslation();
+  const { addSearch } = useRecentSearches();
 
   const handleSearch = async (food: string, source: "trending" | "search" = "search") => {
     setIsLoading(true);
@@ -60,6 +62,10 @@ const Index = () => {
       }
 
       setResult(data);
+      // Add to recent searches on successful result
+      if (data && !data.error) {
+        addSearch(food);
+      }
     } catch (err) {
       console.error("Error checking food safety:", err);
       toast.error("Something went wrong. Please try again.");
@@ -225,6 +231,12 @@ const Index = () => {
                   currentFood={result.food} 
                   petType={result.petType}
                   onFoodClick={handleSearch}
+                />
+                
+                {/* Recent Searches - helps users compare foods */}
+                <RecentSearches 
+                  onFoodClick={(food) => handleSearch(food, "search")} 
+                  currentFood={result.food}
                 />
               </>
             ) : null}
