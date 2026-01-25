@@ -57,10 +57,11 @@ serve(async (req) => {
     // Normalize food name for matching
     const normalizedFoodName = food_name.toLowerCase().trim();
 
-    // Exact case-insensitive match on product_name
+    // Match affiliate by product_name (case-insensitive). Country filtering intentionally removed.
+    // Note: ilike expects a pattern; using the raw term provides exact case-insensitive matching.
     const { data: affiliate, error } = await supabase
       .from('affiliates')
-      .select('id, product_name, affiliate_url')
+      .select('*')
       .ilike('product_name', normalizedFoodName)
       .limit(1)
       .maybeSingle();

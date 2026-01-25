@@ -75,6 +75,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
 
         // Debug log requested by user
         console.log('Affiliate Data:', matchResponse.data);
+        console.log('Database Row Found:', matchResponse.data?.affiliate);
 
         // Visible "connection alive" signal requested by user
         if (matchResponse.data) {
@@ -180,14 +181,14 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
           ) : matchedAffiliate ? (
-            /* Matched Affiliate - Big CTA Button */
+            /* Matched Affiliate - Direct DB link */
             <button
               onClick={handleAmazonClick}
               className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
               style={{ backgroundColor: '#F28C74' }}
             >
               <ShoppingBag className="w-6 h-6" />
-              <span>{t('safeFoodWidget.buyOnAmazon', 'Comprar {{product}} en Amazon', { product: matchedAffiliate.product_name })}</span>
+              <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}</span>
               <ExternalLink className="w-5 h-5" />
             </button>
           ) : (
