@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
 
 interface SafeFoodWidgetProps {
@@ -16,17 +17,10 @@ interface AffiliateProduct {
   food_category_link: string | null;
 }
 
-// Hardcoded affiliate matches (we'll replace with DB later)
-const HARDCODED_AFFILIATES: Record<string, { productName: string; url: string }> = {
-  "salmon oil": {
-    productName: "Salmon Oil",
-    url: "https://www.amazon.com/dp/B0002ABR6E?tag=petsafechoice-20",
-  },
-  "aceite de salmón": {
-    productName: "Aceite de Salmón",
-    url: "https://www.amazon.com/dp/B0002ABR6E?tag=petsafechoice-20",
-  },
-};
+interface AffiliateMatch {
+  productName: string;
+  url: string;
+}
 
 // Fallback recommendations if no affiliate match
 const getFallbackRecommendations = (petType: "dog" | "cat"): AffiliateProduct[] => [
@@ -50,23 +44,53 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [products, setProducts] = useState<AffiliateProduct[]>([]);
-
-  // Check for hardcoded affiliate match
-  const normalizedFoodName = foodName.trim().toLowerCase();
-  const hardcodedMatch = HARDCODED_AFFILIATES[normalizedFoodName];
+  const [affiliateMatch, setAffiliateMatch] = useState<AffiliateMatch | null>(null);
 
   useEffect(() => {
-    // Simple loading simulation
-    setIsLoading(true);
-    const timer = setTimeout(() => {
-      if (!hardcodedMatch) {
-        setProducts(getFallbackRecommendations(petType));
-      }
-      setIsLoading(false);
-    }, 300);
+    const fetchAffiliateMatch = async () => {
+      setIsLoading(true);
+      setAffiliateMatch(null);
+      setProducts([]);
 
-    return () => clearTimeout(timer);
-  }, [petType, foodName, hardcodedMatch]);
+      try {
+        const normalizedFoodName = foodName.trim().toLowerCase();
+
+        // Fetch all affiliates from database
+        const { data, error } = await supabase.functions.invoke('get-all-affiliates');
+
+        if (error) {
+          console.error('Error fetching affiliates:', error);
+          setProducts(getFallbackRecommendations(petType));
+          return;
+        }
+
+        const affiliates = (data?.affiliates ?? []) as Array<{ product_name: string; affiliate_url: string }>;
+
+        // Case-insensitive match: compare lowercase versions
+        const match = affiliates.find(
+          (a) => (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
+        );
+
+        if (match) {
+          // Found a match in the database - show the button
+          setAffiliateMatch({
+            productName: match.product_name,
+            url: match.affiliate_url,
+          });
+        } else {
+          // No match - show generic recommendations
+          setProducts(getFallbackRecommendations(petType));
+        }
+      } catch (err) {
+        console.error('Error fetching affiliates:', err);
+        setProducts(getFallbackRecommendations(petType));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchAffiliateMatch();
+  }, [petType, foodName]);
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
@@ -81,12 +105,12 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
             <div>
               <h3 className="font-heading font-bold text-foreground">
-                {hardcodedMatch
+                {affiliateMatch
                   ? t('safeFoodWidget.recommendedProduct', 'Recommended Product')
                   : t('safeFoodWidget.title', 'Treat Recommendations')}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {hardcodedMatch
+                {affiliateMatch
                   ? t('safeFoodWidget.matchFound', 'We found a great option for you!')
                   : t('safeFoodWidget.subtitle', `Vet-approved options your ${petType} will love`)}
               </p>
@@ -97,11 +121,11 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
-          ) : hardcodedMatch ? (
-            /* Hardcoded Affiliate Match - Single Big Button */
+          ) : affiliateMatch ? (
+            /* Database Affiliate Match - Single Big Button */
             <AffiliateButton
-              productName={hardcodedMatch.productName}
-              affiliateUrl={hardcodedMatch.url}
+              productName={affiliateMatch.productName}
+              affiliateUrl={affiliateMatch.url}
             />
           ) : (
             /* Fallback: Generic Recommendations Grid */
