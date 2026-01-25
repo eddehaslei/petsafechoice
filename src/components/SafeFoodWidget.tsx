@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
-import { useGeoLocation } from "@/hooks/useGeoLocation";
 
 interface SafeFoodWidgetProps {
   foodName: string;
@@ -47,7 +46,6 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const [products, setProducts] = useState<AffiliateProduct[]>([]);
   const [matchedAffiliate, setMatchedAffiliate] = useState<MatchedAffiliate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const { countryCode } = useGeoLocation();
   const { t } = useTranslation();
 
   useEffect(() => {
@@ -57,36 +55,23 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
       setProducts([]);
       
       try {
-        const normalizedFoodName = foodName.trim();
+        const normalizedFoodName = foodName.trim().toLowerCase();
 
-        // 1) Try exact case-insensitive match by product_name only (no country filters)
-        const matchResponse = await supabase.functions.invoke('get-affiliate-match', {
-          body: { 
-            food_name: normalizedFoodName
-          }
-        });
+        // Fetch all affiliates (no filters) then match name-to-name (case-insensitive)
+        const { data, error } = await supabase.functions.invoke('get-all-affiliates');
+        if (error) throw error;
 
-        if (!matchResponse.error && matchResponse.data?.affiliate) {
-          // Match found - replace the section with a single button
-          setMatchedAffiliate(matchResponse.data.affiliate);
-          setProducts([]); // Clear generic products
+        const affiliates = (data?.affiliates ?? []) as Array<{ product_name: string; affiliate_url: string }>;
+
+        const match = affiliates.find((a) =>
+          (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
+        );
+
+        if (match) {
+          setMatchedAffiliate({ id: 'match', product_name: match.product_name, affiliate_url: match.affiliate_url });
+          setProducts([]);
         } else {
-          // 2) No match - fetch general affiliates as fallback
-          const { data, error } = await supabase.functions.invoke('get-affiliates', {
-            body: { 
-              pet_type: petType,
-              country_code: countryCode || 'US',
-              limit: 4
-            }
-          });
-
-          if (error) throw error;
-          
-          if (data?.products && data.products.length > 0) {
-            setProducts(data.products);
-          } else {
-            setProducts(getFallbackRecommendations(petType));
-          }
+          setProducts(getFallbackRecommendations(petType));
         }
       } catch (err) {
         console.error('Error fetching affiliates:', err);
@@ -97,7 +82,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
     };
 
     fetchAffiliates();
-  }, [petType, countryCode, foodName]);
+  }, [petType, foodName]);
 
   const handleProductClick = async (productId: string) => {
     if (productId.startsWith('fallback-')) return;
@@ -161,14 +146,20 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
           ) : matchedAffiliate ? (
-            /* Matched Affiliate - Direct DB link */
+            /* Matched Affiliate - total override */
             <button
               onClick={handleAmazonClick}
               className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
               style={{ backgroundColor: '#F28C74' }}
             >
               <ShoppingBag className="w-6 h-6" />
-              <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}</span>
+              <span>
+                {t(
+                  'safeFoodWidget.viewRecommendedOnAmazon',
+                  'View Recommended {{food}} on Amazon',
+                  { food: matchedAffiliate.product_name }
+                )}
+              </span>
               <ExternalLink className="w-5 h-5" />
             </button>
           ) : (
