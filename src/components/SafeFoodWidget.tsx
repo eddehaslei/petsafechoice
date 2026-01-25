@@ -47,6 +47,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const [products, setProducts] = useState<AffiliateProduct[]>([]);
   const [matchedAffiliate, setMatchedAffiliate] = useState<MatchedAffiliate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [dbConnected, setDbConnected] = useState(false);
   const { countryCode } = useGeoLocation();
   const { t } = useTranslation();
 
@@ -54,6 +55,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
     const fetchAffiliates = async () => {
       setIsLoading(true);
       setMatchedAffiliate(null);
+      setDbConnected(false);
       
       try {
         const normalizedFoodName = foodName.trim();
@@ -74,6 +76,11 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
         // Debug log requested by user
         console.log('Affiliate Data:', matchResponse.data);
 
+        // Visible "connection alive" signal requested by user
+        if (matchResponse.data) {
+          setDbConnected(true);
+        }
+
         if (!matchResponse.error && matchResponse.data?.affiliate) {
           // Match found - use this as the primary recommendation
           setMatchedAffiliate(matchResponse.data.affiliate);
@@ -89,6 +96,10 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
           });
 
           if (error) throw error;
+
+          if (data) {
+            setDbConnected(true);
+          }
           
           if (data?.products && data.products.length > 0) {
             setProducts(data.products);
@@ -247,6 +258,12 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
           <p className="mt-4 text-xs text-muted-foreground text-center">
             {t('safeFoodWidget.disclosure', 'These are general recommendations. We may earn a small commission from qualifying purchases.')}
           </p>
+
+          {dbConnected && (
+            <p className="mt-2 text-xs text-center font-semibold text-primary">
+              SUCCESS: DATABASE CONNECTED
+            </p>
+          )}
         </div>
       </div>
     </div>
