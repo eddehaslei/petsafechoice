@@ -213,20 +213,11 @@ const Index = () => {
                   </>
                 )}
                 
-                {result.safetyLevel === "safe" && (
-                  <SafeFoodWidget 
-                    foodName={result.food} 
-                    petType={result.petType} 
-                  />
-                )}
-
-                {/* Treat Recommendations / Affiliate Match (always show so affiliate lookup runs on every search) */}
-                {result.safetyLevel !== "safe" && (
-                  <SafeFoodWidget 
-                    foodName={result.food} 
-                    petType={result.petType} 
-                  />
-                )}
+                {/* Affiliate Widget - shows for ALL safety levels */}
+                <SafeFoodWidget 
+                  foodName={result.food} 
+                  petType={result.petType} 
+                />
                 
                 {/* Related Foods - drives engagement */}
                 <RelatedFoods 
