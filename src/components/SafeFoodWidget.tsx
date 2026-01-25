@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
+import { ShoppingBag, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
@@ -9,48 +9,27 @@ interface SafeFoodWidgetProps {
   petType: "dog" | "cat";
 }
 
-interface AffiliateProduct {
-  id: string;
-  product_name: string;
-  price_point: string | null;
-  image_url: string | null;
-  food_category_link: string | null;
-}
-
-interface AffiliateMatch {
+interface AffiliateLink {
   productName: string;
   url: string;
+  isFromDatabase: boolean;
 }
 
-// Fallback recommendations if no affiliate match
-const getFallbackRecommendations = (petType: "dog" | "cat"): AffiliateProduct[] => [
-  {
-    id: "fallback-1",
-    product_name: petType === "dog" ? "Premium Training Treats" : "Gourmet Cat Treats",
-    price_point: null,
-    image_url: null,
-    food_category_link: petType,
-  },
-  {
-    id: "fallback-2",
-    product_name: petType === "dog" ? "Natural Freeze-Dried Snacks" : "Dental Health Treats",
-    price_point: null,
-    image_url: null,
-    food_category_link: petType,
-  },
-];
+// Generate a fallback Amazon search URL
+function generateFallbackAffiliateUrl(foodName: string, petType: "dog" | "cat"): string {
+  const searchTerm = encodeURIComponent(`${foodName} for ${petType}s`);
+  return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
+}
 
 export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
-  const [products, setProducts] = useState<AffiliateProduct[]>([]);
-  const [affiliateMatch, setAffiliateMatch] = useState<AffiliateMatch | null>(null);
+  const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
 
   useEffect(() => {
     const fetchAffiliateMatch = async () => {
       setIsLoading(true);
-      setAffiliateMatch(null);
-      setProducts([]);
+      setAffiliateLink(null);
 
       try {
         const normalizedFoodName = foodName.trim().toLowerCase();
@@ -58,32 +37,40 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
         // Fetch all affiliates from database
         const { data, error } = await supabase.functions.invoke('get-all-affiliates');
 
-        if (error) {
-          console.error('Error fetching affiliates:', error);
-          setProducts(getFallbackRecommendations(petType));
-          return;
+        if (!error && data?.affiliates) {
+          const affiliates = data.affiliates as Array<{ product_name: string; affiliate_url: string }>;
+
+          // Case-insensitive match
+          const match = affiliates.find(
+            (a) => (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
+          );
+
+          if (match) {
+            // Found a match in the database
+            setAffiliateLink({
+              productName: match.product_name,
+              url: match.affiliate_url,
+              isFromDatabase: true,
+            });
+            setIsLoading(false);
+            return;
+          }
         }
 
-        const affiliates = (data?.affiliates ?? []) as Array<{ product_name: string; affiliate_url: string }>;
-
-        // Case-insensitive match: compare lowercase versions
-        const match = affiliates.find(
-          (a) => (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
-        );
-
-        if (match) {
-          // Found a match in the database - show the button
-          setAffiliateMatch({
-            productName: match.product_name,
-            url: match.affiliate_url,
-          });
-        } else {
-          // No match - show generic recommendations
-          setProducts(getFallbackRecommendations(petType));
-        }
+        // No match found - generate fallback Amazon search link
+        setAffiliateLink({
+          productName: foodName.trim(),
+          url: generateFallbackAffiliateUrl(foodName.trim(), petType),
+          isFromDatabase: false,
+        });
       } catch (err) {
         console.error('Error fetching affiliates:', err);
-        setProducts(getFallbackRecommendations(petType));
+        // On error, still show fallback
+        setAffiliateLink({
+          productName: foodName.trim(),
+          url: generateFallbackAffiliateUrl(foodName.trim(), petType),
+          isFromDatabase: false,
+        });
       } finally {
         setIsLoading(false);
       }
@@ -105,14 +92,10 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
             <div>
               <h3 className="font-heading font-bold text-foreground">
-                {affiliateMatch
-                  ? t('safeFoodWidget.recommendedProduct', 'Recommended Product')
-                  : t('safeFoodWidget.title', 'Treat Recommendations')}
+                {t('safeFoodWidget.recommendedProduct', 'Recommended Product')}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {affiliateMatch
-                  ? t('safeFoodWidget.matchFound', 'We found a great option for you!')
-                  : t('safeFoodWidget.subtitle', `Vet-approved options your ${petType} will love`)}
+                {t('safeFoodWidget.matchFound', 'We found a great option for you!')}
               </p>
             </div>
           </div>
@@ -121,48 +104,13 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
-          ) : affiliateMatch ? (
-            /* Database Affiliate Match - Single Big Button */
+          ) : affiliateLink ? (
+            /* Affiliate Button - Database match or Fallback */
             <AffiliateButton
-              productName={affiliateMatch.productName}
-              affiliateUrl={affiliateMatch.url}
+              productName={affiliateLink.productName}
+              affiliateUrl={affiliateLink.url}
             />
-          ) : (
-            /* Fallback: Generic Recommendations Grid */
-            <div className="grid gap-3 sm:grid-cols-2">
-              {products.map((product) => (
-                <div
-                  key={product.id}
-                  className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
-                >
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
-                      {product.image_url ? (
-                        <img
-                          src={product.image_url}
-                          alt=""
-                          className="w-6 h-6 object-contain rounded"
-                        />
-                      ) : (
-                        <Gift className="w-5 h-5" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-sm text-foreground mb-0.5">
-                        {product.product_name}
-                      </h4>
-                      {product.price_point && (
-                        <p className="text-xs text-muted-foreground">
-                          {product.price_point}
-                        </p>
-                      )}
-                    </div>
-                    <ExternalLink className="w-4 h-4 text-muted-foreground/50 group-hover:text-safe transition-colors shrink-0" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+          ) : null}
 
           {/* Affiliate disclosure */}
           <p className="mt-4 text-xs text-muted-foreground text-center">
