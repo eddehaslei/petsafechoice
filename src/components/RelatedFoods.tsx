@@ -1,5 +1,5 @@
+import { forwardRef } from "react";
 import { Search, ArrowRight } from "lucide-react";
-import { SafetyResultData } from "./SafetyResult";
 
 interface RelatedFoodsProps {
   currentFood: string;
@@ -59,54 +59,56 @@ const foodCategories: Record<string, string[]> = {
 // Fallback suggestions if no specific match
 const defaultSuggestions = ["chocolate", "grapes", "chicken", "pumpkin"];
 
-export function RelatedFoods({ currentFood, petType, onFoodClick }: RelatedFoodsProps) {
-  const normalizedFood = currentFood.toLowerCase().trim();
-  
-  // Find related foods
-  let relatedFoods = foodCategories[normalizedFood];
-  
-  // If no exact match, try partial matching
-  if (!relatedFoods) {
-    const matchingKey = Object.keys(foodCategories).find(key => 
-      normalizedFood.includes(key) || key.includes(normalizedFood)
-    );
-    relatedFoods = matchingKey ? foodCategories[matchingKey] : defaultSuggestions;
-  }
+export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
+  function RelatedFoods({ currentFood, petType, onFoodClick }, ref) {
+    const normalizedFood = currentFood.toLowerCase().trim();
+    
+    // Find related foods
+    let relatedFoods = foodCategories[normalizedFood];
+    
+    // If no exact match, try partial matching
+    if (!relatedFoods) {
+      const matchingKey = Object.keys(foodCategories).find(key => 
+        normalizedFood.includes(key) || key.includes(normalizedFood)
+      );
+      relatedFoods = matchingKey ? foodCategories[matchingKey] : defaultSuggestions;
+    }
 
-  // Filter out the current food and limit to 4
-  const suggestions = relatedFoods
-    .filter(food => food.toLowerCase() !== normalizedFood)
-    .slice(0, 4);
+    // Filter out the current food and limit to 4
+    const suggestions = relatedFoods
+      .filter(food => food.toLowerCase() !== normalizedFood)
+      .slice(0, 4);
 
-  if (suggestions.length === 0) return null;
+    if (suggestions.length === 0) return null;
 
-  return (
-    <div className="w-full max-w-2xl mx-auto mt-8 animate-fade-in">
-      <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5">
-        <div className="flex items-center gap-2 mb-4">
-          <Search className="w-5 h-5 text-primary" />
-          <h3 className="font-heading font-semibold text-foreground">
-            People Also Ask About
-          </h3>
+    return (
+      <div ref={ref} className="w-full max-w-2xl mx-auto mt-8 animate-fade-in">
+        <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Search className="w-5 h-5 text-primary" />
+            <h3 className="font-heading font-semibold text-foreground">
+              People Also Ask About
+            </h3>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+            {suggestions.map((food) => (
+              <button
+                key={food}
+                onClick={() => onFoodClick(food)}
+                className="group flex items-center justify-between gap-2 px-4 py-3 bg-background hover:bg-primary/5 border border-border hover:border-primary/30 rounded-xl text-sm font-medium text-foreground transition-all duration-200 hover:-translate-y-0.5"
+              >
+                <span className="capitalize">{food}</span>
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+              </button>
+            ))}
+          </div>
+          
+          <p className="text-xs text-muted-foreground text-center mt-4">
+            Click to check if these foods are safe for your {petType}
+          </p>
         </div>
-        
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          {suggestions.map((food) => (
-            <button
-              key={food}
-              onClick={() => onFoodClick(food)}
-              className="group flex items-center justify-between gap-2 px-4 py-3 bg-background hover:bg-primary/5 border border-border hover:border-primary/30 rounded-xl text-sm font-medium text-foreground transition-all duration-200 hover:-translate-y-0.5"
-            >
-              <span className="capitalize">{food}</span>
-              <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
-            </button>
-          ))}
-        </div>
-        
-        <p className="text-xs text-muted-foreground text-center mt-4">
-          Click to check if these foods are safe for your {petType}
-        </p>
       </div>
-    </div>
-  );
-}
+    );
+  }
+);
