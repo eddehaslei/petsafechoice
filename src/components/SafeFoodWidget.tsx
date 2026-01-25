@@ -1,15 +1,97 @@
 import { useState, useEffect, forwardRef } from "react";
-import { ShoppingBag, Loader2, Shield, UtensilsCrossed } from "lucide-react";
+import { ShoppingBag, Loader2, Shield, Apple, Beef, Fish, Pill, Cookie, Carrot, Grape, Cherry } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
 import type { SafetyLevel } from "./SafetyResult";
 
-// High-quality fallback images (reliable hosted images)
+// Curated food image map with high-quality, direct URLs (white background product shots)
+const FOOD_IMAGE_MAP: Record<string, string> = {
+  // Fruits
+  "apple": "https://images.unsplash.com/photo-1584306670957-acf935f5033c?w=800&h=400&fit=crop&q=80",
+  "banana": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=800&h=400&fit=crop&q=80",
+  "blueberry": "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=800&h=400&fit=crop&q=80",
+  "blueberries": "https://images.unsplash.com/photo-1498557850523-fd3d118b962e?w=800&h=400&fit=crop&q=80",
+  "strawberry": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=800&h=400&fit=crop&q=80",
+  "strawberries": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=800&h=400&fit=crop&q=80",
+  "watermelon": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=800&h=400&fit=crop&q=80",
+  "mango": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=800&h=400&fit=crop&q=80",
+  "grapes": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=800&h=400&fit=crop&q=80",
+  "grape": "https://images.unsplash.com/photo-1537640538966-79f369143f8f?w=800&h=400&fit=crop&q=80",
+  "orange": "https://images.unsplash.com/photo-1547514701-42782101795e?w=800&h=400&fit=crop&q=80",
+  "pear": "https://images.unsplash.com/photo-1514756331096-242fdeb70d4a?w=800&h=400&fit=crop&q=80",
+  
+  // Vegetables
+  "carrot": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800&h=400&fit=crop&q=80",
+  "carrots": "https://images.unsplash.com/photo-1598170845058-32b9d6a5da37?w=800&h=400&fit=crop&q=80",
+  "broccoli": "https://images.unsplash.com/photo-1459411552884-841db9b3cc2a?w=800&h=400&fit=crop&q=80",
+  "spinach": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=800&h=400&fit=crop&q=80",
+  "pumpkin": "https://images.unsplash.com/photo-1570586437263-ab629fccc818?w=800&h=400&fit=crop&q=80",
+  "sweet potato": "https://images.unsplash.com/photo-1596097635121-14b63a7b0a41?w=800&h=400&fit=crop&q=80",
+  "cucumber": "https://images.unsplash.com/photo-1449300079323-02e209d9d3a6?w=800&h=400&fit=crop&q=80",
+  
+  // Proteins
+  "chicken": "https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=800&h=400&fit=crop&q=80",
+  "salmon": "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?w=800&h=400&fit=crop&q=80",
+  "beef": "https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=800&h=400&fit=crop&q=80",
+  "turkey": "https://images.unsplash.com/photo-1574672280600-4accfa5b6f98?w=800&h=400&fit=crop&q=80",
+  "egg": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=800&h=400&fit=crop&q=80",
+  "eggs": "https://images.unsplash.com/photo-1582722872445-44dc5f7e3c8f?w=800&h=400&fit=crop&q=80",
+  "fish": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=400&fit=crop&q=80",
+  "tuna": "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=800&h=400&fit=crop&q=80",
+  "shrimp": "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?w=800&h=400&fit=crop&q=80",
+  "liver": "https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=800&h=400&fit=crop&q=80",
+  "pork": "https://images.unsplash.com/photo-1602470520998-f4a52199a3d6?w=800&h=400&fit=crop&q=80",
+  
+  // Dairy & Other
+  "cheese": "https://images.unsplash.com/photo-1486297678162-eb2a19b0a32d?w=800&h=400&fit=crop&q=80",
+  "yogurt": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=800&h=400&fit=crop&q=80",
+  "milk": "https://images.unsplash.com/photo-1563636619-e9143da7973b?w=800&h=400&fit=crop&q=80",
+  "peanut butter": "https://images.unsplash.com/photo-1612253979816-35ee7c7eb89b?w=800&h=400&fit=crop&q=80",
+  "rice": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=800&h=400&fit=crop&q=80",
+  "oatmeal": "https://images.unsplash.com/photo-1517673132405-a56a62b18caf?w=800&h=400&fit=crop&q=80",
+  "honey": "https://images.unsplash.com/photo-1587049352846-4a222e784d38?w=800&h=400&fit=crop&q=80",
+  "coconut": "https://images.unsplash.com/photo-1580984969071-a8da8c3a67f8?w=800&h=400&fit=crop&q=80",
+  
+  // Toxic foods (still need images)
+  "chocolate": "https://images.unsplash.com/photo-1481391319762-47dff72954d9?w=800&h=400&fit=crop&q=80",
+  "onion": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=800&h=400&fit=crop&q=80",
+  "onions": "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=800&h=400&fit=crop&q=80",
+  "garlic": "https://images.unsplash.com/photo-1540148426945-6cf22a6b2383?w=800&h=400&fit=crop&q=80",
+  "avocado": "https://images.unsplash.com/photo-1523049673857-eb18f1d7b578?w=800&h=400&fit=crop&q=80",
+};
+
+// Pet product image (professional supplement bottle)
+const PET_PRODUCT_IMAGE = "https://images.unsplash.com/photo-1585846416120-3a7354ed7d39?w=800&h=400&fit=crop&q=80";
+
+// Food category detection for icon fallbacks
+type FoodCategory = "fruit" | "vegetable" | "protein" | "dairy" | "supplement" | "grain" | "unknown";
+
+const CATEGORY_KEYWORDS: Record<FoodCategory, string[]> = {
+  fruit: ["apple", "banana", "berry", "grape", "mango", "melon", "orange", "pear", "peach", "plum", "cherry", "strawberry", "blueberry", "watermelon"],
+  vegetable: ["carrot", "broccoli", "spinach", "pumpkin", "potato", "cucumber", "celery", "pea", "bean", "lettuce", "kale"],
+  protein: ["chicken", "beef", "salmon", "fish", "turkey", "egg", "meat", "liver", "pork", "shrimp", "tuna", "lamb"],
+  dairy: ["cheese", "yogurt", "milk", "cream"],
+  supplement: ["oil", "treat", "supplement", "vitamin", "chew", "bone", "biscuit", "pill"],
+  grain: ["rice", "oat", "wheat", "bread", "pasta"],
+  unknown: [],
+};
+
+const detectFoodCategory = (foodName: string): FoodCategory => {
+  const lowerFood = foodName.toLowerCase();
+  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
+    if (keywords.some(keyword => lowerFood.includes(keyword))) {
+      return category as FoodCategory;
+    }
+  }
+  return "unknown";
+};
+
+// High-quality fallback images for safety states
 const FALLBACK_IMAGES = {
-  safe: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=400&fit=crop&q=80", // Happy dog
-  dangerous: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop&q=80", // Alert dog
-  default: "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=800&h=400&fit=crop&q=80", // Pet food bowl
+  safe: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=400&fit=crop&q=80",
+  dangerous: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop&q=80",
+  default: "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=800&h=400&fit=crop&q=80",
 };
 
 interface SafeFoodWidgetProps {
@@ -134,26 +216,48 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     const isDangerous = safetyLevel === "dangerous";
     const isCaution = safetyLevel === "caution";
     
-    // Pet product keywords that need special handling
-    const PET_PRODUCT_KEYWORDS = ['oil', 'treat', 'supplement', 'vitamin', 'chew', 'bone', 'biscuit'];
+    // Get the food category for icon fallback
+    const foodCategory = detectFoodCategory(foodName);
+    const isPetProduct = foodCategory === "supplement";
     
-    // Generate Unsplash image URL with product-first keywords
-    const getImageUrl = () => {
+    // Get curated image URL - prioritizes hardcoded map, then category fallback
+    const getImageData = (): { url: string | null; useIcon: boolean; category: FoodCategory } => {
       const foodLower = foodName.toLowerCase().trim();
       
-      // Check if it's a pet product that needs special keywords
-      const isPetProduct = PET_PRODUCT_KEYWORDS.some(keyword => foodLower.includes(keyword));
-      
-      let searchTerms = foodLower;
-      if (isPetProduct) {
-        // Add pet-specific keywords for products like oils, treats, supplements
-        searchTerms = `${foodLower},pet-treat,dog-food`;
-      } else {
-        // Standard food - use white-background, product for clean shots
-        searchTerms = `${foodLower},white-background,product`;
+      // 1. Check hardcoded image map first
+      if (FOOD_IMAGE_MAP[foodLower]) {
+        return { url: FOOD_IMAGE_MAP[foodLower], useIcon: false, category: foodCategory };
       }
       
-      return `https://source.unsplash.com/featured/800x400/?${encodeURIComponent(searchTerms)}`;
+      // 2. Pet products get a professional supplement bottle image
+      if (isPetProduct) {
+        return { url: PET_PRODUCT_IMAGE, useIcon: false, category: "supplement" };
+      }
+      
+      // 3. For unknown foods, use icon-based fallback (no random Unsplash)
+      return { url: null, useIcon: true, category: foodCategory };
+    };
+    
+    const imageData = getImageData();
+    
+    // Get category icon component
+    const getCategoryIcon = () => {
+      switch (foodCategory) {
+        case "fruit":
+          return <Apple className="w-16 h-16 text-safe" />;
+        case "vegetable":
+          return <Carrot className="w-16 h-16 text-safe" />;
+        case "protein":
+          return <Beef className="w-16 h-16 text-primary" />;
+        case "dairy":
+          return <Cookie className="w-16 h-16 text-caution" />;
+        case "supplement":
+          return <Pill className="w-16 h-16 text-primary" />;
+        case "grain":
+          return <Cookie className="w-16 h-16 text-caution" />;
+        default:
+          return <Cherry className="w-16 h-16 text-muted-foreground" />;
+      }
     };
     
     // Get fallback image based on safety level
@@ -255,20 +359,30 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     return (
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">
         <div className={`${containerBg} border-2 rounded-2xl overflow-hidden relative`}>
-          {/* Food Image Section - Simplified without fade effects */}
+          {/* Food Image Section - Curated images only */}
           <div className="relative w-full h-[160px] sm:h-[200px] bg-muted/30 overflow-hidden">
-            {!imageError ? (
+            {imageData.url && !imageError ? (
               <img
-                src={getImageUrl()}
+                src={imageData.url}
                 alt={getImageAlt()}
                 title={getImageTitle()}
                 className="w-full h-full object-cover"
                 onError={handleImageError}
                 loading="lazy"
               />
+            ) : imageData.useIcon ? (
+              // Category-based icon fallback (no random images)
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-muted/50 to-background">
+                <div className="p-4 rounded-2xl bg-background/80 shadow-sm border border-border/50">
+                  {getCategoryIcon()}
+                </div>
+                <span className="mt-3 text-sm text-muted-foreground font-medium capitalize">
+                  {foodName}
+                </span>
+              </div>
             ) : (
+              // Fallback for failed curated images
               <div className="relative w-full h-full overflow-hidden">
-                {/* Reliable fallback image based on safety */}
                 <img
                   src={getFallbackImage()}
                   alt={isDangerous ? "This food is not safe for pets" : "Healthy pet food"}
@@ -287,7 +401,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
                     </div>
                   </div>
                 )}
-                {/* Ultimate emoji fallback if image also fails */}
+                {/* Ultimate emoji fallback */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-safe/10 -z-10">
                   <span className="text-5xl mb-2" role="img" aria-label={isDangerous ? "Warning" : "Pet food"}>
                     {isDangerous ? "⚠️" : "🐕"}
