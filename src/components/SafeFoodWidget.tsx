@@ -24,6 +24,52 @@ const AMAZON_CONFIG: Record<string, { domain: string; tag: string; ratingFilter:
   en: { domain: "amazon.com", tag: "petsafechoice-20", ratingFilter: "p_72%3A2661611011" },
 };
 
+// Common food name translations for Spanish Amazon searches
+const FOOD_TRANSLATIONS_ES: Record<string, string> = {
+  "apple": "manzana",
+  "banana": "plátano",
+  "blueberry": "arándano",
+  "blueberries": "arándanos",
+  "carrot": "zanahoria",
+  "carrots": "zanahorias",
+  "chicken": "pollo",
+  "chocolate": "chocolate",
+  "egg": "huevo",
+  "eggs": "huevos",
+  "fish": "pescado",
+  "grapes": "uvas",
+  "grape": "uva",
+  "meat": "carne",
+  "milk": "leche",
+  "onion": "cebolla",
+  "onions": "cebollas",
+  "peanut butter": "mantequilla de maní",
+  "pumpkin": "calabaza",
+  "rice": "arroz",
+  "salmon": "salmón",
+  "salmon oil": "aceite de salmón",
+  "spinach": "espinaca",
+  "strawberry": "fresa",
+  "strawberries": "fresas",
+  "sweet potato": "batata",
+  "tuna": "atún",
+  "turkey": "pavo",
+  "watermelon": "sandía",
+  "yogurt": "yogur",
+  "cheese": "queso",
+  "beef": "carne de res",
+  "pork": "cerdo",
+  "honey": "miel",
+  "oatmeal": "avena",
+  "broccoli": "brócoli",
+  "cucumber": "pepino",
+  "mango": "mango",
+  "coconut": "coco",
+  "coconut oil": "aceite de coco",
+  "liver": "hígado",
+  "shrimp": "camarones",
+};
+
 const DEFAULT_CONFIG = AMAZON_CONFIG.en;
 
 /**
@@ -34,11 +80,25 @@ function getAmazonConfig(language: string) {
 }
 
 /**
+ * Translate food name for regional Amazon searches
+ */
+function translateFoodName(foodName: string, language: string): string {
+  if (language === 'es') {
+    const lowerName = foodName.toLowerCase().trim();
+    return FOOD_TRANSLATIONS_ES[lowerName] || foodName;
+  }
+  return foodName;
+}
+
+/**
  * Generate safe treats URL based on language
  */
 function getSafeTreatsUrl(language: string): string {
   const config = getAmazonConfig(language);
-  return `https://www.${config.domain}/s?k=natural+freeze+dried+dog+cat+treats&rh=${config.ratingFilter}&tag=${config.tag}`;
+  const safetyKeyword = language === 'es' 
+    ? 'snacks+liofilizados+naturales+perros+gatos' 
+    : 'natural+freeze+dried+dog+cat+treats';
+  return `https://www.${config.domain}/s?k=${safetyKeyword}&rh=${config.ratingFilter}&tag=${config.tag}`;
 }
 
 /**
@@ -46,7 +106,8 @@ function getSafeTreatsUrl(language: string): string {
  */
 function generateFallbackUrl(foodName: string, language: string): string {
   const config = getAmazonConfig(language);
-  const searchTerm = encodeURIComponent(foodName);
+  const translatedName = translateFoodName(foodName, language);
+  const searchTerm = encodeURIComponent(translatedName);
   return `https://www.${config.domain}/s?k=${searchTerm}&rh=${config.ratingFilter}&tag=${config.tag}`;
 }
 
