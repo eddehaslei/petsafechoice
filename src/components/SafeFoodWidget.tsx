@@ -79,13 +79,13 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     }, [foodName]);
 
     return (
-      <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
-        <div className="bg-safe/10 border-2 border-safe/30 rounded-2xl p-5 relative overflow-hidden">
+      <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">
+        <div className="bg-safe/10 border-2 border-safe/30 rounded-2xl p-4 sm:p-5 relative overflow-hidden">
           <div className="absolute top-0 right-0 w-24 h-24 bg-safe/10 rounded-full -translate-y-1/2 translate-x-1/2" />
 
           <div className="relative">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-safe/20 flex items-center justify-center">
+            <div className="flex items-center gap-3 mb-4 px-1">
+              <div className="w-10 h-10 rounded-xl bg-safe/20 flex items-center justify-center shrink-0">
                 <ShoppingBag className="w-5 h-5 text-safe" />
               </div>
               <div>
@@ -106,7 +106,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
               <AffiliateButton productName={affiliateLink.productName} affiliateUrl={affiliateLink.url} />
             ) : null}
 
-            <p className="mt-4 text-xs text-muted-foreground text-center">
+            <p className="mt-4 px-2 sm:px-0 text-xs text-muted-foreground text-center leading-relaxed">
               {t('safeFoodWidget.disclosure', 'We may earn a small commission from qualifying purchases.')}
             </p>
           </div>
