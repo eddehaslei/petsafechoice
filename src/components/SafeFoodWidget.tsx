@@ -28,38 +28,57 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+    const normalizedName = foodName.trim();
+
     const fetchAffiliate = async () => {
-      setIsLoading(true);
-      const normalizedName = foodName.trim();
-
       try {
-        // Check database for matching affiliate
-        const { data, error } = await supabase.functions.invoke('get-all-affiliates');
+        // Attempt to fetch affiliates from database
+        const response = await supabase.functions.invoke('get-all-affiliates');
+        
+        // If component unmounted, bail out
+        if (!isMounted) return;
 
-        if (!error && data?.affiliates?.length > 0) {
-          const affiliates = data.affiliates as Array<{ product_name: string; affiliate_url: string }>;
+        // Check for successful response with data
+        if (response.data?.affiliates && Array.isArray(response.data.affiliates)) {
+          const affiliates = response.data.affiliates as Array<{ product_name: string; affiliate_url: string }>;
+          
+          // Case-insensitive name match
           const match = affiliates.find(
-            (a) => a.product_name?.toLowerCase() === normalizedName.toLowerCase()
+            (a) => a.product_name && a.product_name.toLowerCase() === normalizedName.toLowerCase()
           );
 
-          if (match) {
+          if (match && match.affiliate_url) {
+            console.log('Affiliate Status: Database Match');
             setAffiliateLink({ productName: match.product_name, url: match.affiliate_url });
             setIsLoading(false);
             return;
           }
         }
 
-        // Fallback: generate Amazon search link
+        // No database match - use fallback
+        console.log('Affiliate Status: Auto-Generated');
         setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
       } catch {
-        // Error resilience: always show fallback
-        setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
+        // Error occurred - use fallback (silent, no crash)
+        if (isMounted) {
+          console.log('Affiliate Status: Auto-Generated');
+          setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
+        }
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
     };
 
+    setIsLoading(true);
+    setAffiliateLink(null);
     fetchAffiliate();
+
+    return () => {
+      isMounted = false;
+    };
   }, [foodName]);
 
   return (
