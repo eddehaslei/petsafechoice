@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Gift, ShoppingBag, ExternalLink, Loader2, Star } from "lucide-react";
+import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { useGeoLocation } from "@/hooks/useGeoLocation";
@@ -47,7 +47,6 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const [products, setProducts] = useState<AffiliateProduct[]>([]);
   const [matchedAffiliate, setMatchedAffiliate] = useState<MatchedAffiliate | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [dbConnected, setDbConnected] = useState(false);
   const { countryCode } = useGeoLocation();
   const { t } = useTranslation();
 
@@ -55,39 +54,24 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
     const fetchAffiliates = async () => {
       setIsLoading(true);
       setMatchedAffiliate(null);
-      setDbConnected(false);
+      setProducts([]);
       
       try {
         const normalizedFoodName = foodName.trim();
-        console.log('[SafeFoodWidget] Fetching affiliate match for:', {
-          foodName: normalizedFoodName,
-          countryCode: countryCode || 'US',
-          petType,
-        });
 
-        // First, check for a matching affiliate product by food name
+        // 1) Try exact case-insensitive match by product_name only (no country filters)
         const matchResponse = await supabase.functions.invoke('get-affiliate-match', {
           body: { 
-            food_name: normalizedFoodName,
-            country_code: countryCode || 'US'
+            food_name: normalizedFoodName
           }
         });
 
-        // Debug log requested by user
-        console.log('Affiliate Data:', matchResponse.data);
-        console.log('Database Row Found:', matchResponse.data?.affiliate);
-
-        // Visible "connection alive" signal requested by user
-        if (matchResponse.data) {
-          setDbConnected(true);
-        }
-
         if (!matchResponse.error && matchResponse.data?.affiliate) {
-          // Match found - use this as the primary recommendation
+          // Match found - replace the section with a single button
           setMatchedAffiliate(matchResponse.data.affiliate);
           setProducts([]); // Clear generic products
         } else {
-          // No match - fetch general affiliates as fallback
+          // 2) No match - fetch general affiliates as fallback
           const { data, error } = await supabase.functions.invoke('get-affiliates', {
             body: { 
               pet_type: petType,
@@ -97,10 +81,6 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
           });
 
           if (error) throw error;
-
-          if (data) {
-            setDbConnected(true);
-          }
           
           if (data?.products && data.products.length > 0) {
             setProducts(data.products);
