@@ -16,19 +16,44 @@ interface AffiliateLink {
   url: string;
 }
 
-// Generic safe treats URL - always safe for pets
-const SAFE_TREATS_URL = "https://www.amazon.com/s?k=natural+freeze+dried+dog+cat+treats&rh=p_72%3A2661611011&tag=petsafechoice-20";
+// Amazon domain and filter configuration by language
+const AMAZON_CONFIG: Record<string, { domain: string; tag: string; ratingFilter: string }> = {
+  es: { domain: "amazon.es", tag: "petsafechoice-20", ratingFilter: "p_72%3A440634031" },
+  de: { domain: "amazon.de", tag: "petsafechoice-20", ratingFilter: "p_72%3A419130031" },
+  fr: { domain: "amazon.fr", tag: "petsafechoice-20", ratingFilter: "p_72%3A428432031" },
+  en: { domain: "amazon.com", tag: "petsafechoice-20", ratingFilter: "p_72%3A2661611011" },
+};
+
+const DEFAULT_CONFIG = AMAZON_CONFIG.en;
+
+/**
+ * Get Amazon config based on user's language
+ */
+function getAmazonConfig(language: string) {
+  return AMAZON_CONFIG[language] || DEFAULT_CONFIG;
+}
+
+/**
+ * Generate safe treats URL based on language
+ */
+function getSafeTreatsUrl(language: string): string {
+  const config = getAmazonConfig(language);
+  return `https://www.${config.domain}/s?k=natural+freeze+dried+dog+cat+treats&rh=${config.ratingFilter}&tag=${config.tag}`;
+}
 
 /**
  * Generate a fallback Amazon search URL with 4+ star quality filter
  */
-function generateFallbackUrl(foodName: string): string {
+function generateFallbackUrl(foodName: string, language: string): string {
+  const config = getAmazonConfig(language);
   const searchTerm = encodeURIComponent(foodName);
-  return `https://www.amazon.com/s?k=${searchTerm}&rh=p_72%3A2661611011&tag=petsafechoice-20`;
+  return `https://www.${config.domain}/s?k=${searchTerm}&rh=${config.ratingFilter}&tag=${config.tag}`;
 }
 
 export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
   function SafeFoodWidget({ foodName, petType, safetyLevel = "safe" }, ref) {
+    const { i18n } = useTranslation();
+    const currentLanguage = i18n.language?.split('-')[0] || 'en';
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(true);
     const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
@@ -41,7 +66,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       if (isDangerous) {
         setAffiliateLink({
           productName: "Natural Freeze-Dried Treats",
-          url: SAFE_TREATS_URL
+          url: getSafeTreatsUrl(currentLanguage)
         });
         setIsLoading(false);
         console.log('Affiliate Status: Safe Alternative (Dangerous Food)');
@@ -74,12 +99,12 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
 
           if (isMounted) {
             console.log('Affiliate Status: Auto-Generated');
-            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
+            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName, currentLanguage) });
           }
         } catch {
           if (isMounted) {
             console.log('Affiliate Status: Auto-Generated');
-            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
+            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName, currentLanguage) });
           }
         } finally {
           if (isMounted) {
@@ -95,7 +120,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       return () => {
         isMounted = false;
       };
-    }, [foodName, isDangerous]);
+    }, [foodName, isDangerous, currentLanguage]);
 
     // Dynamic styling based on safety
     const containerBg = isDangerous ? "bg-primary/10 border-primary/30" : "bg-safe/10 border-safe/30";
