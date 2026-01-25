@@ -213,10 +213,11 @@ const Index = () => {
                   </>
                 )}
                 
-                {/* Affiliate Widget - shows for ALL safety levels */}
+                {/* Affiliate Widget - shows for ALL safety levels with safety intelligence */}
                 <SafeFoodWidget 
                   foodName={result.food} 
-                  petType={result.petType} 
+                  petType={result.petType}
+                  safetyLevel={result.safetyLevel}
                 />
                 
                 {/* Related Foods - drives engagement */}
