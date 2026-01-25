@@ -134,10 +134,26 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     const isDangerous = safetyLevel === "dangerous";
     const isCaution = safetyLevel === "caution";
     
-    // Generate LoremFlickr image URL - reliable and keyword-based
+    // Pet product keywords that need special handling
+    const PET_PRODUCT_KEYWORDS = ['oil', 'treat', 'supplement', 'vitamin', 'chew', 'bone', 'biscuit'];
+    
+    // Generate Unsplash image URL with product-first keywords
     const getImageUrl = () => {
-      const searchTerm = encodeURIComponent(foodName.toLowerCase().trim());
-      return `https://loremflickr.com/800/400/${searchTerm},food/all`;
+      const foodLower = foodName.toLowerCase().trim();
+      
+      // Check if it's a pet product that needs special keywords
+      const isPetProduct = PET_PRODUCT_KEYWORDS.some(keyword => foodLower.includes(keyword));
+      
+      let searchTerms = foodLower;
+      if (isPetProduct) {
+        // Add pet-specific keywords for products like oils, treats, supplements
+        searchTerms = `${foodLower},pet-treat,dog-food`;
+      } else {
+        // Standard food - use white-background, product for clean shots
+        searchTerms = `${foodLower},white-background,product`;
+      }
+      
+      return `https://source.unsplash.com/featured/800x400/?${encodeURIComponent(searchTerms)}`;
     };
     
     // Get fallback image based on safety level
