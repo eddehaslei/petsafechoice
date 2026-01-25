@@ -17,7 +17,7 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
       style={{ backgroundColor: '#F28C74' }}
     >
       <ShoppingBag className="w-6 h-6" />
-      <span>View Recommended {productName} on Amazon</span>
+      <span>Shop Best-Selling {productName} on Amazon</span>
       <ExternalLink className="w-5 h-5" />
     </button>
   );
