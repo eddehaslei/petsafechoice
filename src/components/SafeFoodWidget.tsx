@@ -12,11 +12,12 @@ interface SafeFoodWidgetProps {
 interface AffiliateLink {
   productName: string;
   url: string;
-  isFromDatabase: boolean;
 }
 
-// Generate a fallback Amazon search URL with 4+ star quality filter
-function generateFallbackAffiliateUrl(foodName: string): string {
+/**
+ * Generate a fallback Amazon search URL with 4+ star quality filter
+ */
+function generateFallbackUrl(foodName: string): string {
   const searchTerm = encodeURIComponent(foodName);
   return `https://www.amazon.com/s?k=${searchTerm}&rh=p_72%3A2661611011&tag=petsafechoice-20`;
 }
@@ -27,62 +28,43 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
   const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
 
   useEffect(() => {
-    const fetchAffiliateMatch = async () => {
+    const fetchAffiliate = async () => {
       setIsLoading(true);
-      setAffiliateLink(null);
+      const normalizedName = foodName.trim();
 
       try {
-        const normalizedFoodName = foodName.trim().toLowerCase();
-
-        // Fetch all affiliates from database
+        // Check database for matching affiliate
         const { data, error } = await supabase.functions.invoke('get-all-affiliates');
 
-        if (!error && data?.affiliates) {
+        if (!error && data?.affiliates?.length > 0) {
           const affiliates = data.affiliates as Array<{ product_name: string; affiliate_url: string }>;
-
-          // Case-insensitive match
           const match = affiliates.find(
-            (a) => (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
+            (a) => a.product_name?.toLowerCase() === normalizedName.toLowerCase()
           );
 
           if (match) {
-            // Found a match in the database
-            setAffiliateLink({
-              productName: match.product_name,
-              url: match.affiliate_url,
-              isFromDatabase: true,
-            });
+            setAffiliateLink({ productName: match.product_name, url: match.affiliate_url });
             setIsLoading(false);
             return;
           }
         }
 
-        // No match found - generate fallback Amazon search link
-        setAffiliateLink({
-          productName: foodName.trim(),
-          url: generateFallbackAffiliateUrl(foodName.trim()),
-          isFromDatabase: false,
-        });
-      } catch (err) {
-        console.error('Error fetching affiliates:', err);
-        // On error, still show fallback
-        setAffiliateLink({
-          productName: foodName.trim(),
-          url: generateFallbackAffiliateUrl(foodName.trim()),
-          isFromDatabase: false,
-        });
+        // Fallback: generate Amazon search link
+        setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
+      } catch {
+        // Error resilience: always show fallback
+        setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName) });
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchAffiliateMatch();
-  }, [petType, foodName]);
+    fetchAffiliate();
+  }, [foodName]);
 
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
       <div className="bg-safe/10 border-2 border-safe/30 rounded-2xl p-5 relative overflow-hidden">
-        {/* Decorative element */}
         <div className="absolute top-0 right-0 w-24 h-24 bg-safe/10 rounded-full -translate-y-1/2 translate-x-1/2" />
 
         <div className="relative">
@@ -105,16 +87,11 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
           ) : affiliateLink ? (
-            /* Affiliate Button - Database match or Fallback */
-            <AffiliateButton
-              productName={affiliateLink.productName}
-              affiliateUrl={affiliateLink.url}
-            />
+            <AffiliateButton productName={affiliateLink.productName} affiliateUrl={affiliateLink.url} />
           ) : null}
 
-          {/* Affiliate disclosure */}
           <p className="mt-4 text-xs text-muted-foreground text-center">
-            {t('safeFoodWidget.disclosure', 'These are general recommendations. We may earn a small commission from qualifying purchases.')}
+            {t('safeFoodWidget.disclosure', 'We may earn a small commission from qualifying purchases.')}
           </p>
         </div>
       </div>
