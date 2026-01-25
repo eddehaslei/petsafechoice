@@ -41,7 +41,7 @@ serve(async (req) => {
       );
     }
 
-    const { food_name, country_code } = await req.json();
+    const { food_name } = await req.json();
 
     if (!food_name) {
       return new Response(
@@ -57,30 +57,13 @@ serve(async (req) => {
     // Normalize food name for matching
     const normalizedFoodName = food_name.toLowerCase().trim();
 
-    // First try to find an exact or partial match for the user's country
-    const validCountryCode = country_code?.toUpperCase().match(/^[A-Z]{2}$/) ? country_code.toUpperCase() : 'US';
-
-    let { data: affiliate, error } = await supabase
+    // Country targeting removed for now: match any affiliate by product_name (case-insensitive)
+    const { data: affiliate, error } = await supabase
       .from('affiliates')
       .select('id, product_name, affiliate_url')
-      .eq('country_code', validCountryCode)
       .ilike('product_name', `%${normalizedFoodName}%`)
       .limit(1)
       .maybeSingle();
-
-    // Fallback to US if no country-specific match found
-    if (!error && !affiliate && validCountryCode !== 'US') {
-      const fallback = await supabase
-        .from('affiliates')
-        .select('id, product_name, affiliate_url')
-        .eq('country_code', 'US')
-        .ilike('product_name', `%${normalizedFoodName}%`)
-        .limit(1)
-        .maybeSingle();
-      
-      affiliate = fallback.data;
-      error = fallback.error;
-    }
 
     if (error) {
       console.error("Database error:", error);
@@ -90,7 +73,7 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[${clientIP}] Affiliate match for "${food_name}": ${affiliate ? affiliate.product_name : 'none'}`);
+    console.log(`[${clientIP}] Affiliate match for "${food_name}" (no country filter): ${affiliate ? affiliate.product_name : 'none'}`);
 
     return new Response(
       JSON.stringify({ affiliate }),
