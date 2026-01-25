@@ -1,5 +1,5 @@
 import { useState, useEffect, forwardRef } from "react";
-import { ShoppingBag, Loader2, Shield } from "lucide-react";
+import { ShoppingBag, Loader2, Shield, UtensilsCrossed } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
@@ -121,9 +121,16 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     const { t } = useTranslation();
     const [isLoading, setIsLoading] = useState(true);
     const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
+    const [imageError, setImageError] = useState(false);
 
     // Check if food is dangerous - should show safe alternative instead
     const isDangerous = safetyLevel === "dangerous";
+    
+    // Generate Unsplash image URL
+    const getImageUrl = () => {
+      const searchTerm = encodeURIComponent(`${foodName} food`);
+      return `https://source.unsplash.com/featured/400x200/?${searchTerm}`;
+    };
 
     useEffect(() => {
       // If food is dangerous, skip fetching and show safe alternative immediately
@@ -136,6 +143,9 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
         console.log('Affiliate Status: Safe Alternative (Dangerous Food)');
         return;
       }
+      
+      // Reset image error state on food change
+      setImageError(false);
 
       let isMounted = true;
       const normalizedName = foodName.trim();
@@ -194,10 +204,32 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
 
     return (
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">
-        <div className={`${containerBg} border-2 rounded-2xl p-4 sm:p-5 relative overflow-hidden`}>
-          <div className={`absolute top-0 right-0 w-24 h-24 ${isDangerous ? 'bg-primary/10' : 'bg-safe/10'} rounded-full -translate-y-1/2 translate-x-1/2`} />
+        <div className={`${containerBg} border-2 rounded-2xl overflow-hidden relative`}>
+          {/* Food Image Section */}
+          <div className="relative w-full h-[160px] sm:h-[200px] bg-muted/30 overflow-hidden">
+            {!imageError ? (
+              <img
+                src={getImageUrl()}
+                alt={`${foodName} for ${petType}s`}
+                className="w-full h-full object-cover"
+                onError={() => setImageError(true)}
+                loading="lazy"
+              />
+            ) : (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-muted/50">
+                <UtensilsCrossed className="w-12 h-12 text-muted-foreground/40 mb-2" />
+                <span className="text-sm text-muted-foreground/60">
+                  {t('safeFoodWidget.noImage', 'Pet food imagery')}
+                </span>
+              </div>
+            )}
+            {/* Gradient overlay for better text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent pointer-events-none" />
+          </div>
+          
+          <div className={`absolute top-[160px] sm:top-[200px] right-4 w-24 h-24 ${isDangerous ? 'bg-primary/10' : 'bg-safe/10'} rounded-full -translate-y-1/2`} />
 
-          <div className="relative">
+          <div className="relative p-4 sm:p-5">
             <div className="flex items-center gap-3 mb-4 px-1">
               <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center shrink-0`}>
                 {isDangerous ? (
