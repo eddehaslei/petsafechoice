@@ -233,6 +233,9 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
             <p className="mt-4 px-2 sm:px-0 text-xs text-muted-foreground text-center leading-relaxed">
               {t('safeFoodWidget.disclosure', 'We may earn a small commission from qualifying purchases.')}
             </p>
+            <p className="mt-2 px-2 sm:px-0 text-[10px] text-muted-foreground/60 text-center leading-relaxed">
+              {t('safeFoodWidget.amazonDisclosure', 'As an Amazon Associate, I earn from qualifying purchases.')}
+            </p>
           </div>
         </div>
       </div>

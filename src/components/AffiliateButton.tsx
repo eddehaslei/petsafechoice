@@ -77,8 +77,14 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
     ? `Ver ${displayName} en Amazon`
     : `Shop Best-Selling ${displayName} on Amazon`;
 
+  // Generate Amazon.com fallback URL for Spanish users
+  const getGlobalFallbackUrl = () => {
+    const searchTerm = encodeURIComponent(`best ${productName}`);
+    return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
+  };
+
   return (
-    <div className="flex justify-center w-full">
+    <div className="flex flex-col items-center w-full gap-2">
       <button
         onClick={handleClick}
         className="w-[90%] sm:w-full flex items-center justify-center gap-2 sm:gap-3 px-4 sm:px-6 py-4 sm:py-5 rounded-2xl font-bold text-white text-base sm:text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
@@ -88,6 +94,18 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
         <span className="text-center leading-tight">{buttonText}</span>
         <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
       </button>
+      
+      {/* Regional fallback for Spanish users */}
+      {currentLanguage === 'es' && (
+        <a
+          href={getGlobalFallbackUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+        >
+          ¿No lo encuentras? Ver en Amazon Global (.com)
+        </a>
+      )}
     </div>
   );
 }
