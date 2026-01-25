@@ -56,13 +56,23 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
       setMatchedAffiliate(null);
       
       try {
+        const normalizedFoodName = foodName.trim();
+        console.log('[SafeFoodWidget] Fetching affiliate match for:', {
+          foodName: normalizedFoodName,
+          countryCode: countryCode || 'US',
+          petType,
+        });
+
         // First, check for a matching affiliate product by food name
         const matchResponse = await supabase.functions.invoke('get-affiliate-match', {
           body: { 
-            food_name: foodName,
+            food_name: normalizedFoodName,
             country_code: countryCode || 'US'
           }
         });
+
+        // Debug log requested by user
+        console.log('Affiliate Data:', matchResponse.data);
 
         if (!matchResponse.error && matchResponse.data?.affiliate) {
           // Match found - use this as the primary recommendation
@@ -160,7 +170,13 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
           ) : matchedAffiliate ? (
             /* Matched Affiliate - Custom Featured Card */
-            <div className="bg-card rounded-2xl border-2 border-primary/30 p-6 shadow-lg">
+            <div className="space-y-3">
+              {/* Visible placeholder requested by user */}
+              <div className="rounded-xl border-2 border-primary bg-primary text-primary-foreground p-4 text-center font-bold tracking-wide">
+                AFFILIATE FOUND
+              </div>
+
+              <div className="bg-card rounded-2xl border-2 border-primary/30 p-6 shadow-lg">
               <div className="flex items-center gap-2 mb-3">
                 <Star className="w-4 h-4 text-primary fill-primary" />
                 <span className="text-xs font-medium text-primary uppercase tracking-wide">
@@ -187,6 +203,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
                 <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}</span>
                 <ExternalLink className="w-4 h-4" />
               </button>
+              </div>
             </div>
           ) : (
             /* Fallback: Generic Recommendations Grid */
