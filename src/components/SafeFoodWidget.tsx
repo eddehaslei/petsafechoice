@@ -180,42 +180,16 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
           ) : matchedAffiliate ? (
-            /* Matched Affiliate - Custom Featured Card */
-            <div className="space-y-3">
-              {/* Visible placeholder requested by user */}
-              <div className="rounded-xl border-2 border-primary bg-primary text-primary-foreground p-4 text-center font-bold tracking-wide">
-                AFFILIATE FOUND
-              </div>
-
-              <div className="bg-card rounded-2xl border-2 border-primary/30 p-6 shadow-lg">
-              <div className="flex items-center gap-2 mb-3">
-                <Star className="w-4 h-4 text-primary fill-primary" />
-                <span className="text-xs font-medium text-primary uppercase tracking-wide">
-                  {t('safeFoodWidget.bestMatch', 'Best Match')}
-                </span>
-              </div>
-              
-              <h4 className="text-xl font-heading font-bold text-foreground mb-2">
-                {matchedAffiliate.product_name}
-              </h4>
-              
-              {matchedAffiliate.price_point && (
-                <p className="text-sm text-muted-foreground mb-4">
-                  {matchedAffiliate.price_point}
-                </p>
-              )}
-              
-              <button
-                onClick={handleAmazonClick}
-                className="w-full flex items-center justify-center gap-3 px-6 py-4 rounded-xl font-bold text-white transition-all duration-200 hover:scale-[1.02] hover:shadow-lg active:scale-[0.98]"
-                style={{ backgroundColor: '#F28C74' }}
-              >
-                <ShoppingBag className="w-5 h-5" />
-                <span>{t('safeFoodWidget.viewOnAmazon', 'View on Amazon')}</span>
-                <ExternalLink className="w-4 h-4" />
-              </button>
-              </div>
-            </div>
+            /* Matched Affiliate - Big CTA Button */
+            <button
+              onClick={handleAmazonClick}
+              className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
+              style={{ backgroundColor: '#F28C74' }}
+            >
+              <ShoppingBag className="w-6 h-6" />
+              <span>{t('safeFoodWidget.buyOnAmazon', 'Comprar {{product}} en Amazon', { product: matchedAffiliate.product_name })}</span>
+              <ExternalLink className="w-5 h-5" />
+            </button>
           ) : (
             /* Fallback: Generic Recommendations Grid */
             <div className="grid gap-3 sm:grid-cols-2">
@@ -258,12 +232,6 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
           <p className="mt-4 text-xs text-muted-foreground text-center">
             {t('safeFoodWidget.disclosure', 'These are general recommendations. We may earn a small commission from qualifying purchases.')}
           </p>
-
-          {dbConnected && (
-            <p className="mt-2 text-xs text-center font-semibold text-primary">
-              SUCCESS: DATABASE CONNECTED
-            </p>
-          )}
         </div>
       </div>
     </div>
