@@ -1,4 +1,4 @@
-import { useState, useEffect, forwardRef } from "react";
+import { useState, useEffect, useRef, forwardRef } from "react";
 import { ShoppingBag, Loader2, Shield, UtensilsCrossed } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
@@ -122,14 +122,54 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     const [isLoading, setIsLoading] = useState(true);
     const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
     const [imageError, setImageError] = useState(false);
+    const [imageLoaded, setImageLoaded] = useState(false);
+    const imageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Check if food is dangerous - should show safe alternative instead
     const isDangerous = safetyLevel === "dangerous";
     
-    // Generate Unsplash image URL
+    // Generate stable Unsplash image URL using picsum for consistency
     const getImageUrl = () => {
-      const searchTerm = encodeURIComponent(`${foodName} food`);
-      return `https://source.unsplash.com/featured/400x200/?${searchTerm}`;
+      // Use picsum.photos with a seed for consistent images per food
+      const seed = encodeURIComponent(foodName.toLowerCase().trim());
+      return `https://picsum.photos/seed/${seed}/800/400`;
+    };
+    
+    // SEO-optimized alt text
+    const getImageAlt = () => {
+      return `Safe food for pets: ${foodName.charAt(0).toUpperCase() + foodName.slice(1)}`;
+    };
+
+    // 3-second timeout for image loading
+    useEffect(() => {
+      setImageError(false);
+      setImageLoaded(false);
+      
+      imageTimeoutRef.current = setTimeout(() => {
+        if (!imageLoaded) {
+          setImageError(true);
+        }
+      }, 3000);
+      
+      return () => {
+        if (imageTimeoutRef.current) {
+          clearTimeout(imageTimeoutRef.current);
+        }
+      };
+    }, [foodName]);
+
+    const handleImageLoad = () => {
+      setImageLoaded(true);
+      if (imageTimeoutRef.current) {
+        clearTimeout(imageTimeoutRef.current);
+      }
+    };
+
+    const handleImageError = () => {
+      setImageError(true);
+      if (imageTimeoutRef.current) {
+        clearTimeout(imageTimeoutRef.current);
+      }
     };
 
     useEffect(() => {
@@ -144,8 +184,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
         return;
       }
       
-      // Reset image error state on food change
-      setImageError(false);
+      // Reset image states on food change (timeout handled in separate useEffect)
 
       let isMounted = true;
       const normalizedName = foodName.trim();
@@ -208,18 +247,27 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
           {/* Food Image Section */}
           <div className="relative w-full h-[160px] sm:h-[200px] bg-muted/30 overflow-hidden">
             {!imageError ? (
-              <img
-                src={getImageUrl()}
-                alt={`${foodName} for ${petType}s`}
-                className="w-full h-full object-cover"
-                onError={() => setImageError(true)}
-                loading="lazy"
-              />
+              <>
+                {/* Loading state while image loads */}
+                {!imageLoaded && (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
+                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                  </div>
+                )}
+                <img
+                  src={getImageUrl()}
+                  alt={getImageAlt()}
+                  className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={handleImageLoad}
+                  onError={handleImageError}
+                  loading="lazy"
+                />
+              </>
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-muted/50">
-                <UtensilsCrossed className="w-12 h-12 text-muted-foreground/40 mb-2" />
-                <span className="text-sm text-muted-foreground/60">
-                  {t('safeFoodWidget.noImage', 'Pet food imagery')}
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-safe/10">
+                <span className="text-5xl mb-2" role="img" aria-label="Pet food">🍽️</span>
+                <span className="text-sm text-muted-foreground/70 font-medium">
+                  {t('safeFoodWidget.petFood', 'Pet Food')}
                 </span>
               </div>
             )}
