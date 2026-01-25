@@ -1,4 +1,52 @@
 import { ShoppingBag, ExternalLink } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
+// Common food name translations for button display
+const FOOD_TRANSLATIONS_ES: Record<string, string> = {
+  "apple": "Manzana",
+  "banana": "Plátano",
+  "blueberry": "Arándano",
+  "blueberries": "Arándanos",
+  "carrot": "Zanahoria",
+  "carrots": "Zanahorias",
+  "chicken": "Pollo",
+  "chocolate": "Chocolate",
+  "egg": "Huevo",
+  "eggs": "Huevos",
+  "fish": "Pescado",
+  "grapes": "Uvas",
+  "grape": "Uva",
+  "meat": "Carne",
+  "milk": "Leche",
+  "onion": "Cebolla",
+  "onions": "Cebollas",
+  "peanut butter": "Mantequilla de Maní",
+  "pumpkin": "Calabaza",
+  "rice": "Arroz",
+  "salmon": "Salmón",
+  "salmon oil": "Aceite de Salmón",
+  "spinach": "Espinaca",
+  "strawberry": "Fresa",
+  "strawberries": "Fresas",
+  "sweet potato": "Batata",
+  "tuna": "Atún",
+  "turkey": "Pavo",
+  "watermelon": "Sandía",
+  "yogurt": "Yogur",
+  "cheese": "Queso",
+  "beef": "Carne de Res",
+  "pork": "Cerdo",
+  "honey": "Miel",
+  "oatmeal": "Avena",
+  "broccoli": "Brócoli",
+  "cucumber": "Pepino",
+  "mango": "Mango",
+  "coconut": "Coco",
+  "coconut oil": "Aceite de Coco",
+  "liver": "Hígado",
+  "shrimp": "Camarones",
+  "natural freeze-dried treats": "Snacks Liofilizados Naturales",
+};
 
 interface AffiliateButtonProps {
   productName: string;
@@ -6,9 +54,28 @@ interface AffiliateButtonProps {
 }
 
 export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonProps) {
+  const { i18n, t } = useTranslation();
+  const currentLanguage = i18n.language?.split('-')[0] || 'en';
+
   const handleClick = () => {
     window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
   };
+
+  // Translate product name for display
+  const getDisplayName = () => {
+    if (currentLanguage === 'es') {
+      const lowerName = productName.toLowerCase().trim();
+      return FOOD_TRANSLATIONS_ES[lowerName] || productName;
+    }
+    return productName;
+  };
+
+  const displayName = getDisplayName();
+
+  // Localized button text
+  const buttonText = currentLanguage === 'es'
+    ? `Ver ${displayName} en Amazon`
+    : `Shop Best-Selling ${displayName} on Amazon`;
 
   return (
     <div className="flex justify-center w-full">
@@ -18,7 +85,7 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
         style={{ backgroundColor: '#F28C74' }}
       >
         <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />
-        <span className="text-center leading-tight">Shop Best-Selling {productName} on Amazon</span>
+        <span className="text-center leading-tight">{buttonText}</span>
         <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
       </button>
     </div>
