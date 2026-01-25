@@ -16,13 +16,15 @@ interface AffiliateLink {
   url: string;
 }
 
-// Amazon domain and filter configuration by language
-const AMAZON_CONFIG: Record<string, { domain: string; tag: string; ratingFilter: string }> = {
-  es: { domain: "amazon.es", tag: "petsafechoice-20", ratingFilter: "p_72%3A440634031" },
-  de: { domain: "amazon.de", tag: "petsafechoice-20", ratingFilter: "p_72%3A419130031" },
-  fr: { domain: "amazon.fr", tag: "petsafechoice-20", ratingFilter: "p_72%3A428432031" },
-  en: { domain: "amazon.com", tag: "petsafechoice-20", ratingFilter: "p_72%3A2661611011" },
+// Amazon domain configuration by language
+const AMAZON_CONFIG: Record<string, { domain: string; tag: string }> = {
+  es: { domain: "amazon.es", tag: "petsafechoice-20" },
+  de: { domain: "amazon.de", tag: "petsafechoice-20" },
+  fr: { domain: "amazon.fr", tag: "petsafechoice-20" },
+  en: { domain: "amazon.com", tag: "petsafechoice-20" },
 };
+
+const DEFAULT_CONFIG = AMAZON_CONFIG.en;
 
 // Common food name translations for Spanish Amazon searches
 const FOOD_TRANSLATIONS_ES: Record<string, string> = {
@@ -70,7 +72,6 @@ const FOOD_TRANSLATIONS_ES: Record<string, string> = {
   "shrimp": "camarones",
 };
 
-const DEFAULT_CONFIG = AMAZON_CONFIG.en;
 
 /**
  * Get Amazon config based on user's language
@@ -96,19 +97,21 @@ function translateFoodName(foodName: string, language: string): string {
 function getSafeTreatsUrl(language: string): string {
   const config = getAmazonConfig(language);
   const safetyKeyword = language === 'es' 
-    ? 'snacks+liofilizados+naturales+perros+gatos' 
-    : 'natural+freeze+dried+dog+cat+treats';
-  return `https://www.${config.domain}/s?k=${safetyKeyword}&rh=${config.ratingFilter}&tag=${config.tag}`;
+    ? 'mejores+snacks+naturales+perros+gatos' 
+    : 'best+natural+freeze+dried+dog+cat+treats';
+  return `https://www.${config.domain}/s?k=${safetyKeyword}&tag=${config.tag}`;
 }
 
 /**
- * Generate a fallback Amazon search URL with 4+ star quality filter
+ * Generate a fallback Amazon search URL with "Best" prefix for quality results
  */
 function generateFallbackUrl(foodName: string, language: string): string {
   const config = getAmazonConfig(language);
   const translatedName = translateFoodName(foodName, language);
-  const searchTerm = encodeURIComponent(translatedName);
-  return `https://www.${config.domain}/s?k=${searchTerm}&rh=${config.ratingFilter}&tag=${config.tag}`;
+  // Add "Best" or "Mejores" prefix to help Amazon find top-rated products
+  const qualityPrefix = language === 'es' ? 'mejores' : 'best';
+  const searchTerm = encodeURIComponent(`${qualityPrefix} ${translatedName}`);
+  return `https://www.${config.domain}/s?k=${searchTerm}&tag=${config.tag}`;
 }
 
 export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
