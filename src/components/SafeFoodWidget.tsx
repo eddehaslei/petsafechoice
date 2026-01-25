@@ -127,17 +127,34 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
 
     // Check if food is dangerous - should show safe alternative instead
     const isDangerous = safetyLevel === "dangerous";
+    const isCaution = safetyLevel === "caution";
     
-    // Generate stable Unsplash image URL using picsum for consistency
+    // Generate Unsplash image URL with food-specific keywords
     const getImageUrl = () => {
-      // Use picsum.photos with a seed for consistent images per food
-      const seed = encodeURIComponent(foodName.toLowerCase().trim());
-      return `https://picsum.photos/seed/${seed}/800/400`;
+      const searchTerm = encodeURIComponent(foodName.toLowerCase().trim());
+      return `https://source.unsplash.com/featured/800x400/?${searchTerm},fruit,vegetable,food`;
+    };
+    
+    // Fallback image URLs based on safety level
+    const getFallbackImageUrl = () => {
+      if (isDangerous) {
+        // Warning/caution themed image for toxic foods
+        return 'https://source.unsplash.com/featured/800x400/?warning,stop,caution';
+      }
+      // Happy dog eating for safe foods
+      return 'https://source.unsplash.com/featured/800x400/?happy,dog,eating,treat';
     };
     
     // SEO-optimized alt text
     const getImageAlt = () => {
-      return `Safe food for pets: ${foodName.charAt(0).toUpperCase() + foodName.slice(1)}`;
+      const capitalizedFood = foodName.charAt(0).toUpperCase() + foodName.slice(1);
+      return `Safe food for pets: ${capitalizedFood}`;
+    };
+    
+    // SEO description/title for the image
+    const getImageTitle = () => {
+      const capitalizedFood = foodName.charAt(0).toUpperCase() + foodName.slice(1);
+      return `Fresh ${capitalizedFood} for pets`;
     };
 
     // 3-second timeout for image loading
@@ -257,6 +274,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
                 <img
                   src={getImageUrl()}
                   alt={getImageAlt()}
+                  title={getImageTitle()}
                   className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
                   onLoad={handleImageLoad}
                   onError={handleImageError}
@@ -264,11 +282,39 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
                 />
               </>
             ) : (
-              <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-safe/10">
-                <span className="text-5xl mb-2" role="img" aria-label="Pet food">🍽️</span>
-                <span className="text-sm text-muted-foreground/70 font-medium">
-                  {t('safeFoodWidget.petFood', 'Pet Food')}
-                </span>
+              <div className="relative w-full h-full overflow-hidden">
+                {/* Safety-aware fallback image */}
+                <img
+                  src={getFallbackImageUrl()}
+                  alt={isDangerous ? "Warning: toxic food for pets" : "Happy dog with safe treats"}
+                  title={isDangerous ? "This food is not safe for pets" : "Safe and healthy pet treats"}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    // Ultimate fallback to colored background with emoji
+                    e.currentTarget.style.display = 'none';
+                  }}
+                />
+                {/* Overlay for toxic foods */}
+                {isDangerous && (
+                  <div className="absolute inset-0 bg-danger/20 flex items-center justify-center">
+                    <div className="bg-background/90 rounded-full p-4">
+                      <Shield className="w-10 h-10 text-danger" />
+                    </div>
+                  </div>
+                )}
+                {/* Fallback emoji if image fails */}
+                <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-safe/10 -z-10">
+                  <span className="text-5xl mb-2" role="img" aria-label={isDangerous ? "Warning" : "Pet food"}>
+                    {isDangerous ? "⚠️" : "🐕"}
+                  </span>
+                  <span className="text-sm text-muted-foreground/70 font-medium">
+                    {isDangerous 
+                      ? t('safeFoodWidget.notRecommended', 'Not Recommended')
+                      : t('safeFoodWidget.healthyChoice', 'Healthy Choice')
+                    }
+                  </span>
+                </div>
               </div>
             )}
             {/* Gradient overlay for better text contrast */}
