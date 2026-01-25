@@ -30,6 +30,7 @@ const Index = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [result, setResult] = useState<SafetyResultData | null>(null);
   const [searchSource, setSearchSource] = useState<"trending" | "search" | null>(null);
+  const [lastSearchedFood, setLastSearchedFood] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
   const { addSearch } = useRecentSearches();
 
@@ -37,6 +38,7 @@ const Index = () => {
     setIsLoading(true);
     setResult(null);
     setSearchSource(source);
+    setLastSearchedFood(food);
 
     try {
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
@@ -73,6 +75,20 @@ const Index = () => {
       setIsLoading(false);
     }
   };
+
+  // Auto-refresh when pet type changes (if there's an active result)
+  useEffect(() => {
+    if (lastSearchedFood && result) {
+      handleSearch(lastSearchedFood, searchSource || "search");
+    }
+  }, [petType]);
+
+  // Auto-refresh when language changes (if there's an active result)
+  useEffect(() => {
+    if (lastSearchedFood && result) {
+      handleSearch(lastSearchedFood, searchSource || "search");
+    }
+  }, [i18n.language]);
 
   const handleBackToDiscovery = () => {
     setResult(null);
