@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Gift, ShoppingBag, ExternalLink, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { supabase } from "@/integrations/supabase/client";
+import { AffiliateButton } from "./AffiliateButton";
 
 interface SafeFoodWidgetProps {
   foodName: string;
@@ -16,16 +16,20 @@ interface AffiliateProduct {
   food_category_link: string | null;
 }
 
-interface MatchedAffiliate {
-  id: string;
-  product_name: string;
-  affiliate_url: string;
-  price_point?: string | null;
-  image_url?: string | null;
-}
+// Hardcoded affiliate matches (we'll replace with DB later)
+const HARDCODED_AFFILIATES: Record<string, { productName: string; url: string }> = {
+  "salmon oil": {
+    productName: "Salmon Oil",
+    url: "https://www.amazon.com/dp/B0002ABR6E?tag=petsafechoice-20",
+  },
+  "aceite de salmón": {
+    productName: "Aceite de Salmón",
+    url: "https://www.amazon.com/dp/B0002ABR6E?tag=petsafechoice-20",
+  },
+};
 
-// Fallback recommendations if API fails
-const getFallbackRecommendations = (petType: "dog" | "cat") => [
+// Fallback recommendations if no affiliate match
+const getFallbackRecommendations = (petType: "dog" | "cat"): AffiliateProduct[] => [
   {
     id: "fallback-1",
     product_name: petType === "dog" ? "Premium Training Treats" : "Gourmet Cat Treats",
@@ -34,7 +38,7 @@ const getFallbackRecommendations = (petType: "dog" | "cat") => [
     food_category_link: petType,
   },
   {
-    id: "fallback-2", 
+    id: "fallback-2",
     product_name: petType === "dog" ? "Natural Freeze-Dried Snacks" : "Dental Health Treats",
     price_point: null,
     image_url: null,
@@ -43,83 +47,33 @@ const getFallbackRecommendations = (petType: "dog" | "cat") => [
 ];
 
 export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
-  const [products, setProducts] = useState<AffiliateProduct[]>([]);
-  const [matchedAffiliate, setMatchedAffiliate] = useState<MatchedAffiliate | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
   const { t } = useTranslation();
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<AffiliateProduct[]>([]);
+
+  // Check for hardcoded affiliate match
+  const normalizedFoodName = foodName.trim().toLowerCase();
+  const hardcodedMatch = HARDCODED_AFFILIATES[normalizedFoodName];
 
   useEffect(() => {
-    const fetchAffiliates = async () => {
-      setIsLoading(true);
-      setMatchedAffiliate(null);
-      setProducts([]);
-      
-      try {
-        const normalizedFoodName = foodName.trim().toLowerCase();
-
-        // Fetch all affiliates (no filters) then match name-to-name (case-insensitive)
-        const { data, error } = await supabase.functions.invoke('get-all-affiliates');
-        if (error) throw error;
-
-        const affiliates = (data?.affiliates ?? []) as Array<{ product_name: string; affiliate_url: string }>;
-
-        const match = affiliates.find((a) =>
-          (a.product_name ?? '').trim().toLowerCase() === normalizedFoodName
-        );
-
-        if (match) {
-          setMatchedAffiliate({ id: 'match', product_name: match.product_name, affiliate_url: match.affiliate_url });
-          setProducts([]);
-        } else {
-          setProducts(getFallbackRecommendations(petType));
-        }
-      } catch (err) {
-        console.error('Error fetching affiliates:', err);
+    // Simple loading simulation
+    setIsLoading(true);
+    const timer = setTimeout(() => {
+      if (!hardcodedMatch) {
         setProducts(getFallbackRecommendations(petType));
-      } finally {
-        setIsLoading(false);
       }
-    };
+      setIsLoading(false);
+    }, 300);
 
-    fetchAffiliates();
-  }, [petType, foodName]);
+    return () => clearTimeout(timer);
+  }, [petType, foodName, hardcodedMatch]);
 
-  const handleProductClick = async (productId: string) => {
-    if (productId.startsWith('fallback-')) return;
-    
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/affiliate-redirect?id=${productId}`,
-        {
-          headers: {
-            'apikey': import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY,
-          }
-        }
-      );
-      
-      if (response.ok) {
-        const result = await response.json();
-        if (result.url) {
-          window.open(result.url, '_blank', 'noopener,noreferrer');
-        }
-      }
-    } catch (err) {
-      console.error('Error redirecting:', err);
-    }
-  };
-
-  const handleAmazonClick = () => {
-    if (matchedAffiliate?.affiliate_url) {
-      window.open(matchedAffiliate.affiliate_url, '_blank', 'noopener,noreferrer');
-    }
-  };
-  
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
       <div className="bg-safe/10 border-2 border-safe/30 rounded-2xl p-5 relative overflow-hidden">
         {/* Decorative element */}
         <div className="absolute top-0 right-0 w-24 h-24 bg-safe/10 rounded-full -translate-y-1/2 translate-x-1/2" />
-        
+
         <div className="relative">
           <div className="flex items-center gap-3 mb-4">
             <div className="w-10 h-10 rounded-xl bg-safe/20 flex items-center justify-center">
@@ -127,56 +81,42 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
             </div>
             <div>
               <h3 className="font-heading font-bold text-foreground">
-                {matchedAffiliate 
+                {hardcodedMatch
                   ? t('safeFoodWidget.recommendedProduct', 'Recommended Product')
-                  : t('safeFoodWidget.title', 'Treat Recommendations')
-                }
+                  : t('safeFoodWidget.title', 'Treat Recommendations')}
               </h3>
               <p className="text-xs text-muted-foreground">
-                {matchedAffiliate
+                {hardcodedMatch
                   ? t('safeFoodWidget.matchFound', 'We found a great option for you!')
-                  : t('safeFoodWidget.subtitle', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase(), defaultValue: `Vet-approved options your ${petType} will love` })
-                }
+                  : t('safeFoodWidget.subtitle', `Vet-approved options your ${petType} will love`)}
               </p>
             </div>
           </div>
-          
+
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
               <Loader2 className="w-6 h-6 animate-spin text-safe" />
             </div>
-          ) : matchedAffiliate ? (
-            /* Matched Affiliate - total override */
-            <button
-              onClick={handleAmazonClick}
-              className="w-full flex items-center justify-center gap-3 px-6 py-5 rounded-2xl font-bold text-white text-lg transition-all duration-200 hover:scale-[1.02] hover:shadow-xl active:scale-[0.98]"
-              style={{ backgroundColor: '#F28C74' }}
-            >
-              <ShoppingBag className="w-6 h-6" />
-              <span>
-                {t(
-                  'safeFoodWidget.viewRecommendedOnAmazon',
-                  'View Recommended {{food}} on Amazon',
-                  { food: matchedAffiliate.product_name }
-                )}
-              </span>
-              <ExternalLink className="w-5 h-5" />
-            </button>
+          ) : hardcodedMatch ? (
+            /* Hardcoded Affiliate Match - Single Big Button */
+            <AffiliateButton
+              productName={hardcodedMatch.productName}
+              affiliateUrl={hardcodedMatch.url}
+            />
           ) : (
             /* Fallback: Generic Recommendations Grid */
             <div className="grid gap-3 sm:grid-cols-2">
               {products.map((product) => (
                 <div
                   key={product.id}
-                  onClick={() => handleProductClick(product.id)}
                   className="bg-card/80 rounded-xl p-4 border border-border/50 hover:border-safe/40 transition-all duration-200 hover:-translate-y-0.5 cursor-pointer group"
                 >
                   <div className="flex items-start gap-3">
                     <div className="w-8 h-8 rounded-lg bg-safe/10 flex items-center justify-center text-safe group-hover:bg-safe/20 transition-colors">
                       {product.image_url ? (
-                        <img 
-                          src={product.image_url} 
-                          alt="" 
+                        <img
+                          src={product.image_url}
+                          alt=""
                           className="w-6 h-6 object-contain rounded"
                         />
                       ) : (
@@ -199,7 +139,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
               ))}
             </div>
           )}
-          
+
           {/* Affiliate disclosure */}
           <p className="mt-4 text-xs text-muted-foreground text-center">
             {t('safeFoodWidget.disclosure', 'These are general recommendations. We may earn a small commission from qualifying purchases.')}
