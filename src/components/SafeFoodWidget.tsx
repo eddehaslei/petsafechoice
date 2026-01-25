@@ -15,10 +15,10 @@ interface AffiliateLink {
   isFromDatabase: boolean;
 }
 
-// Generate a fallback Amazon search URL
-function generateFallbackAffiliateUrl(foodName: string, petType: "dog" | "cat"): string {
-  const searchTerm = encodeURIComponent(`${foodName} for ${petType}s`);
-  return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
+// Generate a fallback Amazon search URL with 4+ star quality filter
+function generateFallbackAffiliateUrl(foodName: string): string {
+  const searchTerm = encodeURIComponent(foodName);
+  return `https://www.amazon.com/s?k=${searchTerm}&rh=p_72%3A2661611011&tag=petsafechoice-20`;
 }
 
 export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
@@ -60,7 +60,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
         // No match found - generate fallback Amazon search link
         setAffiliateLink({
           productName: foodName.trim(),
-          url: generateFallbackAffiliateUrl(foodName.trim(), petType),
+          url: generateFallbackAffiliateUrl(foodName.trim()),
           isFromDatabase: false,
         });
       } catch (err) {
@@ -68,7 +68,7 @@ export function SafeFoodWidget({ foodName, petType }: SafeFoodWidgetProps) {
         // On error, still show fallback
         setAffiliateLink({
           productName: foodName.trim(),
-          url: generateFallbackAffiliateUrl(foodName.trim(), petType),
+          url: generateFallbackAffiliateUrl(foodName.trim()),
           isFromDatabase: false,
         });
       } finally {
