@@ -1,9 +1,16 @@
-import { useState, useEffect, useRef, forwardRef } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { ShoppingBag, Loader2, Shield, UtensilsCrossed } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
 import type { SafetyLevel } from "./SafetyResult";
+
+// High-quality fallback images (reliable hosted images)
+const FALLBACK_IMAGES = {
+  safe: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=800&h=400&fit=crop&q=80", // Happy dog
+  dangerous: "https://images.unsplash.com/photo-1548199973-03cce0bbc87b?w=800&h=400&fit=crop&q=80", // Alert dog
+  default: "https://images.unsplash.com/photo-1623387641168-d9803ddd3f35?w=800&h=400&fit=crop&q=80", // Pet food bowl
+};
 
 interface SafeFoodWidgetProps {
   foodName: string;
@@ -122,27 +129,21 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     const [isLoading, setIsLoading] = useState(true);
     const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
     const [imageError, setImageError] = useState(false);
-    const [imageLoaded, setImageLoaded] = useState(false);
-    const imageTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     // Check if food is dangerous - should show safe alternative instead
     const isDangerous = safetyLevel === "dangerous";
     const isCaution = safetyLevel === "caution";
     
-    // Generate Unsplash image URL with food-specific keywords
+    // Generate LoremFlickr image URL - reliable and keyword-based
     const getImageUrl = () => {
       const searchTerm = encodeURIComponent(foodName.toLowerCase().trim());
-      return `https://source.unsplash.com/featured/800x400/?${searchTerm},fruit,vegetable,food`;
+      return `https://loremflickr.com/800/400/${searchTerm},food/all`;
     };
     
-    // Fallback image URLs based on safety level
-    const getFallbackImageUrl = () => {
-      if (isDangerous) {
-        // Warning/caution themed image for toxic foods
-        return 'https://source.unsplash.com/featured/800x400/?warning,stop,caution';
-      }
-      // Happy dog eating for safe foods
-      return 'https://source.unsplash.com/featured/800x400/?happy,dog,eating,treat';
+    // Get fallback image based on safety level
+    const getFallbackImage = () => {
+      if (isDangerous) return FALLBACK_IMAGES.dangerous;
+      return FALLBACK_IMAGES.safe;
     };
     
     // SEO-optimized alt text
@@ -157,36 +158,13 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       return `Fresh ${capitalizedFood} for pets`;
     };
 
-    // 3-second timeout for image loading
+    // Reset image error on food change
     useEffect(() => {
       setImageError(false);
-      setImageLoaded(false);
-      
-      imageTimeoutRef.current = setTimeout(() => {
-        if (!imageLoaded) {
-          setImageError(true);
-        }
-      }, 3000);
-      
-      return () => {
-        if (imageTimeoutRef.current) {
-          clearTimeout(imageTimeoutRef.current);
-        }
-      };
     }, [foodName]);
-
-    const handleImageLoad = () => {
-      setImageLoaded(true);
-      if (imageTimeoutRef.current) {
-        clearTimeout(imageTimeoutRef.current);
-      }
-    };
 
     const handleImageError = () => {
       setImageError(true);
-      if (imageTimeoutRef.current) {
-        clearTimeout(imageTimeoutRef.current);
-      }
     };
 
     useEffect(() => {
@@ -261,49 +239,39 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     return (
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">
         <div className={`${containerBg} border-2 rounded-2xl overflow-hidden relative`}>
-          {/* Food Image Section */}
+          {/* Food Image Section - Simplified without fade effects */}
           <div className="relative w-full h-[160px] sm:h-[200px] bg-muted/30 overflow-hidden">
             {!imageError ? (
-              <>
-                {/* Loading state while image loads */}
-                {!imageLoaded && (
-                  <div className="absolute inset-0 flex items-center justify-center bg-muted/30">
-                    <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-                  </div>
-                )}
-                <img
-                  src={getImageUrl()}
-                  alt={getImageAlt()}
-                  title={getImageTitle()}
-                  className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  onLoad={handleImageLoad}
-                  onError={handleImageError}
-                  loading="lazy"
-                />
-              </>
+              <img
+                src={getImageUrl()}
+                alt={getImageAlt()}
+                title={getImageTitle()}
+                className="w-full h-full object-cover"
+                onError={handleImageError}
+                loading="lazy"
+              />
             ) : (
               <div className="relative w-full h-full overflow-hidden">
-                {/* Safety-aware fallback image */}
+                {/* Reliable fallback image based on safety */}
                 <img
-                  src={getFallbackImageUrl()}
-                  alt={isDangerous ? "Warning: toxic food for pets" : "Happy dog with safe treats"}
-                  title={isDangerous ? "This food is not safe for pets" : "Safe and healthy pet treats"}
+                  src={getFallbackImage()}
+                  alt={isDangerous ? "This food is not safe for pets" : "Healthy pet food"}
+                  title={isDangerous ? "Warning: toxic food" : "Safe and healthy pet treats"}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   onError={(e) => {
-                    // Ultimate fallback to colored background with emoji
                     e.currentTarget.style.display = 'none';
                   }}
                 />
                 {/* Overlay for toxic foods */}
                 {isDangerous && (
-                  <div className="absolute inset-0 bg-danger/20 flex items-center justify-center">
-                    <div className="bg-background/90 rounded-full p-4">
+                  <div className="absolute inset-0 bg-danger/30 flex items-center justify-center">
+                    <div className="bg-background/90 rounded-full p-4 shadow-lg">
                       <Shield className="w-10 h-10 text-danger" />
                     </div>
                   </div>
                 )}
-                {/* Fallback emoji if image fails */}
+                {/* Ultimate emoji fallback if image also fails */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-safe/10 -z-10">
                   <span className="text-5xl mb-2" role="img" aria-label={isDangerous ? "Warning" : "Pet food"}>
                     {isDangerous ? "⚠️" : "🐕"}
