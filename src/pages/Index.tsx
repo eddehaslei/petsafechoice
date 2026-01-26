@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { Dog, Cat, Heart, ArrowLeft } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
-import { SafetyResult, SafetyResultData } from "@/components/SafetyResult";
+import { SafetyResult } from "@/components/SafetyResult";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { TrustBar } from "@/components/TrustBar";
@@ -18,23 +18,37 @@ import { VetMapWidget } from "@/components/VetMapWidget";
 import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
 import { TrendingSafetyTips } from "@/components/TrendingSafetyTips";
 import { RecentSearches, useRecentSearches } from "@/components/RecentSearches";
+import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
-type PetType = "dog" | "cat";
-
 const Index = () => {
-  const [petType, setPetType] = useState<PetType>("dog");
-  const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState<SafetyResultData | null>(null);
-  const [searchSource, setSearchSource] = useState<"trending" | "search" | null>(null);
-  const [lastSearchedFood, setLastSearchedFood] = useState<string | null>(null);
   const { t, i18n } = useTranslation();
   const { addSearch } = useRecentSearches();
+  
+  // Global state from Zustand store - persists across navigation
+  const {
+    petType,
+    result,
+    lastSearchedFood,
+    isLoading,
+    searchSource,
+    setPetType,
+    setResult,
+    setLastSearchedFood,
+    setIsLoading,
+    setSearchSource,
+    clearResult,
+  } = useSearchStore();
 
-  const handleSearch = async (food: string, source: "trending" | "search" = "search") => {
+  // Track if we should trigger auto-refresh on toggle changes
+  const isFirstRender = useRef(true);
+  const previousPetType = useRef(petType);
+  const previousLanguage = useRef(i18n.language);
+
+  const handleSearch = useCallback(async (food: string, source: "trending" | "search" = "search") => {
     setIsLoading(true);
     setResult(null);
     setSearchSource(source);
@@ -49,11 +63,11 @@ const Index = () => {
         console.error("Edge function error:", error);
         
         if (error.message?.includes("429") || error.status === 429) {
-          toast.error("Too many requests. Please wait a moment and try again.");
+          toast.error(t('errors.tooManyRequests', 'Too many requests. Please wait a moment and try again.'));
         } else if (error.message?.includes("402") || error.status === 402) {
-          toast.error("Service temporarily unavailable. Please try again later.");
+          toast.error(t('errors.serviceUnavailable', 'Service temporarily unavailable. Please try again later.'));
         } else {
-          toast.error("Failed to check food safety. Please try again.");
+          toast.error(t('errors.generic', 'Failed to check food safety. Please try again.'));
         }
         return;
       }
@@ -70,29 +84,36 @@ const Index = () => {
       }
     } catch (err) {
       console.error("Error checking food safety:", err);
-      toast.error("Something went wrong. Please try again.");
+      toast.error(t('errors.generic', 'Something went wrong. Please try again.'));
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t]);
 
-  // Auto-refresh when pet type changes (if there's an active result)
+  // Auto-refresh when pet type changes (if there's an active search)
   useEffect(() => {
-    if (lastSearchedFood && result) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    
+    // Only trigger if petType actually changed and we have a previous search
+    if (previousPetType.current !== petType && lastSearchedFood) {
       handleSearch(lastSearchedFood, searchSource || "search");
     }
-  }, [petType]);
+    previousPetType.current = petType;
+  }, [petType, lastSearchedFood, searchSource, handleSearch]);
 
-  // Auto-refresh when language changes (if there's an active result)
+  // Auto-refresh when language changes (if there's an active search)
   useEffect(() => {
-    if (lastSearchedFood && result) {
+    if (previousLanguage.current !== i18n.language && lastSearchedFood && result) {
       handleSearch(lastSearchedFood, searchSource || "search");
     }
-  }, [i18n.language]);
+    previousLanguage.current = i18n.language;
+  }, [i18n.language, lastSearchedFood, result, searchSource, handleSearch]);
 
   const handleBackToDiscovery = () => {
-    setResult(null);
-    setSearchSource(null);
+    clearResult();
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -138,12 +159,15 @@ const Index = () => {
             <h1 className="text-4xl md:text-5xl font-heading font-extrabold text-foreground mb-3">
               {t('common.appName')}
             </h1>
-            <p className="text-lg text-muted-foreground max-w-lg mx-auto mb-6">
+            {/* Tagline - hidden on mobile for cleaner UI */}
+            <p className="hidden sm:block text-lg text-muted-foreground max-w-lg mx-auto mb-6">
               {t('common.tagline')}
             </p>
             
-            {/* Trust Bar */}
-            <TrustBar />
+            {/* Trust Bar - hidden on mobile for cleaner UI */}
+            <div className="hidden sm:block">
+              <TrustBar />
+            </div>
           </div>
         ) : (
           <div className="mb-6 animate-fade-in">
@@ -160,11 +184,11 @@ const Index = () => {
         )}
 
         {/* Pet Toggle */}
-        <div className="flex justify-center mb-8 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <div className="flex justify-center mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
           <PetToggle value={petType} onChange={setPetType} />
         </div>
 
-        {/* Search */}
+        {/* Search - Full width with button below */}
         <div className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
           <FoodSearch onSearch={(food) => handleSearch(food, "search")} isLoading={isLoading} />
         </div>
