@@ -31,12 +31,16 @@
     "disclaimer": "Aviso Legal",
     "disclaimerTitle": "Aviso Médico",
     "disclaimerText": "PetSafeChoice es solo para uso educativo. Siempre consulte a un veterinario con licencia antes de cambiar la dieta de su mascota o en caso de emergencia.",
-    "readMore": "Leer aviso completo →"
+    "readMore": "Leer aviso completo →",
+    "affiliateDisclosure": "Como Asociado de Amazon, gano con compras calificadas. Los precios y la disponibilidad de los productos son precisos a la fecha/hora indicada y están sujetos a cambios."
   },
   "vetBadge": {
     "verified": "Verificado por Veterinarios",
     "boardName": "Consejo Veterinario Asesor de PetSafeChoice",
     "reviewedBy": "Revisado médicamente por profesionales veterinarios con licencia"
+  },
+  "verifiedBadge": {
+    "verified": "Datos Verificados"
   },
   "petToggle": {
     "dog": "Perro",
@@ -88,6 +92,26 @@
     "supplement": "Suplemento",
     "grain": "Grano",
     "toxic": "Tóxico"
+  },
+  "newsletter": {
+    "title": "Consejos de Seguridad Semanales",
+    "description": "Recibe consejos de seguridad alimentaria, retiros de productos y asesoramiento experto en tu correo.",
+    "placeholder": "Ingresa tu correo",
+    "subscribe": "Suscribirse",
+    "subscribed": "¡Estás suscrito!",
+    "checkInbox": "Revisa tu correo para consejos semanales de seguridad.",
+    "success": "¡Gracias por suscribirte! Revisa tu correo para nuestro mensaje de bienvenida.",
+    "invalidEmail": "Por favor ingresa una dirección de correo válida"
+  },
+  "emergency": {
+    "title": "Contactos de Emergencia",
+    "subtitle": "Números importantes a tener a mano si tu mascota ingiere algo dañino.",
+    "didYourPetEat": "¿Tu {{petType}} Comió {{food}}?",
+    "timeIsCritical": "El tiempo es crítico en casos de envenenamiento. Contacta a un veterinario inmediatamente si sospechas que tu mascota ha ingerido este alimento.",
+    "showingInfoFor": "Mostrando información de emergencia para {{city}}",
+    "emergencyContacts": "Contactos de Emergencia",
+    "call": "Llamar",
+    "visitWebsite": "Visitar Sitio Web"
   },
   "about": {
     "title": "Acerca de Nosotros",
@@ -189,10 +213,6 @@
       "description": "Si bien estos alimentos son generalmente seguros, siempre introduce nuevos alimentos gradualmente y con moderación. Cada mascota es única y algunas pueden tener sensibilidades o alergias individuales. En caso de duda, consulta a tu veterinario."
     }
   },
-  "emergency": {
-    "title": "Contactos de Emergencia",
-    "subtitle": "Números importantes a tener a mano si tu mascota ingiere algo dañino."
-  },
   "trending": {
     "title": "Tendencias Ahora",
     "scientificReference": "Referencia Científica",
@@ -219,5 +239,10 @@
       "keyword": "Comida Cruda Deshidratada",
       "summary": "Topper Alto en Proteína – el punto medio más seguro entre croquetas y crudo."
     }
+  },
+  "errors": {
+    "tooManyRequests": "Demasiadas solicitudes. Por favor espera un momento e inténtalo de nuevo.",
+    "serviceUnavailable": "Servicio temporalmente no disponible. Por favor inténtalo más tarde.",
+    "generic": "Algo salió mal. Por favor inténtalo de nuevo."
   }
 }

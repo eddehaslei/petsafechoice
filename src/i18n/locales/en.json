@@ -31,12 +31,16 @@
     "disclaimer": "Disclaimer",
     "disclaimerTitle": "Medical Disclaimer",
     "disclaimerText": "PetSafeChoice is for educational use only. Always consult a licensed veterinarian before changing your pet's diet or in an emergency.",
-    "readMore": "Read full disclaimer →"
+    "readMore": "Read full disclaimer →",
+    "affiliateDisclosure": "As an Amazon Associate I earn from qualifying purchases. Product prices and availability are accurate as of the date/time indicated and are subject to change."
   },
   "vetBadge": {
     "verified": "Vet-Verified",
     "boardName": "PetSafeChoice Veterinary Advisory Board",
     "reviewedBy": "Medically reviewed by licensed veterinary professionals"
+  },
+  "verifiedBadge": {
+    "verified": "Verified Data"
   },
   "petToggle": {
     "dog": "Dog",
@@ -88,6 +92,26 @@
     "supplement": "Supplement",
     "grain": "Grain",
     "toxic": "Toxic"
+  },
+  "newsletter": {
+    "title": "Weekly Safety Tips",
+    "description": "Get pet food safety tips, recalls, and expert advice in your inbox.",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "subscribed": "You're subscribed!",
+    "checkInbox": "Check your inbox for weekly safety tips.",
+    "success": "Thanks for subscribing! Check your inbox for our welcome email.",
+    "invalidEmail": "Please enter a valid email address"
+  },
+  "emergency": {
+    "title": "Emergency Contacts",
+    "subtitle": "Important numbers to have on hand if your pet ingests something harmful.",
+    "didYourPetEat": "Did Your {{petType}} Eat {{food}}?",
+    "timeIsCritical": "Time is critical in poisoning cases. Contact a veterinarian immediately if you suspect your pet has ingested this food.",
+    "showingInfoFor": "Showing emergency info for {{city}}",
+    "emergencyContacts": "Emergency Contacts",
+    "call": "Call",
+    "visitWebsite": "Visit Website"
   },
   "about": {
     "title": "About Us",
@@ -189,10 +213,6 @@
       "description": "While these foods are generally safe, always introduce new foods gradually and in moderation. Every pet is unique, and some may have individual sensitivities or allergies. When in doubt, consult your veterinarian."
     }
   },
-  "emergency": {
-    "title": "Emergency Contacts",
-    "subtitle": "Important numbers to have on hand if your pet ingests something harmful."
-  },
   "trending": {
     "title": "Trending Now",
     "scientificReference": "Scientific Reference",
@@ -219,5 +239,10 @@
       "keyword": "Air-Dried Raw Food",
       "summary": "High-Protein Topper – the safest middle ground between kibble and raw."
     }
+  },
+  "errors": {
+    "tooManyRequests": "Too many requests. Please wait a moment and try again.",
+    "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
+    "generic": "Something went wrong. Please try again."
   }
 }

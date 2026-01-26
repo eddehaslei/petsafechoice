@@ -1,6 +1,7 @@
 import { Heart } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { NewsletterSignup } from "./NewsletterSignup";
 
 export const Footer = () => {
   const { t } = useTranslation();
@@ -8,6 +9,11 @@ export const Footer = () => {
   return (
     <footer className="py-8 border-t border-border/50 bg-card/30">
       <div className="container max-w-4xl mx-auto px-4">
+        {/* Newsletter Signup */}
+        <div className="mb-8">
+          <NewsletterSignup />
+        </div>
+
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
           <div>
             <h4 className="font-semibold text-foreground mb-3">{t('footer.company')}</h4>
@@ -79,6 +85,13 @@ export const Footer = () => {
             <Link to="/disclaimer" className="text-primary hover:underline font-medium">
               {t('footer.readMore', 'Read full disclaimer →')}
             </Link>
+          </p>
+        </div>
+
+        {/* Amazon Affiliate Disclosure */}
+        <div className="py-3 px-4 bg-background/50 rounded-lg border border-border/30 mb-6">
+          <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed">
+            {t('footer.affiliateDisclosure', 'As an Amazon Associate I earn from qualifying purchases. Product prices and availability are accurate as of the date/time indicated and are subject to change.')}
           </p>
         </div>
 
