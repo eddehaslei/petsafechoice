@@ -58,18 +58,24 @@ const Index = () => {
     console.info("Logging search:", { query, species, language: i18n.language, safetyLevel });
     
     try {
-      const { error } = await supabase.from('search_logs').insert({
-        query,
-        species,
-        language: i18n.language,
-        result_safety_level: safetyLevel,
-        source: 'search',
-      });
+      // IMPORTANT: insert must be an ARRAY of objects and we call .select() to force a DB confirmation
+      const { data, error } = await supabase
+        .from("search_logs")
+        .insert([
+          {
+            query: query,
+            species: species,
+            language: i18n.language,
+            result_safety_level: safetyLevel,
+            source: "search",
+          },
+        ])
+        .select();
       
       if (error) {
         console.error("Supabase Error:", error);
       } else {
-        console.info("Search logged successfully");
+        console.info("Search logged successfully", { inserted: data?.[0] ?? null });
       }
     } catch (err) {
       console.error('Failed to log search:', err);
@@ -80,6 +86,8 @@ const Index = () => {
     // Check cache first for instant results
     const cached = getCachedResult(food, petType);
     if (cached) {
+      // Ensure we never show a loading state when we have cached data
+      setIsLoading(false);
       setResult(cached);
       setLastSearchedFood(food);
       setSearchSource(source);
@@ -147,6 +155,8 @@ const Index = () => {
       // Check cache first for instant switch
       const cached = getCachedResult(lastSearchedFood, petType);
       if (cached) {
+        // If we're switching back to a cached result, avoid any loading/flicker
+        setIsLoading(false);
         setResult(cached);
         // Log the toggle switch
         logSearch(lastSearchedFood, petType, cached.safetyLevel);
