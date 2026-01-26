@@ -175,6 +175,23 @@ serve(async (req) => {
     if (dbFood) {
       console.log(`[${clientIP}] ✅ Found in database: ${dbFood.name} (${dbFood.safety_rating}) - FREE`);
       
+      // Log search to analytics (async, don't block response)
+      (async () => {
+        try {
+          await supabase.from('search_logs').insert({
+            query: foodLower,
+            species: petType,
+            language: language,
+            country_code: countryCode,
+            result_safety_level: mapSafetyRating(dbFood.safety_rating),
+            source: 'database'
+          });
+          console.log(`[${clientIP}] Search logged`);
+        } catch (logErr) {
+          console.error('Search log error:', logErr);
+        }
+      })();
+      
       const safetyData = {
         food: dbFood.name,
         petType: petType,
@@ -299,6 +316,23 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
       safetyData.source = "ai";
       safetyData.countryCode = countryCode;
       safetyData.affiliate = affiliate;
+      
+      // Log AI search to analytics (async, don't block response)
+      (async () => {
+        try {
+          await supabase.from('search_logs').insert({
+            query: foodLower,
+            species: petType,
+            language: language,
+            country_code: countryCode,
+            result_safety_level: safetyData.safetyLevel,
+            source: 'ai'
+          });
+          console.log(`[${clientIP}] AI Search logged`);
+        } catch (logErr) {
+          console.error('AI Search log error:', logErr);
+        }
+      })();
     } catch (parseError) {
       console.error("Failed to parse AI response:", content);
       return new Response(

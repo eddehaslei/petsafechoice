@@ -5,7 +5,5 @@
     <ellipse cx="17" cy="6" rx="4" ry="5" fill="#E29578"/>
     <ellipse cx="26" cy="12" rx="5" ry="6" fill="#E29578"/>
   </g>
-  <text x="45" y="33" font-family="Nunito, sans-serif" font-size="22" font-weight="700">
-    <tspan fill="#E29578">Pet</tspan><tspan fill="#2D2D2D">Safe</tspan><tspan fill="#83B394">Choice</tspan>
-  </text>
+  <text x="45" y="33" font-family="Nunito, sans-serif" font-size="22" font-weight="700" fill="#E29578">PetSafeChoice</text>
 </svg>

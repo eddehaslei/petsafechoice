@@ -92,31 +92,33 @@ const Emergency = () => {
           {city && !geoLoading && (
             <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary">
               <MapPin className="w-4 h-4" />
-              <span className="font-medium">Showing results for: {city}</span>
+              <span className="font-medium">{t('emergency.showingInfoFor', { city })}</span>
             </div>
           )}
         </div>
 
-        {/* Emergency Alert */}
-        <div className="bg-danger/10 border border-danger/30 rounded-2xl p-6 mb-8">
-          <div className="flex items-start gap-4">
+        {/* Emergency Alert - Fixed height:auto and 24px padding */}
+        <div className="bg-danger/10 border border-danger/30 rounded-2xl p-6 mb-8" style={{ height: 'auto', padding: '24px' }}>
+          <div className="flex flex-col sm:flex-row items-start gap-4">
             <div className="w-12 h-12 bg-danger/20 rounded-xl flex items-center justify-center flex-shrink-0">
               <AlertTriangle className="w-6 h-6 text-danger" />
             </div>
-            <div>
-              <h2 className="text-xl font-semibold text-foreground mb-2">If Your Pet Is In Immediate Danger</h2>
+            <div className="flex-1">
+              <h2 className="text-xl font-semibold text-foreground mb-2">
+                {t('emergency.immediateHelp', 'If Your Pet Is In Immediate Danger')}
+              </h2>
               <p className="text-muted-foreground mb-4">
-                Call your nearest emergency vet clinic immediately. Time is critical in poisoning cases.
+                {t('emergency.callVet', 'Call your nearest emergency vet clinic immediately. Time is critical in poisoning cases.')}
               </p>
               {emergencyData && (
-                <div className="flex flex-wrap gap-3">
-                  <Button variant="destructive" className="gap-2" asChild>
+                <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+                  <Button variant="destructive" className="gap-2 min-h-[48px]" asChild>
                     <a href={`tel:${emergencyData.emergencyNumbers.general.replace(/\D/g, '')}`}>
                       <Phone className="w-4 h-4" />
-                      Emergency: {emergencyData.emergencyNumbers.general}
+                      {t('emergency.call', 'Call')}: {emergencyData.emergencyNumbers.general}
                     </a>
                   </Button>
-                  <Button variant="outline" className="gap-2 border-danger/50 text-danger hover:bg-danger/10" asChild>
+                  <Button variant="outline" className="gap-2 border-danger/50 text-danger hover:bg-danger/10 min-h-[48px]" asChild>
                     <a href={`tel:${emergencyData.emergencyNumbers.poison.replace(/[^\d+]/g, '')}`}>
                       <Phone className="w-4 h-4" />
                       {emergencyData.emergencyNumbers.poison}
@@ -159,7 +161,9 @@ const Emergency = () => {
                     <Clock className="w-6 h-6 text-primary" />
                   </div>
                   <div>
-                    <h2 className="text-xl font-semibold text-foreground">24/7 Emergency Vet Clinics</h2>
+                    <h2 className="text-xl font-semibold text-foreground">
+                      {t('emergency.24hClinics', '24/7 Emergency Vet Clinics')}
+                    </h2>
                     <p className="text-sm text-muted-foreground">
                       {emergencyData.message}
                     </p>
@@ -170,7 +174,7 @@ const Emergency = () => {
                   {emergencyData.clinics.map((clinic, index) => (
                     <div 
                       key={index}
-                      className="bg-background rounded-xl border border-border/50 p-4 hover:border-primary/30 transition-colors"
+                      className="bg-background rounded-xl border border-border/50 p-4 hover:border-primary/30 transition-colors pb-8"
                     >
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
@@ -208,9 +212,9 @@ const Emergency = () => {
                             )}
                           </div>
                         </div>
-                        <Button variant="default" size="sm" className="flex-shrink-0" asChild>
+                        <Button variant="default" size="sm" className="flex-shrink-0 min-h-[48px]" asChild>
                           <a href={`tel:${clinic.phone.replace(/\D/g, '')}`}>
-                            Call Now
+                            {t('emergency.callNow', 'Call Now')}
                           </a>
                         </Button>
                       </div>
@@ -221,10 +225,9 @@ const Emergency = () => {
             ) : (
               <div className="bg-card rounded-2xl border border-border p-6 mb-8 text-center">
                 <p className="text-muted-foreground mb-4">
-                  No specific emergency vet clinics found for your location. 
-                  Please search online for "24 hour emergency vet near me" or call the emergency numbers above.
+                  {t('emergency.noClinicsFound', 'No specific emergency vet clinics found for your location. Please search online for "24 hour emergency vet near me" or call the emergency numbers above.')}
                 </p>
-                <Button variant="outline" asChild>
+                <Button variant="outline" className="min-h-[48px]" asChild>
                   <a 
                     href={`https://www.google.com/maps/search/24+hour+emergency+vet+${encodeURIComponent(city || '')}`}
                     target="_blank"
@@ -232,7 +235,7 @@ const Emergency = () => {
                     className="gap-2"
                   >
                     <MapPin className="w-4 h-4" />
-                    Search on Google Maps
+                    {t('emergency.searchMaps', 'Search on Google Maps')}
                   </a>
                 </Button>
               </div>
@@ -241,28 +244,30 @@ const Emergency = () => {
         )}
 
         {/* What To Do Section */}
-        <div className="bg-card rounded-2xl border border-border p-6">
-          <h2 className="text-xl font-semibold text-foreground mb-4">What To Do In A Pet Emergency</h2>
+        <div className="bg-card rounded-2xl border border-border p-6 pb-8">
+          <h2 className="text-xl font-semibold text-foreground mb-4">
+            {t('emergency.whatToDo', 'What To Do In A Pet Emergency')}
+          </h2>
           <ol className="space-y-3">
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">1</span>
-              <p className="text-muted-foreground"><strong className="text-foreground">Stay calm.</strong> Your pet can sense your stress.</p>
+              <p className="text-muted-foreground"><strong className="text-foreground">{t('emergency.step1Title', 'Stay calm.')}</strong> {t('emergency.step1Desc', 'Your pet can sense your stress.')}</p>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">2</span>
-              <p className="text-muted-foreground"><strong className="text-foreground">Note what they ate</strong> and approximately how much.</p>
+              <p className="text-muted-foreground"><strong className="text-foreground">{t('emergency.step2Title', 'Note what they ate')}</strong> {t('emergency.step2Desc', 'and approximately how much.')}</p>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">3</span>
-              <p className="text-muted-foreground"><strong className="text-foreground">Call the emergency vet</strong> before heading there - they may give you immediate instructions.</p>
+              <p className="text-muted-foreground"><strong className="text-foreground">{t('emergency.step3Title', 'Call the emergency vet')}</strong> {t('emergency.step3Desc', 'before heading there - they may give you immediate instructions.')}</p>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">4</span>
-              <p className="text-muted-foreground"><strong className="text-foreground">Don't induce vomiting</strong> unless specifically instructed by a vet.</p>
+              <p className="text-muted-foreground"><strong className="text-foreground">{t('emergency.step4Title', "Don't induce vomiting")}</strong> {t('emergency.step4Desc', 'unless specifically instructed by a vet.')}</p>
             </li>
             <li className="flex items-start gap-3">
               <span className="flex-shrink-0 w-6 h-6 bg-primary/10 rounded-full flex items-center justify-center text-sm font-semibold text-primary">5</span>
-              <p className="text-muted-foreground"><strong className="text-foreground">Bring the packaging</strong> or sample of what your pet consumed if possible.</p>
+              <p className="text-muted-foreground"><strong className="text-foreground">{t('emergency.step5Title', 'Bring the packaging')}</strong> {t('emergency.step5Desc', 'or sample of what your pet consumed if possible.')}</p>
             </li>
           </ol>
         </div>

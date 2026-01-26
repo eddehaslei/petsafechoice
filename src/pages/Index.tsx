@@ -176,7 +176,7 @@ const Index = () => {
             {/* Back to Home button - always visible on results */}
             <button
               onClick={handleBackToDiscovery}
-              className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card hover:bg-accent border border-border/50 hover:border-primary/30 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-x-0.5 min-h-[44px]"
+              className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card hover:bg-accent border border-border/50 hover:border-primary/30 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-x-0.5 min-h-[48px]"
             >
               <ArrowLeft className="w-4 h-4" />
               {t('nav.back')} {t('nav.home')}
@@ -205,7 +205,7 @@ const Index = () => {
                   <button
                     key={food}
                     onClick={() => handleSearch(food, "search")}
-                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5 min-h-[44px]"
+                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5 min-h-[48px]"
                   >
                     {food}
                   </button>

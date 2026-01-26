@@ -8,10 +8,10 @@ interface DynamicSEOProps {
 export function DynamicSEO({ result }: DynamicSEOProps) {
   useEffect(() => {
     if (result) {
-      // Dynamic title: "Can Dogs Eat Chocolate? Safety & Health Guide"
+      // Dynamic title: "Can Dogs Eat Chocolate? Safety & Facts | PetSafeChoice"
       const petName = result.petType === "dog" ? "Dogs" : "Cats";
       const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
-      const newTitle = `Can ${petName} Eat ${foodName}? Safety & Health Guide`;
+      const newTitle = `Can ${petName} Eat ${foodName}? Safety & Facts | PetSafeChoice`;
       
       // Dynamic meta description based on safety level
       let description = "";
@@ -42,14 +42,21 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
       // Update Open Graph tags
       updateMetaTag("og:title", newTitle);
       updateMetaTag("og:description", description);
+      updateMetaTag("og:type", "article");
+      updateMetaTag("og:site_name", "PetSafeChoice");
 
       // Update Twitter tags
       updateMetaTag("twitter:title", newTitle);
       updateMetaTag("twitter:description", description);
+      updateMetaTag("twitter:card", "summary_large_image");
     } else {
       // Reset to default when no result
       document.title = "Can My Pet Eat This? | Pet Food Safety Checker";
       updateMetaTag("description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
+      updateMetaTag("og:title", "Can My Pet Eat This? | Pet Food Safety Checker");
+      updateMetaTag("og:description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
+      updateMetaTag("twitter:title", "Can My Pet Eat This? | Pet Food Safety Checker");
+      updateMetaTag("twitter:description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
     }
   }, [result]);
 
