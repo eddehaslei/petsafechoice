@@ -89,6 +89,39 @@ export type Database = {
         }
         Relationships: []
       }
+      search_logs: {
+        Row: {
+          country_code: string | null
+          created_at: string
+          id: string
+          language: string | null
+          query: string
+          result_safety_level: string | null
+          source: string | null
+          species: string
+        }
+        Insert: {
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          query: string
+          result_safety_level?: string | null
+          source?: string | null
+          species: string
+        }
+        Update: {
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          language?: string | null
+          query?: string
+          result_safety_level?: string | null
+          source?: string | null
+          species?: string
+        }
+        Relationships: []
+      }
       vets: {
         Row: {
           city: string
