@@ -1,5 +1,6 @@
-import { forwardRef } from "react";
-import { Search, ArrowRight } from "lucide-react";
+import { forwardRef, useState, useEffect } from "react";
+import { Search, ArrowRight, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 interface RelatedFoodsProps {
   currentFood: string;
@@ -7,82 +8,199 @@ interface RelatedFoodsProps {
   onFoodClick: (food: string) => void;
 }
 
-// Related foods mapping by category
-const foodCategories: Record<string, string[]> = {
+// Food category mapping for grouping
+const foodCategories: Record<string, string> = {
   // Fruits
-  blueberries: ["strawberries", "raspberries", "blackberries", "cranberries"],
-  strawberries: ["blueberries", "raspberries", "watermelon", "cantaloupe"],
-  raspberries: ["blueberries", "strawberries", "blackberries", "mango"],
-  grapes: ["raisins", "cherries", "plums", "apricots"],
-  apples: ["pears", "bananas", "watermelon", "mango"],
-  bananas: ["apples", "watermelon", "pineapple", "mango"],
-  watermelon: ["cantaloupe", "honeydew", "strawberries", "bananas"],
-  avocado: ["mango", "papaya", "coconut", "kiwi"],
-  oranges: ["tangerines", "lemons", "grapefruit", "limes"],
+  blueberries: "fruit",
+  strawberries: "fruit",
+  raspberries: "fruit",
+  blackberries: "fruit",
+  cranberries: "fruit",
+  grapes: "fruit",
+  raisins: "fruit",
+  apples: "fruit",
+  bananas: "fruit",
+  watermelon: "fruit",
+  cantaloupe: "fruit",
+  honeydew: "fruit",
+  mango: "fruit",
+  pineapple: "fruit",
+  avocado: "fruit",
+  oranges: "fruit",
+  cherries: "fruit",
+  plums: "fruit",
+  apricots: "fruit",
   
   // Vegetables
-  carrots: ["sweet potato", "pumpkin", "green beans", "peas"],
-  pumpkin: ["sweet potato", "carrots", "squash", "zucchini"],
-  broccoli: ["cauliflower", "green beans", "spinach", "kale"],
-  spinach: ["kale", "lettuce", "broccoli", "green beans"],
+  carrots: "vegetable",
+  pumpkin: "vegetable",
+  "sweet potato": "vegetable",
+  broccoli: "vegetable",
+  cauliflower: "vegetable",
+  spinach: "vegetable",
+  kale: "vegetable",
+  "green beans": "vegetable",
+  peas: "vegetable",
+  zucchini: "vegetable",
+  squash: "vegetable",
+  lettuce: "vegetable",
   
   // Proteins
-  chicken: ["turkey", "beef", "salmon", "eggs"],
-  beef: ["chicken", "turkey", "lamb", "pork"],
-  salmon: ["tuna", "sardines", "cod", "chicken"],
-  eggs: ["chicken", "turkey", "cheese", "yogurt"],
-  
-  // Dangerous foods
-  chocolate: ["coffee", "caffeine", "cocoa", "xylitol"],
-  xylitol: ["chocolate", "grapes", "onions", "garlic"],
-  onions: ["garlic", "leeks", "chives", "shallots"],
-  garlic: ["onions", "leeks", "chives", "shallots"],
+  chicken: "protein",
+  turkey: "protein",
+  beef: "protein",
+  lamb: "protein",
+  pork: "protein",
+  salmon: "protein",
+  tuna: "protein",
+  sardines: "protein",
+  cod: "protein",
+  eggs: "protein",
   
   // Dairy
-  cheese: ["yogurt", "milk", "cottage cheese", "cream cheese"],
-  milk: ["cheese", "yogurt", "ice cream", "butter"],
-  yogurt: ["cheese", "milk", "cottage cheese", "kefir"],
+  cheese: "dairy",
+  yogurt: "dairy",
+  milk: "dairy",
+  "cottage cheese": "dairy",
+  "cream cheese": "dairy",
+  butter: "dairy",
+  "ice cream": "dairy",
+  kefir: "dairy",
+  
+  // Dangerous/Toxic
+  chocolate: "toxic",
+  xylitol: "toxic",
+  onions: "toxic",
+  garlic: "toxic",
+  coffee: "toxic",
+  caffeine: "toxic",
+  alcohol: "toxic",
   
   // Nuts & Seeds
-  peanuts: ["almonds", "cashews", "walnuts", "sunflower seeds"],
-  almonds: ["peanuts", "cashews", "pecans", "hazelnuts"],
+  peanuts: "nuts",
+  almonds: "nuts",
+  cashews: "nuts",
+  walnuts: "nuts",
+  pecans: "nuts",
+  "peanut butter": "nuts",
   
   // Grains
-  rice: ["oatmeal", "quinoa", "pasta", "bread"],
-  bread: ["rice", "pasta", "oatmeal", "crackers"],
-  oatmeal: ["rice", "quinoa", "bread", "barley"],
+  rice: "grain",
+  oatmeal: "grain",
+  bread: "grain",
+  pasta: "grain",
+  quinoa: "grain",
   
-  // Cooked items
-  "cooked bones": ["raw bones", "chicken bones", "fish bones", "bone broth"],
+  // Bones
+  "cooked bones": "bones",
+  "raw bones": "bones",
+  "chicken bones": "bones",
+  "fish bones": "bones",
+  "bone broth": "bones",
 };
-
-// Fallback suggestions if no specific match
-const defaultSuggestions = ["chocolate", "grapes", "chicken", "pumpkin"];
 
 export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
   function RelatedFoods({ currentFood, petType, onFoodClick }, ref) {
-    const normalizedFood = currentFood.toLowerCase().trim();
-    
-    // Find related foods
-    let relatedFoods = foodCategories[normalizedFood];
-    
-    // If no exact match, try partial matching
-    if (!relatedFoods) {
-      const matchingKey = Object.keys(foodCategories).find(key => 
-        normalizedFood.includes(key) || key.includes(normalizedFood)
+    const [relatedFoods, setRelatedFoods] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+      const fetchRelatedFoods = async () => {
+        setIsLoading(true);
+        
+        // Get category of current food
+        const normalizedFood = currentFood.toLowerCase().trim();
+        let currentCategory = foodCategories[normalizedFood];
+        
+        // Try partial matching if no exact match
+        if (!currentCategory) {
+          const matchingKey = Object.keys(foodCategories).find(
+            (key) => normalizedFood.includes(key) || key.includes(normalizedFood)
+          );
+          currentCategory = matchingKey ? foodCategories[matchingKey] : null;
+        }
+
+        try {
+          // Fetch foods from database
+          const { data, error } = await supabase
+            .from("foods")
+            .select("name, species")
+            .or(`species.eq.${petType},species.eq.both`);
+
+          if (error) {
+            console.error("Error fetching related foods:", error);
+            setRelatedFoods([]);
+            return;
+          }
+
+          if (!data || data.length === 0) {
+            setRelatedFoods([]);
+            return;
+          }
+
+          // Deduplicate by lowercase name
+          const uniqueFoods = Array.from(
+            new Map(data.map((f) => [f.name.toLowerCase(), f.name])).values()
+          );
+
+          // Filter out current food
+          const otherFoods = uniqueFoods.filter(
+            (name) => name.toLowerCase() !== normalizedFood
+          );
+
+          // If we have a category, prioritize same-category foods
+          let sameCategoryFoods: string[] = [];
+          let otherCategoryFoods: string[] = [];
+
+          if (currentCategory) {
+            otherFoods.forEach((name) => {
+              const category = foodCategories[name.toLowerCase()];
+              if (category === currentCategory) {
+                sameCategoryFoods.push(name);
+              } else {
+                otherCategoryFoods.push(name);
+              }
+            });
+          } else {
+            otherCategoryFoods = otherFoods;
+          }
+
+          // Shuffle same-category foods and pick 4
+          const shuffled = sameCategoryFoods.sort(() => Math.random() - 0.5);
+          let suggestions = shuffled.slice(0, 4);
+
+          // If not enough same-category, fill with random others
+          if (suggestions.length < 4) {
+            const shuffledOthers = otherCategoryFoods.sort(() => Math.random() - 0.5);
+            suggestions = [...suggestions, ...shuffledOthers].slice(0, 4);
+          }
+
+          setRelatedFoods(suggestions);
+        } catch (err) {
+          console.error("Error fetching related foods:", err);
+          setRelatedFoods([]);
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchRelatedFoods();
+    }, [currentFood, petType]);
+
+    if (isLoading) {
+      return (
+        <div ref={ref} className="w-full max-w-2xl mx-auto mt-12 pb-8">
+          <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5 flex items-center justify-center">
+            <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          </div>
+        </div>
       );
-      relatedFoods = matchingKey ? foodCategories[matchingKey] : defaultSuggestions;
     }
 
-    // Filter out the current food and limit to 4
-    const suggestions = relatedFoods
-      .filter(food => food.toLowerCase() !== normalizedFood)
-      .slice(0, 4);
-
-    if (suggestions.length === 0) return null;
+    if (relatedFoods.length === 0) return null;
 
     return (
-      <div ref={ref} className="w-full max-w-2xl mx-auto mt-8 pb-8 animate-fade-in">
+      <div ref={ref} className="w-full max-w-2xl mx-auto mt-12 pb-8 animate-fade-in">
         <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-5 h-5 text-primary" />
@@ -92,7 +210,7 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
           </div>
           
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            {suggestions.map((food) => (
+            {relatedFoods.map((food) => (
               <button
                 key={food}
                 onClick={() => onFoodClick(food)}

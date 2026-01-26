@@ -43,6 +43,8 @@ const Index = () => {
     setIsLoading,
     setSearchSource,
     clearResult,
+    getCachedResult,
+    setCachedResult,
   } = useSearchStore();
 
   // Track if we should trigger auto-refresh on toggle changes
@@ -50,7 +52,34 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
+  // Log search to database (public INSERT now allowed)
+  const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
+    try {
+      await supabase.from('search_logs').insert({
+        query,
+        species,
+        language: i18n.language,
+        result_safety_level: safetyLevel,
+        source: 'search',
+      });
+    } catch (err) {
+      console.error('Failed to log search:', err);
+    }
+  }, [i18n.language]);
+
   const handleSearch = useCallback(async (food: string, source: "trending" | "search" = "search") => {
+    // Check cache first for instant results
+    const cached = getCachedResult(food, petType);
+    if (cached) {
+      setResult(cached);
+      setLastSearchedFood(food);
+      setSearchSource(source);
+      addSearch(food);
+      // Log cached search too
+      logSearch(food, petType, cached.safetyLevel);
+      return;
+    }
+
     setIsLoading(true);
     setResult(null);
     setSearchSource(source);
@@ -80,9 +109,14 @@ const Index = () => {
       }
 
       setResult(data);
+      // Cache the result for instant toggles
+      setCachedResult(food, petType, data);
+      
       // Add to recent searches on successful result
       if (data && !data.error) {
         addSearch(food);
+        // Log search to database
+        logSearch(food, petType, data.safetyLevel);
       }
     } catch (err) {
       console.error("Error checking food safety:", err);
@@ -90,9 +124,9 @@ const Index = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t]);
+  }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t, getCachedResult, setCachedResult, logSearch]);
 
-  // Auto-refresh when pet type changes (if there's an active search)
+  // INSTANT toggle switch - use cache if available
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -101,10 +135,19 @@ const Index = () => {
     
     // Only trigger if petType actually changed and we have a previous search
     if (previousPetType.current !== petType && lastSearchedFood) {
-      handleSearch(lastSearchedFood, searchSource || "search");
+      // Check cache first for instant switch
+      const cached = getCachedResult(lastSearchedFood, petType);
+      if (cached) {
+        setResult(cached);
+        // Log the toggle switch
+        logSearch(lastSearchedFood, petType, cached.safetyLevel);
+      } else {
+        // No cache, fetch new data
+        handleSearch(lastSearchedFood, searchSource || "search");
+      }
     }
     previousPetType.current = petType;
-  }, [petType, lastSearchedFood, searchSource, handleSearch]);
+  }, [petType, lastSearchedFood, searchSource, handleSearch, getCachedResult, setResult, logSearch]);
 
   // Auto-refresh when language changes (if there's an active search)
   useEffect(() => {

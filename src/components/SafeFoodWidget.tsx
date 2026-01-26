@@ -307,7 +307,7 @@ function getSafeTreatsUrl(language: string, petType: "dog" | "cat"): string {
 
 /**
  * SMART AMAZON LOGIC - Generate category-aware search URLs
- * - Fruits/Vegetables: "Organic [food]"
+ * - Fruits/Vegetables: "Fresh [food]"
  * - Yogurt/Peanut Butter: "[food] unsweetened sugar free no xylitol"
  * - Meat/Fish: "Plain [food] no salt"
  * - Default: "[food]"
@@ -328,9 +328,9 @@ function generateSmartFallbackUrl(
   
   // Smart search modifiers based on category and food type
   if (category === 'fruit' || category === 'vegetable') {
-    // Organic prefix for fruits and vegetables
-    const organic = lang === 'es' ? 'orgánico' : 'organic';
-    searchQuery = `${organic} ${translatedName} ${petWord}`;
+    // Fresh prefix for fruits and vegetables
+    const fresh = lang === 'es' ? 'fresco' : 'fresh';
+    searchQuery = `${fresh} ${translatedName} ${petWord}`;
   } else if (lowerFood === 'yogurt' || lowerFood === 'yogur' || 
              lowerFood === 'peanut butter' || lowerFood === 'mantequilla de maní') {
     // Safety-focused search for xylitol risk foods

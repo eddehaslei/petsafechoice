@@ -8,10 +8,13 @@ interface DynamicSEOProps {
 export function DynamicSEO({ result }: DynamicSEOProps) {
   useEffect(() => {
     if (result) {
-      // Dynamic title: "Can Dogs Eat Chocolate? Safety & Facts | PetSafeChoice"
+      // Dynamic title: "Can Dogs eat Chocolate? | PetSafeChoice"
       const petName = result.petType === "dog" ? "Dogs" : "Cats";
       const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
-      const newTitle = `Can ${petName} Eat ${foodName}? Safety & Facts | PetSafeChoice`;
+      const newTitle = `Can ${petName} eat ${foodName}? | PetSafeChoice`;
+      
+      // Social sharing title (OG/Twitter): "Can Dogs eat Chocolate? | PetSafeChoice"
+      const socialTitle = `Can ${petName} eat ${foodName}? | PetSafeChoice`;
       
       // Dynamic meta description based on safety level
       let description = "";
@@ -39,14 +42,14 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
       }
       metaDescription.setAttribute("content", description);
 
-      // Update Open Graph tags
-      updateMetaTag("og:title", newTitle);
+      // Update Open Graph tags - use social-optimized title
+      updateMetaTag("og:title", socialTitle);
       updateMetaTag("og:description", description);
       updateMetaTag("og:type", "article");
       updateMetaTag("og:site_name", "PetSafeChoice");
 
-      // Update Twitter tags
-      updateMetaTag("twitter:title", newTitle);
+      // Update Twitter tags - use social-optimized title
+      updateMetaTag("twitter:title", socialTitle);
       updateMetaTag("twitter:description", description);
       updateMetaTag("twitter:card", "summary_large_image");
     } else {
