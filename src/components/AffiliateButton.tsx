@@ -1,5 +1,6 @@
 import { ShoppingBag, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { useSearchStore } from "@/stores/searchStore";
 
 // Common food name translations for button display
 const FOOD_TRANSLATIONS_ES: Record<string, string> = {
@@ -55,6 +56,7 @@ interface AffiliateButtonProps {
 
 export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonProps) {
   const { i18n, t } = useTranslation();
+  const petType = useSearchStore((state) => state.petType);
   const currentLanguage = i18n.language?.split('-')[0] || 'en';
 
   const handleClick = () => {
@@ -71,15 +73,21 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   };
 
   const displayName = getDisplayName();
+  
+  // Get pet type label
+  const petLabel = currentLanguage === 'es'
+    ? (petType === 'dog' ? 'Perro' : 'Gato')
+    : (petType === 'dog' ? 'Dog' : 'Cat');
 
-  // Localized button text
+  // Localized button text with pet type
   const buttonText = currentLanguage === 'es'
-    ? `Ver ${displayName} en Amazon`
-    : `Shop Best-Selling ${displayName} on Amazon`;
+    ? `Ver ${displayName} para ${petLabel} en Amazon`
+    : `Shop ${displayName} for ${petLabel}s on Amazon`;
 
   // Generate Amazon.com fallback URL for Spanish users
   const getGlobalFallbackUrl = () => {
-    const searchTerm = encodeURIComponent(`best ${productName}`);
+    const petWord = petType === 'dog' ? 'dog' : 'cat';
+    const searchTerm = encodeURIComponent(`best ${productName} ${petWord}`);
     return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
   };
 

@@ -1,19 +1,24 @@
 {
   "common": {
     "appName": "¿Puede mi mascota comer esto?",
-    "tagline": "Información de seguridad alimentaria respaldada por la ciencia para perros y gatos. ¡Sepa qué es seguro antes de compartir!",
+    "tagline": "Información de seguridad alimentaria respaldada por la ciencia para perros y gatos. ¡Sabe qué es seguro antes de compartir!",
     "popularSearches": "Búsquedas populares:",
     "madeWithLove": "Hecho con",
     "forPets": "para mascotas en todas partes",
     "allRightsReserved": "Todos los derechos reservados."
   },
+  "trustBar": {
+    "writtenBy": "Escrito por {{author}}",
+    "reviewedBy": "Revisado médicamente por el",
+    "boardName": "Consejo Veterinario Asesor"
+  },
   "nav": {
     "back": "Volver",
     "home": "Inicio",
     "about": "Acerca de",
-    "safeFoods": "Alimentos seguros",
+    "safeFoods": "Alimentos Seguros",
     "emergency": "Emergencia",
-    "faq": "Preguntas frecuentes",
+    "faq": "Preguntas",
     "contact": "Contacto"
   },
   "footer": {
@@ -23,15 +28,15 @@
     "legal": "Legal",
     "privacy": "Privacidad",
     "terms": "Términos",
-    "disclaimer": "Descargo",
+    "disclaimer": "Aviso Legal",
     "disclaimerTitle": "Aviso Médico",
-    "disclaimerText": "PetSafeChoice es solo para uso educativo. Consulte siempre a un veterinario autorizado antes de cambiar la dieta de su mascota o en caso de emergencia.",
-    "readMore": "Leer descargo completo →"
+    "disclaimerText": "PetSafeChoice es solo para uso educativo. Siempre consulte a un veterinario con licencia antes de cambiar la dieta de su mascota o en caso de emergencia.",
+    "readMore": "Leer aviso completo →"
   },
   "vetBadge": {
     "verified": "Verificado por Veterinarios",
-    "boardName": "Consejo Veterinario de PetSafeChoice",
-    "reviewedBy": "Revisado médicamente por profesionales veterinarios licenciados"
+    "boardName": "Consejo Veterinario Asesor de PetSafeChoice",
+    "reviewedBy": "Revisado médicamente por profesionales veterinarios con licencia"
   },
   "petToggle": {
     "dog": "Perro",
@@ -39,137 +44,161 @@
   },
   "search": {
     "placeholder": "Buscar un alimento (ej: chocolate, uvas, pollo...)",
-    "button": "Verificar seguridad",
+    "button": "Verificar Seguridad",
     "checking": "Verificando si es seguro para tu {{petType}}..."
   },
   "safety": {
     "safe": "Seguro",
     "caution": "Precaución",
     "dangerous": "Peligroso",
-    "safeTitle": "Seguro para comer",
-    "cautionTitle": "Precaución requerida",
+    "safeTitle": "Seguro para Comer",
+    "cautionTitle": "Con Precaución",
     "dangerousTitle": "Peligroso",
     "forYour": "para tu",
     "details": "Detalles",
-    "symptoms": "Síntomas a observar",
+    "symptoms": "Síntomas a Observar",
     "recommendations": "Recomendaciones",
-    "disclaimer": "Esta información es solo para orientación general. Siempre consulte con su veterinario para obtener consejos dietéticos específicos para su mascota."
+    "disclaimer": "Esta información es solo orientativa. Siempre consulte con su veterinario para consejos dietéticos específicos para su mascota."
   },
   "featuredSnippet": {
-    "safeAnswer": "¡Sí, los {{petType}} pueden comer {{food}} con seguridad!",
+    "safeAnswer": "Sí, los {{petType}} pueden comer {{food}} de forma segura.",
     "cautionAnswer": "{{food}} debe darse a los {{petType}} con precaución.",
     "dangerousAnswer": "¡No! {{food}} es tóxico para los {{petType}}.",
     "updated": "Actualizado {{date}}"
   },
+  "resultHeader": {
+    "canEat": "¿Pueden los {{petName}} Comer {{foodName}}?",
+    "lastUpdated": "Última Actualización:",
+    "safetyGuide": "Guía de Seguridad y Salud"
+  },
+  "safeFoodWidget": {
+    "safeAlternative": "Alternativa Segura",
+    "recommendedProduct": "Producto Recomendado",
+    "tryThisInstead": "¡Prueba estos premios aprobados por veterinarios!",
+    "matchFound": "¡Encontramos una gran opción para ti!",
+    "disclosure": "Podemos ganar una pequeña comisión de compras calificadas.",
+    "amazonDisclosure": "Como Asociado de Amazon, gano con compras calificadas.",
+    "shopOn": "Ver {{food}} en Amazon"
+  },
+  "categories": {
+    "fruit": "Fruta",
+    "vegetable": "Verdura",
+    "protein": "Proteína",
+    "dairy": "Lácteo",
+    "supplement": "Suplemento",
+    "grain": "Grano",
+    "toxic": "Tóxico"
+  },
   "about": {
-    "title": "Sobre nosotros",
+    "title": "Acerca de Nosotros",
     "subtitle": "Estamos dedicados a mantener a tus amigos peludos seguros y saludables proporcionando información precisa y respaldada por la ciencia sobre seguridad alimentaria.",
     "mission": {
-      "title": "Nuestra misión",
-      "description": "Empoderar a los dueños de mascotas con información confiable y fácil de entender sobre qué alimentos son seguros para sus mascotas. Creemos que cada mascota merece una dieta saludable, y cada dueño merece tranquilidad."
+      "title": "Nuestra Misión",
+      "description": "Empoderar a los dueños de mascotas con información confiable y fácil de entender sobre qué alimentos son seguros para sus mascotas. Creemos que cada mascota merece una dieta saludable y cada dueño merece tranquilidad."
     },
     "science": {
-      "title": "Respaldado por la ciencia",
+      "title": "Respaldado por la Ciencia",
       "description": "Nuestra información de seguridad alimentaria está impulsada por IA entrenada en investigación veterinaria, estudios revisados por pares y recomendaciones de expertos en nutrición animal."
     },
     "love": {
-      "title": "Construido con amor",
+      "title": "Hecho con Amor",
       "description": "Creado por amantes de las mascotas, para amantes de las mascotas. Entendemos el vínculo especial entre tú y tus compañeros peludos, y estamos aquí para ayudarte a mantenerlos felices y saludables."
     },
     "community": {
-      "title": "Impulsado por la comunidad",
-      "description": "Mejoramos continuamente nuestra plataforma basándonos en los comentarios de los dueños de mascotas y profesionales veterinarios. Tu aporte nos ayuda a servir mejor a la comunidad de mascotas."
+      "title": "Impulsado por la Comunidad",
+      "description": "Mejoramos continuamente nuestra plataforma basándonos en los comentarios de dueños de mascotas y profesionales veterinarios. Tu opinión nos ayuda a servir mejor a la comunidad de mascotas."
     },
     "disclaimer": {
-      "title": "Descargo de responsabilidad importante",
-      "description": "Si bien nos esforzamos por proporcionar información precisa y actualizada, nuestra herramienta no debe reemplazar el consejo veterinario profesional. Si su mascota ha consumido algo potencialmente dañino, comuníquese con su veterinario o un centro de control de envenenamiento animal de emergencia inmediatamente."
+      "title": "Aviso Importante",
+      "description": "Si bien nos esforzamos por proporcionar información precisa y actualizada, nuestra herramienta no debe reemplazar el consejo veterinario profesional. Si tu mascota ha consumido algo potencialmente dañino, contacta a tu veterinario o un centro de control de envenenamiento animal de emergencia inmediatamente."
     }
   },
   "faq": {
-    "title": "Preguntas frecuentes",
-    "subtitle": "Encuentre respuestas a las preguntas comunes sobre nuestro verificador de seguridad alimentaria para mascotas.",
-    "stillHaveQuestions": "¿Todavía tienes preguntas?",
+    "title": "Preguntas Frecuentes",
+    "subtitle": "Encuentra respuestas a preguntas comunes sobre nuestro verificador de seguridad alimentaria para mascotas.",
+    "stillHaveQuestions": "¿Aún tienes preguntas?",
     "contactUs": "Contáctanos",
     "questions": {
       "accuracy": {
         "question": "¿Qué tan precisa es la información de seguridad alimentaria?",
-        "answer": "Nuestra información está impulsada por IA entrenada en investigación veterinaria, estudios científicos y recomendaciones de expertos. Sin embargo, siempre recomendamos consultar con su veterinario para preocupaciones dietéticas específicas, especialmente si su mascota tiene condiciones de salud o alergias."
+        "answer": "Nuestra información está impulsada por IA entrenada en investigación veterinaria, estudios científicos y recomendaciones de expertos. Sin embargo, siempre recomendamos consultar con tu veterinario para preocupaciones dietéticas específicas, especialmente si tu mascota tiene condiciones de salud o alergias."
       },
       "emergency": {
-        "question": "¿Puedo confiar en esta herramienta en situaciones de emergencia?",
-        "answer": "Si bien nuestra herramienta proporciona información útil, no debe usarse como sustituto de la atención veterinaria profesional en emergencias. Si su mascota ha ingerido algo potencialmente dañino, comuníquese con su veterinario o un centro de control de envenenamiento animal de emergencia inmediatamente."
+        "question": "¿Puedo confiar en esta herramienta para situaciones de emergencia?",
+        "answer": "Si bien nuestra herramienta proporciona información útil, no debe usarse como sustituto de la atención veterinaria profesional en emergencias. Si tu mascota ha ingerido algo potencialmente dañino, contacta a tu veterinario o un centro de control de envenenamiento animal de emergencia inmediatamente."
       },
       "difference": {
         "question": "¿Por qué la calificación de seguridad difiere entre perros y gatos?",
-        "answer": "Los perros y los gatos tienen sistemas digestivos y procesos metabólicos diferentes. Algunos alimentos seguros para perros pueden ser tóxicos para gatos, y viceversa. Por eso proporcionamos calificaciones de seguridad específicas para cada especie para una orientación precisa."
+        "answer": "Los perros y gatos tienen diferentes sistemas digestivos y procesos metabólicos. Algunos alimentos que son seguros para perros pueden ser tóxicos para gatos, y viceversa. Por eso proporcionamos calificaciones de seguridad específicas por especie para una orientación precisa."
       },
       "levels": {
         "question": "¿Qué significan los niveles de seguridad?",
-        "answer": "Usamos tres niveles de seguridad: Seguro (verde) significa que el alimento es generalmente seguro para consumir en cantidades apropiadas. Precaución (amarillo) significa que el alimento puede estar bien en pequeñas cantidades pero tiene algunos riesgos. Peligroso (rojo) significa que el alimento es tóxico o dañino y debe evitarse por completo."
+        "answer": "Usamos tres niveles de seguridad: Seguro (verde) significa que el alimento es generalmente seguro para el consumo en cantidades apropiadas. Precaución (amarillo) significa que el alimento puede estar bien en pequeñas cantidades pero tiene algunos riesgos. Peligroso (rojo) significa que el alimento es tóxico o dañino y debe evitarse completamente."
       },
       "updates": {
         "question": "¿Con qué frecuencia se actualiza la información?",
-        "answer": "Nuestro modelo de IA se actualiza regularmente con las últimas investigaciones veterinarias y estudios nutricionales. Trabajamos continuamente para mejorar la precisión y exhaustividad de nuestra base de datos de seguridad alimentaria."
+        "answer": "Nuestro modelo de IA se actualiza regularmente con las últimas investigaciones veterinarias y estudios nutricionales. Trabajamos continuamente para mejorar la precisión e integridad de nuestra base de datos de seguridad alimentaria."
       },
       "suggest": {
         "question": "¿Puedo sugerir un alimento para agregar?",
-        "answer": "¡Absolutamente! Siempre estamos buscando expandir nuestra base de datos. Use nuestro formulario de contacto para sugerir alimentos que le gustaría que cubramos, y trabajaremos en agregarlos a nuestro sistema."
+        "answer": "¡Absolutamente! Siempre buscamos expandir nuestra base de datos. Usa nuestro formulario de contacto para sugerir alimentos que te gustaría que cubramos, y trabajaremos para agregarlos a nuestro sistema."
       },
       "free": {
-        "question": "¿Es gratis este servicio?",
-        "answer": "¡Sí! Nuestro verificador básico de seguridad alimentaria es completamente gratuito. Creemos que todos los dueños de mascotas deberían tener acceso a información importante sobre seguridad alimentaria."
+        "question": "¿Este servicio es gratuito?",
+        "answer": "¡Sí! Nuestro verificador básico de seguridad alimentaria es completamente gratuito. Creemos que cada dueño de mascotas debe tener acceso a información importante sobre seguridad alimentaria."
       },
       "dangerous": {
         "question": "¿Qué debo hacer si mi mascota come algo peligroso?",
-        "answer": "Si su mascota consume un alimento peligroso, no entre en pánico. Anote qué comió y cuánto, luego comuníquese inmediatamente con su veterinario o llame al Centro de Control de Envenenamiento Animal ASPCA al (888) 426-4435 (EE.UU.). El tiempo es crítico en casos de envenenamiento."
+        "answer": "Si tu mascota consume un alimento peligroso, no entres en pánico. Anota qué comió y cuánto, luego contacta inmediatamente a tu veterinario o llama a un centro de control de envenenamiento animal. El tiempo es crítico en casos de envenenamiento."
       }
     }
   },
   "contact": {
-    "title": "Contáctenos",
-    "subtitle": "¿Tiene preguntas, sugerencias o comentarios? ¡Nos encantaría saber de usted!",
+    "title": "Contáctanos",
+    "subtitle": "¿Tienes preguntas, sugerencias o comentarios? ¡Nos encantaría saber de ti!",
     "email": {
-      "title": "Envíenos un correo electrónico",
+      "title": "Envíanos un Email",
       "description": "Para consultas generales y soporte"
     },
     "feedback": {
-      "title": "Enviar comentarios",
-      "description": "Ayúdenos a mejorar nuestro servicio"
+      "title": "Enviar Comentarios",
+      "description": "Ayúdanos a mejorar nuestro servicio"
     },
     "form": {
-      "name": "Su nombre",
-      "namePlaceholder": "Ingrese su nombre",
-      "email": "Dirección de correo electrónico",
-      "emailPlaceholder": "Ingrese su correo electrónico",
+      "name": "Tu Nombre",
+      "namePlaceholder": "Ingresa tu nombre",
+      "email": "Correo Electrónico",
+      "emailPlaceholder": "Ingresa tu correo",
       "message": "Mensaje",
-      "messagePlaceholder": "Díganos qué tiene en mente...",
-      "submit": "Enviar mensaje",
+      "messagePlaceholder": "Cuéntanos qué tienes en mente...",
+      "submit": "Enviar Mensaje",
       "sending": "Enviando...",
-      "success": "¡Mensaje enviado! Le responderemos pronto."
+      "success": "¡Mensaje enviado! Te responderemos pronto."
     }
   },
   "safeFoods": {
-    "title": "Guía de alimentos seguros",
-    "subtitle": "Una lista completa de alimentos que generalmente son seguros para sus mascotas cuando se dan en cantidades apropiadas.",
+    "title": "Guía de Alimentos Seguros",
+    "subtitle": "Una lista completa de alimentos que generalmente son seguros para tus mascotas cuando se dan en cantidades apropiadas.",
     "dogsTab": "Perros",
     "catsTab": "Gatos",
     "benefits": "Beneficios:",
     "note": "Nota:",
+    "showMore": "Ver Más",
     "warning": {
-      "title": "Recordatorio importante",
-      "description": "Si bien estos alimentos son generalmente seguros, siempre introduzca nuevos alimentos gradualmente y con moderación. Cada mascota es única, y algunas pueden tener sensibilidades o alergias individuales. En caso de duda, consulte a su veterinario."
+      "title": "Recordatorio Importante",
+      "description": "Si bien estos alimentos son generalmente seguros, siempre introduce nuevos alimentos gradualmente y con moderación. Cada mascota es única y algunas pueden tener sensibilidades o alergias individuales. En caso de duda, consulta a tu veterinario."
     }
   },
   "emergency": {
-    "title": "Contactos de emergencia",
-    "subtitle": "Números importantes que debe tener a mano si su mascota ingiere algo dañino."
+    "title": "Contactos de Emergencia",
+    "subtitle": "Números importantes a tener a mano si tu mascota ingiere algo dañino."
   },
   "trending": {
     "title": "Tendencias Ahora",
     "scientificReference": "Referencia Científica",
     "loading": "Cargando...",
     "discover": "Descubrir",
-    "affiliateDisclosure": "Podemos ganar una pequeña comisión de compras que califican. Los precios pueden variar según la región.",
+    "affiliateDisclosure": "Podemos ganar una pequeña comisión de compras calificadas. Los precios pueden variar según la región.",
     "badges": {
       "popular": "Popular",
       "new2026": "Nuevo 2026",
@@ -178,17 +207,17 @@
     "salmonOil": {
       "title": "El Secreto del Aceite de Salmón",
       "keyword": "Mejor Aceite de Salmón 2026",
-      "summary": "Omega 3 Líquido de Captura Silvestre – oro líquido para la salud del pelaje y las articulaciones."
+      "summary": "Omega 3 Líquido de Captura Salvaje – oro líquido para la salud del pelaje y apoyo articular."
     },
     "lionsMane": {
-      "title": "Melena de León Focus",
+      "title": "Melena de León Enfocado",
       "keyword": "Hongos Medicinales Perros",
-      "summary": "Polvo de Apoyo Cerebral – apoya la función cognitiva de mascotas mayores."
+      "summary": "Polvo de Apoyo Cerebral y Enfoque – apoya la función cognitiva de mascotas mayores."
     },
     "airDried": {
-      "title": "Topper de Res Secada al Aire",
-      "keyword": "Comida Cruda Secada al Aire",
-      "summary": "Topper Alto en Proteínas – el punto medio más seguro entre croquetas y crudo."
+      "title": "Topper de Carne Deshidratada",
+      "keyword": "Comida Cruda Deshidratada",
+      "summary": "Topper Alto en Proteína – el punto medio más seguro entre croquetas y crudo."
     }
   }
 }

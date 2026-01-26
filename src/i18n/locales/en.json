@@ -9,7 +9,8 @@
   },
   "trustBar": {
     "writtenBy": "Written by {{author}}",
-    "reviewedBy": "Medically Reviewed by {{reviewer}}, {{credentials}}"
+    "reviewedBy": "Medically Reviewed by the",
+    "boardName": "Veterinary Advisory Board"
   },
   "nav": {
     "back": "Back",
@@ -64,6 +65,29 @@
     "cautionAnswer": "{{food}} should be given to {{petType}} with caution.",
     "dangerousAnswer": "No! {{food}} is toxic to {{petType}}.",
     "updated": "Updated {{date}}"
+  },
+  "resultHeader": {
+    "canEat": "Can {{petName}} Eat {{foodName}}?",
+    "lastUpdated": "Last Updated:",
+    "safetyGuide": "Safety & Health Guide"
+  },
+  "safeFoodWidget": {
+    "safeAlternative": "Safe Alternative",
+    "recommendedProduct": "Recommended Product",
+    "tryThisInstead": "Try these vet-approved treats instead!",
+    "matchFound": "We found a great option for you!",
+    "disclosure": "We may earn a small commission from qualifying purchases.",
+    "amazonDisclosure": "As an Amazon Associate, I earn from qualifying purchases.",
+    "shopOn": "Shop {{food}} on Amazon"
+  },
+  "categories": {
+    "fruit": "Fruit",
+    "vegetable": "Vegetable",
+    "protein": "Protein",
+    "dairy": "Dairy",
+    "supplement": "Supplement",
+    "grain": "Grain",
+    "toxic": "Toxic"
   },
   "about": {
     "title": "About Us",

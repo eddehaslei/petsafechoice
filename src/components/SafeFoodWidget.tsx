@@ -1,5 +1,5 @@
 import { useState, useEffect, forwardRef } from "react";
-import { ShoppingBag, Loader2, Shield, Apple, Beef, Fish, Pill, Cookie, Carrot, Cherry, Milk, Wheat, Droplets } from "lucide-react";
+import { ShoppingBag, Loader2, Shield, Apple, Beef, Fish, Pill, Cookie, Carrot, Cherry, Milk, Wheat, Droplets, Citrus, Grape, Egg } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
@@ -8,31 +8,183 @@ import type { SafetyLevel } from "./SafetyResult";
 // Food category detection for icon display
 type FoodCategory = "fruit" | "vegetable" | "protein" | "dairy" | "supplement" | "grain" | "toxic" | "unknown";
 
+// STRICT FOOD-TO-CATEGORY MAPPING (exact matches first)
+const EXACT_FOOD_CATEGORY: Record<string, FoodCategory> = {
+  // Fruits
+  "apple": "fruit",
+  "manzana": "fruit",
+  "banana": "fruit",
+  "plátano": "fruit",
+  "platano": "fruit",
+  "bananas": "fruit",
+  "orange": "fruit",
+  "naranja": "fruit",
+  "strawberry": "fruit",
+  "fresa": "fruit",
+  "strawberries": "fruit",
+  "fresas": "fruit",
+  "blueberry": "fruit",
+  "blueberries": "fruit",
+  "arándano": "fruit",
+  "arándanos": "fruit",
+  "watermelon": "fruit",
+  "sandía": "fruit",
+  "sandia": "fruit",
+  "mango": "fruit",
+  "peach": "fruit",
+  "melocotón": "fruit",
+  "pear": "fruit",
+  "pera": "fruit",
+  "cherry": "fruit",
+  "cereza": "fruit",
+  "pineapple": "fruit",
+  "piña": "fruit",
+  "coconut": "fruit",
+  "coco": "fruit",
+  
+  // Vegetables
+  "carrot": "vegetable",
+  "carrots": "vegetable",
+  "zanahoria": "vegetable",
+  "zanahorias": "vegetable",
+  "broccoli": "vegetable",
+  "brócoli": "vegetable",
+  "spinach": "vegetable",
+  "espinaca": "vegetable",
+  "pumpkin": "vegetable",
+  "calabaza": "vegetable",
+  "cucumber": "vegetable",
+  "pepino": "vegetable",
+  "celery": "vegetable",
+  "apio": "vegetable",
+  "sweet potato": "vegetable",
+  "batata": "vegetable",
+  "potato": "vegetable",
+  "papa": "vegetable",
+  "lettuce": "vegetable",
+  "lechuga": "vegetable",
+  "peas": "vegetable",
+  "guisantes": "vegetable",
+  "green beans": "vegetable",
+  "judías verdes": "vegetable",
+  
+  // Proteins
+  "chicken": "protein",
+  "pollo": "protein",
+  "beef": "protein",
+  "carne": "protein",
+  "carne de res": "protein",
+  "salmon": "protein",
+  "salmón": "protein",
+  "fish": "protein",
+  "pescado": "protein",
+  "turkey": "protein",
+  "pavo": "protein",
+  "egg": "protein",
+  "eggs": "protein",
+  "huevo": "protein",
+  "huevos": "protein",
+  "tuna": "protein",
+  "atún": "protein",
+  "liver": "protein",
+  "hígado": "protein",
+  "shrimp": "protein",
+  "camarones": "protein",
+  "pork": "protein",
+  "cerdo": "protein",
+  "lamb": "protein",
+  "cordero": "protein",
+  "duck": "protein",
+  "pato": "protein",
+  
+  // Dairy
+  "cheese": "dairy",
+  "queso": "dairy",
+  "yogurt": "dairy",
+  "yogur": "dairy",
+  "milk": "dairy",
+  "leche": "dairy",
+  "cottage cheese": "dairy",
+  "requesón": "dairy",
+  
+  // Supplements & Pet Products
+  "salmon oil": "supplement",
+  "aceite de salmón": "supplement",
+  "fish oil": "supplement",
+  "aceite de pescado": "supplement",
+  "coconut oil": "supplement",
+  "aceite de coco": "supplement",
+  "peanut butter": "supplement",
+  "mantequilla de maní": "supplement",
+  "honey": "supplement",
+  "miel": "supplement",
+  
+  // Grains
+  "rice": "grain",
+  "arroz": "grain",
+  "oatmeal": "grain",
+  "avena": "grain",
+  "bread": "grain",
+  "pan": "grain",
+  "pasta": "grain",
+  "quinoa": "grain",
+  
+  // Toxic foods
+  "chocolate": "toxic",
+  "onion": "toxic",
+  "onions": "toxic",
+  "cebolla": "toxic",
+  "cebollas": "toxic",
+  "garlic": "toxic",
+  "ajo": "toxic",
+  "grapes": "toxic",
+  "grape": "toxic",
+  "uvas": "toxic",
+  "uva": "toxic",
+  "raisins": "toxic",
+  "pasas": "toxic",
+  "avocado": "toxic",
+  "aguacate": "toxic",
+  "xylitol": "toxic",
+  "macadamia": "toxic",
+  "coffee": "toxic",
+  "café": "toxic",
+  "alcohol": "toxic",
+};
+
+// Fallback keyword detection (if no exact match)
 const CATEGORY_KEYWORDS: Record<FoodCategory, string[]> = {
-  fruit: ["apple", "banana", "berry", "grape", "mango", "melon", "orange", "pear", "peach", "plum", "cherry", "strawberry", "blueberry", "watermelon", "manzana", "plátano", "uva", "sandía", "fresa"],
-  vegetable: ["carrot", "broccoli", "spinach", "pumpkin", "potato", "cucumber", "celery", "pea", "bean", "lettuce", "kale", "zanahoria", "calabaza", "pepino", "espinaca"],
-  protein: ["chicken", "beef", "salmon", "fish", "turkey", "egg", "meat", "liver", "pork", "shrimp", "tuna", "lamb", "pollo", "carne", "huevo", "pescado", "atún"],
-  dairy: ["cheese", "yogurt", "milk", "cream", "queso", "yogur", "leche"],
-  supplement: ["oil", "treat", "supplement", "vitamin", "chew", "bone", "biscuit", "pill", "aceite"],
-  grain: ["rice", "oat", "wheat", "bread", "pasta", "oatmeal", "arroz", "avena"],
-  toxic: ["chocolate", "onion", "garlic", "grape", "raisin", "avocado", "xylitol", "cebolla", "ajo", "uva"],
+  fruit: ["berry", "melon", "fruit", "fruta"],
+  vegetable: ["veggie", "vegetable", "verdura", "legume"],
+  protein: ["meat", "carne", "poultry", "seafood"],
+  dairy: ["cream", "crema", "butter", "mantequilla"],
+  supplement: ["oil", "aceite", "treat", "premio", "supplement", "suplemento", "vitamin", "vitamina", "chew", "bone", "hueso", "biscuit", "galleta"],
+  grain: ["wheat", "trigo", "oat", "cereal"],
+  toxic: [],
   unknown: [],
 };
 
 const detectFoodCategory = (foodName: string, safetyLevel?: SafetyLevel): FoodCategory => {
-  const lowerFood = foodName.toLowerCase();
+  const lowerFood = foodName.toLowerCase().trim();
   
-  // Check toxic first if safety level indicates danger
+  // 1. Check exact match first
+  if (EXACT_FOOD_CATEGORY[lowerFood]) {
+    return EXACT_FOOD_CATEGORY[lowerFood];
+  }
+  
+  // 2. If dangerous, mark as toxic
   if (safetyLevel === "dangerous") {
     return "toxic";
   }
   
+  // 3. Fallback to keyword detection
   for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
     if (category === "toxic" || category === "unknown") continue;
     if (keywords.some(keyword => lowerFood.includes(keyword))) {
       return category as FoodCategory;
     }
   }
+  
   return "unknown";
 };
 
@@ -48,11 +200,27 @@ interface AffiliateLink {
 }
 
 // Amazon domain configuration by language
-const AMAZON_CONFIG: Record<string, { domain: string; tag: string }> = {
-  es: { domain: "amazon.es", tag: "petsafechoice-20" },
-  de: { domain: "amazon.de", tag: "petsafechoice-20" },
-  fr: { domain: "amazon.fr", tag: "petsafechoice-20" },
-  en: { domain: "amazon.com", tag: "petsafechoice-20" },
+const AMAZON_CONFIG: Record<string, { domain: string; tag: string; petKeyword: Record<string, string> }> = {
+  es: { 
+    domain: "amazon.es", 
+    tag: "petsafechoice-20",
+    petKeyword: { dog: "perro", cat: "gato" }
+  },
+  de: { 
+    domain: "amazon.de", 
+    tag: "petsafechoice-20",
+    petKeyword: { dog: "hund", cat: "katze" }
+  },
+  fr: { 
+    domain: "amazon.fr", 
+    tag: "petsafechoice-20",
+    petKeyword: { dog: "chien", cat: "chat" }
+  },
+  en: { 
+    domain: "amazon.com", 
+    tag: "petsafechoice-20",
+    petKeyword: { dog: "dog", cat: "cat" }
+  },
 };
 
 const DEFAULT_CONFIG = AMAZON_CONFIG.en;
@@ -103,19 +271,20 @@ const FOOD_TRANSLATIONS_ES: Record<string, string> = {
   "shrimp": "camarones",
 };
 
-
 /**
  * Get Amazon config based on user's language
  */
 function getAmazonConfig(language: string) {
-  return AMAZON_CONFIG[language] || DEFAULT_CONFIG;
+  const lang = language.split('-')[0];
+  return AMAZON_CONFIG[lang] || DEFAULT_CONFIG;
 }
 
 /**
  * Translate food name for regional Amazon searches
  */
 function translateFoodName(foodName: string, language: string): string {
-  if (language === 'es') {
+  const lang = language.split('-')[0];
+  if (lang === 'es') {
     const lowerName = foodName.toLowerCase().trim();
     return FOOD_TRANSLATIONS_ES[lowerName] || foodName;
   }
@@ -123,33 +292,38 @@ function translateFoodName(foodName: string, language: string): string {
 }
 
 /**
- * Generate safe treats URL based on language
+ * Generate safe treats URL based on language and pet type
  */
-function getSafeTreatsUrl(language: string): string {
+function getSafeTreatsUrl(language: string, petType: "dog" | "cat"): string {
   const config = getAmazonConfig(language);
-  const safetyKeyword = language === 'es' 
-    ? 'mejores+snacks+naturales+perros+gatos' 
-    : 'best+natural+freeze+dried+dog+cat+treats';
+  const petWord = config.petKeyword[petType];
+  const lang = language.split('-')[0];
+  
+  const safetyKeyword = lang === 'es' 
+    ? `mejores+snacks+naturales+${petWord}` 
+    : `best+natural+freeze+dried+${petWord}+treats`;
   return `https://www.${config.domain}/s?k=${safetyKeyword}&tag=${config.tag}`;
 }
 
 /**
- * Generate a fallback Amazon search URL with "Best" prefix for quality results
+ * Generate a fallback Amazon search URL with pet type and "Best" prefix
  */
-function generateFallbackUrl(foodName: string, language: string): string {
+function generateFallbackUrl(foodName: string, language: string, petType: "dog" | "cat"): string {
   const config = getAmazonConfig(language);
+  const lang = language.split('-')[0];
   const translatedName = translateFoodName(foodName, language);
-  // Add "Best" or "Mejores" prefix to help Amazon find top-rated products
-  const qualityPrefix = language === 'es' ? 'mejores' : 'best';
-  const searchTerm = encodeURIComponent(`${qualityPrefix} ${translatedName}`);
+  const petWord = config.petKeyword[petType];
+  
+  // Build search query with pet type for more relevant results
+  const qualityPrefix = lang === 'es' ? 'mejores' : 'best';
+  const searchTerm = encodeURIComponent(`${qualityPrefix} ${translatedName} ${petWord}`);
   return `https://www.${config.domain}/s?k=${searchTerm}&tag=${config.tag}`;
 }
 
 export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
   function SafeFoodWidget({ foodName, petType, safetyLevel = "safe" }, ref) {
-    const { i18n } = useTranslation();
-    const currentLanguage = i18n.language?.split('-')[0] || 'en';
-    const { t } = useTranslation();
+    const { i18n, t } = useTranslation();
+    const currentLanguage = i18n.language || 'en';
     const [isLoading, setIsLoading] = useState(true);
     const [affiliateLink, setAffiliateLink] = useState<AffiliateLink | null>(null);
 
@@ -160,7 +334,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     // Get the food category for icon display
     const foodCategory = detectFoodCategory(foodName, safetyLevel);
     
-    // Get category icon component - PURE ICONS, NO PHOTOS
+    // Get category icon component - STRICT CATEGORY ICONS
     const getCategoryIcon = () => {
       // Toxic foods get warning icon
       if (foodCategory === "toxic" || isDangerous) {
@@ -169,7 +343,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       
       switch (foodCategory) {
         case "fruit":
-          return <Apple className="w-14 h-14 text-safe" />;
+          return <Cherry className="w-14 h-14 text-safe" />;
         case "vegetable":
           return <Carrot className="w-14 h-14 text-safe" />;
         case "protein":
@@ -181,7 +355,8 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
         case "grain":
           return <Wheat className="w-14 h-14 text-caution" />;
         default:
-          return <Cherry className="w-14 h-14 text-muted-foreground" />;
+          // Default to a generic food icon
+          return <Cookie className="w-14 h-14 text-muted-foreground" />;
       }
     };
     
@@ -191,19 +366,13 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       if (isCaution) return "from-caution/10 to-caution/5";
       return "from-safe/10 to-safe/5";
     };
-    
-    // SEO-optimized alt text (kept for accessibility)
-    const getImageAlt = () => {
-      const capitalizedFood = foodName.charAt(0).toUpperCase() + foodName.slice(1);
-      return `Safe food for pets: ${capitalizedFood}`;
-    };
 
     useEffect(() => {
       // If food is dangerous, skip fetching and show safe alternative immediately
       if (isDangerous) {
         setAffiliateLink({
-          productName: "Natural Freeze-Dried Treats",
-          url: getSafeTreatsUrl(currentLanguage)
+          productName: currentLanguage.startsWith('es') ? "Snacks Naturales Seguros" : "Natural Freeze-Dried Treats",
+          url: getSafeTreatsUrl(currentLanguage, petType)
         });
         setIsLoading(false);
         console.log('Affiliate Status: Safe Alternative (Dangerous Food)');
@@ -235,13 +404,19 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
           }
 
           if (isMounted) {
-            console.log('Affiliate Status: Auto-Generated');
-            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName, currentLanguage) });
+            console.log('Affiliate Status: Auto-Generated with Pet Type');
+            setAffiliateLink({ 
+              productName: normalizedName, 
+              url: generateFallbackUrl(normalizedName, currentLanguage, petType) 
+            });
           }
         } catch {
           if (isMounted) {
-            console.log('Affiliate Status: Auto-Generated');
-            setAffiliateLink({ productName: normalizedName, url: generateFallbackUrl(normalizedName, currentLanguage) });
+            console.log('Affiliate Status: Auto-Generated (Error Fallback)');
+            setAffiliateLink({ 
+              productName: normalizedName, 
+              url: generateFallbackUrl(normalizedName, currentLanguage, petType) 
+            });
           }
         } finally {
           if (isMounted) {
@@ -257,7 +432,7 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       return () => {
         isMounted = false;
       };
-    }, [foodName, isDangerous, currentLanguage]);
+    }, [foodName, isDangerous, currentLanguage, petType]);
 
     // Dynamic styling based on safety
     const containerBg = isDangerous ? "bg-primary/10 border-primary/30" : "bg-safe/10 border-safe/30";
@@ -295,14 +470,14 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
               <div>
                 <h3 className="font-heading font-bold text-foreground">
                   {isDangerous 
-                    ? t('safeFoodWidget.safeAlternative', 'Safe Alternative')
-                    : t('safeFoodWidget.recommendedProduct', 'Recommended Product')
+                    ? t('safeFoodWidget.safeAlternative')
+                    : t('safeFoodWidget.recommendedProduct')
                   }
                 </h3>
                 <p className="text-xs text-muted-foreground">
                   {isDangerous
-                    ? t('safeFoodWidget.tryThisInstead', 'Try these vet-approved treats instead!')
-                    : t('safeFoodWidget.matchFound', 'We found a great option for you!')
+                    ? t('safeFoodWidget.tryThisInstead')
+                    : t('safeFoodWidget.matchFound')
                   }
                 </p>
               </div>
@@ -317,10 +492,10 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
             ) : null}
 
             <p className="mt-4 px-2 sm:px-0 text-xs text-muted-foreground text-center leading-relaxed">
-              {t('safeFoodWidget.disclosure', 'We may earn a small commission from qualifying purchases.')}
+              {t('safeFoodWidget.disclosure')}
             </p>
             <p className="mt-2 px-2 sm:px-0 text-[10px] text-muted-foreground/60 text-center leading-relaxed">
-              {t('safeFoodWidget.amazonDisclosure', 'As an Amazon Associate, I earn from qualifying purchases.')}
+              {t('safeFoodWidget.amazonDisclosure')}
             </p>
           </div>
         </div>
