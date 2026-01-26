@@ -4,7 +4,10 @@ import { SafetyResultData } from '@/components/SafetyResult';
 type PetType = "dog" | "cat";
 
 // Cache key format: "food:species" (e.g., "chocolate:dog")
-type ResultCache = Record<string, SafetyResultData>;
+type ResultCache = Record<string, { data: SafetyResultData; timestamp: number }>;
+
+// Cache expiry: 24 hours (in milliseconds)
+const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000;
 
 interface SearchState {
   // Core search state
@@ -14,8 +17,8 @@ interface SearchState {
   isLoading: boolean;
   searchSource: "trending" | "search" | null;
   
-  // Results cache - keyed by "food:species"
-  resultCache: ResultCache;
+  // Results cache - keyed by "food:species" with timestamp
+  resultsCache: ResultCache;
   
   // Actions
   setPetType: (type: PetType) => void;
@@ -25,9 +28,10 @@ interface SearchState {
   setSearchSource: (source: "trending" | "search" | null) => void;
   clearResult: () => void;
   
-  // Cache actions
+  // Cache actions - instant retrieval for species toggle
   getCachedResult: (food: string, species: PetType) => SafetyResultData | null;
   setCachedResult: (food: string, species: PetType, result: SafetyResultData) => void;
+  hasCachedResult: (food: string, species: PetType) => boolean;
 }
 
 const createCacheKey = (food: string, species: PetType): string => 
@@ -40,7 +44,7 @@ export const useSearchStore = create<SearchState>((set, get) => ({
   lastSearchedFood: null,
   isLoading: false,
   searchSource: null,
-  resultCache: {},
+  resultsCache: {},
   
   // Actions
   setPetType: (type) => set({ petType: type }),
@@ -50,19 +54,44 @@ export const useSearchStore = create<SearchState>((set, get) => ({
   setSearchSource: (source) => set({ searchSource: source }),
   clearResult: () => set({ result: null, searchSource: null }),
   
-  // Cache actions
+  // Cache actions - with 24-hour expiry check
   getCachedResult: (food, species) => {
     const key = createCacheKey(food, species);
-    return get().resultCache[key] || null;
+    const cached = get().resultsCache[key];
+    
+    if (!cached) return null;
+    
+    // Check if cache is still valid (within 24 hours)
+    const now = Date.now();
+    if (now - cached.timestamp > CACHE_EXPIRY_MS) {
+      // Cache expired, remove it
+      const { [key]: _, ...rest } = get().resultsCache;
+      set({ resultsCache: rest });
+      return null;
+    }
+    
+    console.info(`[Cache HIT] Using cached result for "${food}:${species}"`);
+    return cached.data;
   },
   
   setCachedResult: (food, species, result) => {
     const key = createCacheKey(food, species);
+    console.info(`[Cache SET] Storing result for "${food}:${species}"`);
     set((state) => ({
-      resultCache: {
-        ...state.resultCache,
-        [key]: result,
+      resultsCache: {
+        ...state.resultsCache,
+        [key]: { data: result, timestamp: Date.now() },
       },
     }));
+  },
+  
+  hasCachedResult: (food, species) => {
+    const key = createCacheKey(food, species);
+    const cached = get().resultsCache[key];
+    if (!cached) return false;
+    
+    // Check expiry
+    const now = Date.now();
+    return now - cached.timestamp <= CACHE_EXPIRY_MS;
   },
 }));

@@ -312,6 +312,14 @@ function getSafeTreatsUrl(language: string, petType: "dog" | "cat"): string {
  * - Meat/Fish: "Plain [food] no salt"
  * - Default: "[food]"
  */
+/**
+ * SMART AMAZON LOGIC - Generate category-aware search URLs
+ * ABSOLUTE RULE: Fruits/Vegetables/Berries NEVER include pet words (dog/cat/perro/gato)
+ * - Fruits/Vegetables/Berries: "Fresh [food]" ONLY
+ * - Yogurt/Peanut Butter: "[food] unsweetened sugar free no xylitol"
+ * - Meat/Fish: "Plain [food] no salt"
+ * - Default: "best [food] [pet]"
+ */
 function generateSmartFallbackUrl(
   foodName: string, 
   language: string, 
@@ -326,24 +334,24 @@ function generateSmartFallbackUrl(
   
   let searchQuery: string;
   
-  // Smart search modifiers based on category and food type
+  // ABSOLUTE RULE: Fruits, vegetables, and berries NEVER include pet words
   if (category === 'fruit' || category === 'vegetable') {
-    // Fresh prefix for fruits and vegetables
-    const fresh = lang === 'es' ? 'fresco' : 'fresh';
-    searchQuery = `${fresh} ${translatedName} ${petWord}`;
+    // Fresh [food] ONLY - NO pet words
+    const fresh = lang === 'es' ? 'Fresh' : 'Fresh';
+    searchQuery = `${fresh} ${translatedName}`;
   } else if (lowerFood === 'yogurt' || lowerFood === 'yogur' || 
              lowerFood === 'peanut butter' || lowerFood === 'mantequilla de maní') {
-    // Safety-focused search for xylitol risk foods
+    // Safety-focused search for xylitol risk foods - NO pet words for human food safety
     const safetyTerms = lang === 'es' 
-      ? `${translatedName} sin azúcar sin xilitol ${petWord}`
-      : `${translatedName} unsweetened sugar free no xylitol ${petWord}`;
+      ? `${translatedName} sin azúcar sin xilitol`
+      : `${translatedName} unsweetened sugar free no xylitol`;
     searchQuery = safetyTerms;
   } else if (category === 'protein') {
-    // Plain/unseasoned for meats
-    const plain = lang === 'es' ? 'simple sin sal' : 'plain no salt';
-    searchQuery = `${plain} ${translatedName} ${petWord}`;
+    // Plain/unseasoned for meats - NO pet words for human-grade meat
+    const plain = lang === 'es' ? 'Plain' : 'Plain';
+    searchQuery = `${plain} ${translatedName} no salt`;
   } else {
-    // Default: just food name + pet type
+    // Default: pet-specific products (treats, supplements, etc.)
     const qualityPrefix = lang === 'es' ? 'mejores' : 'best';
     searchQuery = `${qualityPrefix} ${translatedName} ${petWord}`;
   }
