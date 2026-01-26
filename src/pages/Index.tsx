@@ -18,6 +18,8 @@ import { VetMapWidget } from "@/components/VetMapWidget";
 import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
 import { TrendingSafetyTips } from "@/components/TrendingSafetyTips";
 import { RecentSearches, useRecentSearches } from "@/components/RecentSearches";
+import { SkeletonLoader } from "@/components/SkeletonLoader";
+import { BackToTop } from "@/components/BackToTop";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -145,7 +147,7 @@ const Index = () => {
       {/* Hero Section */}
       <main className="flex-1 container max-w-4xl mx-auto px-4 pt-4 pb-8">
         {/* Header - show default or dynamic based on result */}
-        {!result ? (
+        {!result && !isLoading ? (
           <div className="text-center mb-8 animate-fade-in">
             <div className="inline-flex items-center justify-center gap-3 mb-4">
               <div className="relative">
@@ -169,19 +171,19 @@ const Index = () => {
               <TrustBar />
             </div>
           </div>
-        ) : (
+        ) : result ? (
           <div className="mb-6 animate-fade-in">
             {/* Back to Home button - always visible on results */}
             <button
               onClick={handleBackToDiscovery}
-              className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card hover:bg-accent border border-border/50 hover:border-primary/30 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-x-0.5"
+              className="mb-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-card hover:bg-accent border border-border/50 hover:border-primary/30 text-sm font-medium text-foreground transition-all duration-200 hover:-translate-x-0.5 min-h-[44px]"
             >
               <ArrowLeft className="w-4 h-4" />
               {t('nav.back')} {t('nav.home')}
             </button>
             <DynamicResultHeader data={result} />
           </div>
-        )}
+        ) : null}
 
         {/* Pet Toggle */}
         <div className="flex justify-center mb-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
@@ -203,7 +205,7 @@ const Index = () => {
                   <button
                     key={food}
                     onClick={() => handleSearch(food, "search")}
-                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5"
+                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5 min-h-[44px]"
                   >
                     {food}
                   </button>
@@ -220,14 +222,7 @@ const Index = () => {
         {(result || isLoading) && (
           <div className="mt-8">
             {isLoading ? (
-              <div className="flex flex-col items-center justify-center py-12 animate-fade-in">
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-                  <div className="w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
-                </div>
-                <p className="text-muted-foreground font-medium">
-                  {t('search.checking', { petType: petType === 'dog' ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase() })}
-                </p>
-              </div>
+              <SkeletonLoader variant="result" />
             ) : result ? (
               <>
                 {/* Featured Snippet - Google-optimized answer box */}
@@ -285,6 +280,9 @@ const Index = () => {
       </main>
 
       <Footer />
+      
+      {/* Back to Top - shows on long pages */}
+      <BackToTop />
     </div>
   );
 };

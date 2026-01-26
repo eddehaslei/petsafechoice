@@ -1,6 +1,7 @@
 import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { VerifiedDataBadge } from "./VerifiedDataBadge";
 
 export type SafetyLevel = "safe" | "caution" | "dangerous";
 
@@ -92,8 +93,13 @@ export function SafetyResult({ data }: SafetyResultProps) {
           </div>
         </div>
 
+        {/* Verified Data Badge */}
+        <div className="px-6 pb-3">
+          <VerifiedDataBadge />
+        </div>
+
         {/* Content */}
-        <div className="px-6 pb-6 space-y-4">
+        <div className="px-6 pb-8 space-y-4">
           {/* Summary */}
           <div className="bg-card/80 backdrop-blur rounded-2xl p-4 border border-border/50">
             <p className="text-foreground font-medium leading-relaxed">

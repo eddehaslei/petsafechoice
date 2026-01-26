@@ -1,23 +1,11 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 50" fill="none">
-  <defs>
-    <linearGradient id="pawGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" style="stop-color:#E07B5D;stop-opacity:1" />
-      <stop offset="100%" style="stop-color:#F28C74;stop-opacity:1" />
-    </linearGradient>
-  </defs>
-  
-  <!-- Paw Print Icon -->
   <g transform="translate(5, 8)">
-    <!-- Main pad -->
-    <ellipse cx="17" cy="24" rx="10" ry="8" fill="url(#pawGradient)"/>
-    <!-- Top pads -->
-    <ellipse cx="8" cy="12" rx="5" ry="6" fill="url(#pawGradient)"/>
-    <ellipse cx="17" cy="6" rx="4" ry="5" fill="url(#pawGradient)"/>
-    <ellipse cx="26" cy="12" rx="5" ry="6" fill="url(#pawGradient)"/>
+    <ellipse cx="17" cy="24" rx="10" ry="8" fill="#E29578"/>
+    <ellipse cx="8" cy="12" rx="5" ry="6" fill="#E29578"/>
+    <ellipse cx="17" cy="6" rx="4" ry="5" fill="#E29578"/>
+    <ellipse cx="26" cy="12" rx="5" ry="6" fill="#E29578"/>
   </g>
-  
-  <!-- Text: PetSafeChoice -->
-  <text x="45" y="33" font-family="Nunito, -apple-system, BlinkMacSystemFont, sans-serif" font-size="22" font-weight="700" fill="#2D2419">
-    <tspan fill="#E07B5D">Pet</tspan><tspan fill="#2D2419">Safe</tspan><tspan fill="#5BAE7D">Choice</tspan>
+  <text x="45" y="33" font-family="Nunito, sans-serif" font-size="22" font-weight="700">
+    <tspan fill="#E29578">Pet</tspan><tspan fill="#2D2D2D">Safe</tspan><tspan fill="#83B394">Choice</tspan>
   </text>
 </svg>

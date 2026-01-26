@@ -73,8 +73,9 @@ const poisonControlByCountry: Record<string, {
 const defaultPoisonControl = poisonControlByCountry.US;
 
 export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { countryCode, city, isLoading } = useGeoLocation();
+  const currentLang = i18n.language?.split('-')[0] || 'en';
   
   // Get country-specific poison control info
   const poisonControl = countryCode && poisonControlByCountry[countryCode] 
@@ -84,9 +85,14 @@ export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
   // Get the appropriate website link
   const websiteUrl = poisonControl.website || "https://www.aspca.org/pet-care/animal-poison-control";
   
+  // Localized pet name
+  const petName = currentLang === 'es' 
+    ? (petType === 'dog' ? 'Perro' : 'Gato')
+    : (petType === 'dog' ? 'Dog' : 'Cat');
+  
   return (
     <div className="w-full max-w-2xl mx-auto mt-6 animate-slide-up">
-      <div className="bg-danger/10 border-2 border-danger/30 rounded-2xl p-5 relative overflow-hidden">
+      <div className="bg-danger/10 border-2 border-danger/30 rounded-2xl p-6 relative overflow-hidden" style={{ height: 'auto' }}>
         {/* Urgent pulse effect */}
         <div className="absolute top-0 right-0 w-32 h-32 bg-danger/10 rounded-full -translate-y-1/2 translate-x-1/2 animate-pulse" />
         
@@ -98,35 +104,46 @@ export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
             
             <div className="flex-1">
               <h3 className="font-heading font-bold text-lg text-foreground mb-1">
-                Did Your {petType === "dog" ? "Dog" : "Cat"} Eat {foodName}?
+                {currentLang === 'es' 
+                  ? `¿Tu ${petName} Comió ${foodName}?`
+                  : `Did Your ${petName} Eat ${foodName}?`
+                }
               </h3>
               <p className="text-sm text-muted-foreground mb-4">
-                Time is critical in poisoning cases. Contact a veterinarian immediately if you suspect your pet has ingested this food.
+                {currentLang === 'es'
+                  ? 'El tiempo es crítico en casos de envenenamiento. Contacta a un veterinario inmediatamente si sospechas que tu mascota ha ingerido este alimento.'
+                  : 'Time is critical in poisoning cases. Contact a veterinarian immediately if you suspect your pet has ingested this food.'
+                }
               </p>
               
               {/* Location indicator */}
               {city && !isLoading && (
                 <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
                   <MapPin className="w-3.5 h-3.5" />
-                  <span>Showing emergency info for {city}</span>
+                  <span>
+                    {currentLang === 'es' 
+                      ? `Mostrando información de emergencia para ${city}`
+                      : `Showing emergency info for ${city}`
+                    }
+                  </span>
                 </div>
               )}
               
               <div className="flex flex-col sm:flex-row gap-3">
                 <Link
                   to="/emergency"
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-danger hover:bg-danger/90 text-white rounded-xl font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-danger/25"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-danger hover:bg-danger/90 text-white rounded-xl font-semibold text-sm transition-all duration-200 hover:-translate-y-0.5 shadow-lg shadow-danger/25 min-h-[48px]"
                 >
                   <Phone className="w-4 h-4" />
-                  Emergency Contacts
+                  {currentLang === 'es' ? 'Contactos de Emergencia' : 'Emergency Contacts'}
                 </Link>
                 
                 <a
                   href={`tel:${poisonControl.phone}`}
-                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card hover:bg-accent border border-danger/30 rounded-xl font-semibold text-sm text-foreground transition-all duration-200 hover:-translate-y-0.5"
+                  className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-card hover:bg-accent border border-danger/30 rounded-xl font-semibold text-sm text-foreground transition-all duration-200 hover:-translate-y-0.5 min-h-[48px]"
                 >
                   <Phone className="w-4 h-4" />
-                  Call {poisonControl.phoneFormatted}
+                  {currentLang === 'es' ? 'Llamar' : 'Call'} {poisonControl.phoneFormatted}
                 </a>
               </div>
             </div>
@@ -150,7 +167,7 @@ export function EmergencyBanner({ foodName, petType }: EmergencyBannerProps) {
                   className="text-primary hover:underline inline-flex items-center gap-1"
                 >
                   <ExternalLink className="w-3 h-3" />
-                  Visit Website
+                  {currentLang === 'es' ? 'Visitar Sitio Web' : 'Visit Website'}
                 </a>
               </p>
             )}

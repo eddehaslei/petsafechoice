@@ -17,7 +17,7 @@ export function PetToggle({ value, onChange }: PetToggleProps) {
       <button
         onClick={() => onChange("dog")}
         className={cn(
-          "flex items-center gap-2 px-5 py-2.5 rounded-full font-heading font-semibold text-sm transition-all duration-300",
+          "flex items-center gap-2 px-5 py-2.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 min-h-[44px]",
           value === "dog"
             ? "bg-primary text-primary-foreground shadow-md"
             : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -29,7 +29,7 @@ export function PetToggle({ value, onChange }: PetToggleProps) {
       <button
         onClick={() => onChange("cat")}
         className={cn(
-          "flex items-center gap-2 px-5 py-2.5 rounded-full font-heading font-semibold text-sm transition-all duration-300",
+          "flex items-center gap-2 px-5 py-2.5 rounded-full font-heading font-semibold text-sm transition-all duration-300 min-h-[44px]",
           value === "cat"
             ? "bg-primary text-primary-foreground shadow-md"
             : "text-muted-foreground hover:text-foreground hover:bg-accent"

@@ -37,11 +37,11 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
           />
         </div>
         
-        {/* Submit Button - Centered Below */}
+        {/* Submit Button - Centered Below - min-height 48px for touch */}
         <Button
           type="submit"
           disabled={isLoading || !query.trim()}
-          className="w-full sm:w-auto sm:mx-auto h-12 px-10 rounded-2xl font-heading font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+          className="w-full sm:w-auto sm:mx-auto h-12 min-h-[48px] px-10 rounded-2xl font-heading font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" />
