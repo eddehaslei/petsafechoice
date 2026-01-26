@@ -53,7 +53,7 @@ export function SafetyResult({ data }: SafetyResultProps) {
   const Icon = config.icon;
 
   return (
-    <div className="w-full max-w-2xl mx-auto animate-slide-up">
+    <div className="w-full max-w-2xl mx-auto animate-slide-up pb-8">
       <div
         className={cn(
           "rounded-3xl border-2 overflow-hidden card-shadow-lg",

@@ -306,18 +306,49 @@ function getSafeTreatsUrl(language: string, petType: "dog" | "cat"): string {
 }
 
 /**
- * Generate a fallback Amazon search URL with pet type and "Best" prefix
+ * SMART AMAZON LOGIC - Generate category-aware search URLs
+ * - Fruits/Vegetables: "Organic [food]"
+ * - Yogurt/Peanut Butter: "[food] unsweetened sugar free no xylitol"
+ * - Meat/Fish: "Plain [food] no salt"
+ * - Default: "[food]"
  */
-function generateFallbackUrl(foodName: string, language: string, petType: "dog" | "cat"): string {
+function generateSmartFallbackUrl(
+  foodName: string, 
+  language: string, 
+  petType: "dog" | "cat",
+  category: FoodCategory
+): string {
   const config = getAmazonConfig(language);
   const lang = language.split('-')[0];
   const translatedName = translateFoodName(foodName, language);
   const petWord = config.petKeyword[petType];
+  const lowerFood = foodName.toLowerCase().trim();
   
-  // Build search query with pet type for more relevant results
-  const qualityPrefix = lang === 'es' ? 'mejores' : 'best';
-  const searchTerm = encodeURIComponent(`${qualityPrefix} ${translatedName} ${petWord}`);
-  return `https://www.${config.domain}/s?k=${searchTerm}&tag=${config.tag}`;
+  let searchQuery: string;
+  
+  // Smart search modifiers based on category and food type
+  if (category === 'fruit' || category === 'vegetable') {
+    // Organic prefix for fruits and vegetables
+    const organic = lang === 'es' ? 'orgánico' : 'organic';
+    searchQuery = `${organic} ${translatedName} ${petWord}`;
+  } else if (lowerFood === 'yogurt' || lowerFood === 'yogur' || 
+             lowerFood === 'peanut butter' || lowerFood === 'mantequilla de maní') {
+    // Safety-focused search for xylitol risk foods
+    const safetyTerms = lang === 'es' 
+      ? `${translatedName} sin azúcar sin xilitol ${petWord}`
+      : `${translatedName} unsweetened sugar free no xylitol ${petWord}`;
+    searchQuery = safetyTerms;
+  } else if (category === 'protein') {
+    // Plain/unseasoned for meats
+    const plain = lang === 'es' ? 'simple sin sal' : 'plain no salt';
+    searchQuery = `${plain} ${translatedName} ${petWord}`;
+  } else {
+    // Default: just food name + pet type
+    const qualityPrefix = lang === 'es' ? 'mejores' : 'best';
+    searchQuery = `${qualityPrefix} ${translatedName} ${petWord}`;
+  }
+  
+  return `https://www.${config.domain}/s?k=${encodeURIComponent(searchQuery)}&tag=${config.tag}`;
 }
 
 export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
@@ -404,18 +435,18 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
           }
 
           if (isMounted) {
-            console.log('Affiliate Status: Auto-Generated with Pet Type');
+            console.log('Affiliate Status: Smart Auto-Generated with Pet Type');
             setAffiliateLink({ 
               productName: normalizedName, 
-              url: generateFallbackUrl(normalizedName, currentLanguage, petType) 
+              url: generateSmartFallbackUrl(normalizedName, currentLanguage, petType, foodCategory) 
             });
           }
         } catch {
           if (isMounted) {
-            console.log('Affiliate Status: Auto-Generated (Error Fallback)');
+            console.log('Affiliate Status: Smart Auto-Generated (Error Fallback)');
             setAffiliateLink({ 
               productName: normalizedName, 
-              url: generateFallbackUrl(normalizedName, currentLanguage, petType) 
+              url: generateSmartFallbackUrl(normalizedName, currentLanguage, petType, foodCategory) 
             });
           }
         } finally {
