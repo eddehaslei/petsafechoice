@@ -52,16 +52,25 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database (public INSERT now allowed)
+  // Log search to database (public INSERT now allowed via RLS)
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
+    // Debug logging before insert
+    console.info("Logging search:", { query, species, language: i18n.language, safetyLevel });
+    
     try {
-      await supabase.from('search_logs').insert({
+      const { error } = await supabase.from('search_logs').insert({
         query,
         species,
         language: i18n.language,
         result_safety_level: safetyLevel,
         source: 'search',
       });
+      
+      if (error) {
+        console.error("Supabase Error:", error);
+      } else {
+        console.info("Search logged successfully");
+      }
     } catch (err) {
       console.error('Failed to log search:', err);
     }
