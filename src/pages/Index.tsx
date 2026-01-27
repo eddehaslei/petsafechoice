@@ -22,6 +22,7 @@ import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { BackToTop } from "@/components/BackToTop";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
+import { isRateLimited } from "@/lib/rateLimiter";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -52,13 +53,19 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database (public INSERT now allowed via RLS)
+  // Log search to database with rate limiting
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
+    // Check rate limit before logging
+    if (isRateLimited("log")) {
+      console.warn("[Rate Limited] Skipping search log");
+      return;
+    }
+    
     // Debug logging before insert
     console.info("Logging search:", { query, species, language: i18n.language, safetyLevel });
     
     try {
-      // IMPORTANT: insert must be an ARRAY of objects and we call .select() to force a DB confirmation
+      // CRITICAL: Use array format for insert and call .select() to force DB confirmation
       const { data, error } = await supabase
         .from("search_logs")
         .insert([
@@ -66,27 +73,33 @@ const Index = () => {
             query: query,
             species: species,
             language: i18n.language,
-            result_safety_level: safetyLevel,
+            result_safety_level: safetyLevel || null,
             source: "search",
           },
         ])
         .select();
       
       if (error) {
-        console.error("Supabase Error:", error);
+        console.error("Supabase Error:", error.message, error.details, error.hint);
       } else {
-        console.info("Search logged successfully", { inserted: data?.[0] ?? null });
+        console.info("Search logged successfully", { id: data?.[0]?.id });
       }
     } catch (err) {
-      console.error('Failed to log search:', err);
+      console.error("Failed to log search:", err);
     }
   }, [i18n.language]);
 
   const handleSearch = useCallback(async (food: string, source: "trending" | "search" = "search") => {
-    // Check cache first for instant results
+    // Check rate limit before searching
+    if (isRateLimited("search")) {
+      toast.error(t("errors.tooManyRequests", "Too many requests. Please wait a moment and try again."));
+      return;
+    }
+    
+    // Check cache first for instant results (<100ms)
     const cached = getCachedResult(food, petType);
     if (cached) {
-      // Ensure we never show a loading state when we have cached data
+      // INSTANT: Set result immediately, no loading state
       setIsLoading(false);
       setResult(cached);
       setLastSearchedFood(food);
@@ -143,7 +156,7 @@ const Index = () => {
     }
   }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t, getCachedResult, setCachedResult, logSearch]);
 
-  // INSTANT toggle switch - use cache if available
+  // INSTANT toggle switch - use cache if available (target: <100ms)
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false;
@@ -155,7 +168,7 @@ const Index = () => {
       // Check cache first for instant switch
       const cached = getCachedResult(lastSearchedFood, petType);
       if (cached) {
-        // If we're switching back to a cached result, avoid any loading/flicker
+        // INSTANT: No loading state, just swap the data
         setIsLoading(false);
         setResult(cached);
         // Log the toggle switch
@@ -166,7 +179,7 @@ const Index = () => {
       }
     }
     previousPetType.current = petType;
-  }, [petType, lastSearchedFood, searchSource, handleSearch, getCachedResult, setResult, logSearch]);
+  }, [petType, lastSearchedFood, searchSource, handleSearch, getCachedResult, setResult, setIsLoading, logSearch]);
 
   // Auto-refresh when language changes (if there's an active search)
   useEffect(() => {

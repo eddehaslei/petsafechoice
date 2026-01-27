@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { SafetyResultData } from "./SafetyResult";
+import { isLiquidFood } from "@/lib/liquidFoods";
 
 interface DynamicSEOProps {
   result: SafetyResultData | null;
@@ -8,16 +9,21 @@ interface DynamicSEOProps {
 export function DynamicSEO({ result }: DynamicSEOProps) {
   useEffect(() => {
     if (result) {
-      // Dynamic title: "Can Dogs eat Chocolate? | PetSafeChoice"
       const petName = result.petType === "dog" ? "Dogs" : "Cats";
       const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
-      const newTitle = `Can ${petName} eat ${foodName}? | PetSafeChoice`;
       
-      // Social sharing title (OG/Twitter): "Can Dogs eat Chocolate? | PetSafeChoice"
-      const socialTitle = `Can ${petName} eat ${foodName}? | PetSafeChoice`;
+      // Determine if food is liquid - use "Drink" instead of "Eat"
+      const verb = isLiquidFood(result.food) ? "Drink" : "Eat";
+      
+      // Dynamic title: "Can Dogs Eat/Drink Chocolate? | PetSafeChoice"
+      const newTitle = `Can ${petName} ${verb} ${foodName}? | PetSafeChoice`;
+      
+      // Social sharing title (OG/Twitter)
+      const socialTitle = `Can ${petName} ${verb} ${foodName}? | PetSafeChoice`;
       
       // Dynamic meta description based on safety level
       let description = "";
+      const verbLower = verb.toLowerCase();
       switch (result.safetyLevel) {
         case "safe":
           description = `${foodName} is safe for ${petName.toLowerCase()}! Learn about the health benefits, proper serving sizes, and expert tips for feeding ${foodName.toLowerCase()} to your ${result.petType}.`;
@@ -26,7 +32,7 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
           description = `${foodName} requires caution when feeding to ${petName.toLowerCase()}. Understand the risks, safe amounts, and what to watch for. Veterinary-reviewed guidance.`;
           break;
         case "dangerous":
-          description = `WARNING: ${foodName} is toxic to ${petName.toLowerCase()}! Learn why it's dangerous, symptoms to watch for, and what to do if your ${result.petType} ate ${foodName.toLowerCase()}.`;
+          description = `WARNING: ${foodName} is toxic to ${petName.toLowerCase()}! Learn why it's dangerous, symptoms to watch for, and what to do if your ${result.petType} consumed ${foodName.toLowerCase()}.`;
           break;
       }
 

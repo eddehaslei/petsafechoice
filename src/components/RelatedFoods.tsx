@@ -16,8 +16,6 @@ const foodCategories: Record<string, string> = {
   raspberries: "fruit",
   blackberries: "fruit",
   cranberries: "fruit",
-  grapes: "fruit",
-  raisins: "fruit",
   apples: "fruit",
   bananas: "fruit",
   watermelon: "fruit",
@@ -25,7 +23,6 @@ const foodCategories: Record<string, string> = {
   honeydew: "fruit",
   mango: "fruit",
   pineapple: "fruit",
-  avocado: "fruit",
   oranges: "fruit",
   cherries: "fruit",
   plums: "fruit",
@@ -67,7 +64,7 @@ const foodCategories: Record<string, string> = {
   "ice cream": "dairy",
   kefir: "dairy",
   
-  // Dangerous/Toxic
+  // Dangerous/Toxic - THESE SHOULD NEVER BE SUGGESTED
   chocolate: "toxic",
   xylitol: "toxic",
   onions: "toxic",
@@ -75,6 +72,10 @@ const foodCategories: Record<string, string> = {
   coffee: "toxic",
   caffeine: "toxic",
   alcohol: "toxic",
+  grapes: "toxic",
+  raisins: "toxic",
+  avocado: "toxic",
+  macadamia: "toxic",
   
   // Nuts & Seeds
   peanuts: "nuts",
@@ -99,6 +100,13 @@ const foodCategories: Record<string, string> = {
   "bone broth": "bones",
 };
 
+// Foods that should NEVER be suggested (toxic/dangerous)
+const DANGEROUS_FOODS = new Set([
+  "chocolate", "grapes", "raisins", "avocado", "onions", "garlic",
+  "xylitol", "macadamia", "coffee", "caffeine", "alcohol", "cooked bones",
+  "chicken bones", "fish bones"
+]);
+
 export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
   function RelatedFoods({ currentFood, petType, onFoodClick }, ref) {
     const [relatedFoods, setRelatedFoods] = useState<string[]>([]);
@@ -121,11 +129,12 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
         }
 
         try {
-          // Fetch foods from database
+          // Fetch ONLY SAFE foods from database
           const { data, error } = await supabase
             .from("foods")
-            .select("name, species")
-            .or(`species.eq.${petType},species.eq.both`);
+            .select("name, species, safety_rating")
+            .or(`species.eq.${petType},species.eq.both`)
+            .eq("safety_rating", "safe"); // ONLY SAFE FOODS
 
           if (error) {
             console.error("Error fetching related foods:", error);
@@ -138,9 +147,13 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
             return;
           }
 
-          // Deduplicate by lowercase name
+          // Deduplicate by lowercase name and filter out dangerous foods
           const uniqueFoods = Array.from(
-            new Map(data.map((f) => [f.name.toLowerCase(), f.name])).values()
+            new Map(
+              data
+                .filter((f) => !DANGEROUS_FOODS.has(f.name.toLowerCase()))
+                .map((f) => [f.name.toLowerCase(), f.name])
+            ).values()
           );
 
           // Filter out current food
@@ -152,24 +165,27 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
           let sameCategoryFoods: string[] = [];
           let otherCategoryFoods: string[] = [];
 
-          if (currentCategory) {
+          if (currentCategory && currentCategory !== "toxic") {
             otherFoods.forEach((name) => {
               const category = foodCategories[name.toLowerCase()];
               if (category === currentCategory) {
                 sameCategoryFoods.push(name);
-              } else {
+              } else if (category !== "toxic") {
                 otherCategoryFoods.push(name);
               }
             });
           } else {
-            otherCategoryFoods = otherFoods;
+            // Filter out toxic category from others
+            otherCategoryFoods = otherFoods.filter(
+              (name) => foodCategories[name.toLowerCase()] !== "toxic"
+            );
           }
 
           // Shuffle same-category foods and pick 4
           const shuffled = sameCategoryFoods.sort(() => Math.random() - 0.5);
           let suggestions = shuffled.slice(0, 4);
 
-          // If not enough same-category, fill with random others
+          // If not enough same-category, fill with random safe others
           if (suggestions.length < 4) {
             const shuffledOthers = otherCategoryFoods.sort(() => Math.random() - 0.5);
             suggestions = [...suggestions, ...shuffledOthers].slice(0, 4);
@@ -189,7 +205,7 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
 
     if (isLoading) {
       return (
-        <div ref={ref} className="w-full max-w-2xl mx-auto mt-12 pb-8">
+        <div ref={ref} className="w-full max-w-2xl mx-auto mt-4 pb-8">
           <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5 flex items-center justify-center">
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
           </div>
@@ -200,7 +216,7 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
     if (relatedFoods.length === 0) return null;
 
     return (
-      <div ref={ref} className="w-full max-w-2xl mx-auto mt-12 pb-8 animate-fade-in">
+      <div ref={ref} className="w-full max-w-2xl mx-auto mt-4 pb-8 animate-fade-in">
         <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-4">
             <Search className="w-5 h-5 text-primary" />

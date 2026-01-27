@@ -2,6 +2,7 @@ import { CheckCircle2, AlertTriangle, XCircle, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { VerifiedDataBadge } from "./VerifiedDataBadge";
+import { isLiquidFood } from "@/lib/liquidFoods";
 
 export type SafetyLevel = "safe" | "caution" | "dangerous";
 
@@ -20,12 +21,24 @@ interface SafetyResultProps {
 }
 
 export function SafetyResult({ data }: SafetyResultProps) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  
+  // Determine if food is liquid - use "Drink" instead of "Eat"
+  const isLiquid = isLiquidFood(data.food);
+  const lang = i18n.language.split('-')[0];
+  
+  // Get the appropriate title based on safety level and food type
+  const getSafeTitle = () => {
+    if (isLiquid) {
+      return lang === 'es' ? 'Seguro para Beber' : 'Safe to Drink';
+    }
+    return t('safety.safeTitle');
+  };
 
   const safetyConfig = {
     safe: {
       icon: CheckCircle2,
-      title: t('safety.safeTitle'),
+      title: getSafeTitle(),
       bgClass: "bg-safe-bg",
       borderClass: "border-safe/30",
       iconClass: "text-safe",
