@@ -84,12 +84,12 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto">
+    <form onSubmit={handleSubmit} className="w-full max-w-xl mx-auto" role="search">
       {/* Stacked layout: Full-width input, button below */}
       <div className="flex flex-col gap-3">
         {/* Search Input - Full Width with Autocomplete */}
         <div className="relative w-full">
-          <Search className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" />
+          <Search className="absolute start-4 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground z-10" aria-hidden="true" />
           <Input
             ref={inputRef}
             type="text"
@@ -105,6 +105,7 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
             aria-expanded={showSuggestions && suggestions.length > 0}
             aria-controls="food-suggestions"
             aria-autocomplete="list"
+            aria-label={t('search.ariaLabel', 'Enter a food to check if it is safe for your pet')}
           />
           
           {/* Autocomplete Suggestions Dropdown */}
@@ -139,10 +140,11 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
         <Button
           type="submit"
           disabled={isLoading || !query.trim()}
+          aria-label={t('search.buttonAriaLabel', 'Search for food safety information')}
           className="w-full sm:w-auto sm:mx-auto h-12 min-h-[48px] px-10 rounded-2xl font-heading font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
         >
           {isLoading ? (
-            <Loader2 className="w-5 h-5 animate-spin" />
+            <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
           ) : (
             t('search.button')
           )}

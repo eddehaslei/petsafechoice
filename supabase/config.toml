@@ -2,3 +2,21 @@ project_id = "yvznzqvzkoiommrzwufr"
 
 [functions.check-food-safety]
 verify_jwt = false
+
+[functions.get-all-affiliates]
+verify_jwt = false
+
+[functions.get-affiliates]
+verify_jwt = false
+
+[functions.get-affiliate-match]
+verify_jwt = false
+
+[functions.affiliate-redirect]
+verify_jwt = false
+
+[functions.get-emergency-vets]
+verify_jwt = false
+
+[functions.get-location]
+verify_jwt = false

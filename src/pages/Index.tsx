@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import { Dog, Cat, Heart, ArrowLeft } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
@@ -22,10 +22,24 @@ import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { BackToTop } from "@/components/BackToTop";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
-import { isRateLimited } from "@/lib/rateLimiter";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+
+// Debounce helper for rate limiting
+const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
+  const lastCall = useRef<number>(0);
+  
+  return useCallback((...args: any[]) => {
+    const now = Date.now();
+    if (now - lastCall.current >= delay) {
+      lastCall.current = now;
+      callback(...args);
+    } else {
+      toast.info("Please wait a moment before searching again.");
+    }
+  }, [callback, delay]);
+};
 
 const Index = () => {
   const { t, i18n } = useTranslation();
@@ -53,71 +67,56 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database with rate limiting
+  // Log search to database - fire and forget pattern
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
-    // Check rate limit before logging
-    if (isRateLimited("log")) {
-      console.warn("[Rate Limited] Skipping search log");
-      return;
-    }
-    
-    // Debug logging before insert
-    console.info("Logging search:", { query, species, language: i18n.language, safetyLevel });
-    
+    // Silent logging - don't block UI
     try {
-      // CRITICAL: Use array format for insert and call .select() to force DB confirmation
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("search_logs")
         .insert([
           {
-            query: query,
+            query: query.trim().toLowerCase(),
             species: species,
             language: i18n.language,
             result_safety_level: safetyLevel || null,
             source: "search",
           },
-        ])
-        .select();
+        ]);
       
       if (error) {
-        console.error("Supabase Error:", error.message, error.details, error.hint);
-      } else {
-        console.info("Search logged successfully", { id: data?.[0]?.id });
+        console.error("Log error:", error.message);
       }
     } catch (err) {
       console.error("Failed to log search:", err);
     }
   }, [i18n.language]);
 
-  const handleSearch = useCallback(async (food: string, source: "trending" | "search" = "search") => {
-    // Check rate limit before searching
-    if (isRateLimited("search")) {
-      toast.error(t("errors.tooManyRequests", "Too many requests. Please wait a moment and try again."));
-      return;
-    }
+  const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
+    const normalizedFood = food.trim();
+    if (!normalizedFood) return;
     
-    // Check cache first for instant results (<100ms)
-    const cached = getCachedResult(food, petType);
+    // INSTANT: Check cache first for <50ms response
+    const cached = getCachedResult(normalizedFood, petType);
     if (cached) {
-      // INSTANT: Set result immediately, no loading state
-      setIsLoading(false);
+      // No loading state - instant switch
       setResult(cached);
-      setLastSearchedFood(food);
+      setLastSearchedFood(normalizedFood);
       setSearchSource(source);
-      addSearch(food);
-      // Log cached search too
-      logSearch(food, petType, cached.safetyLevel);
+      setIsLoading(false);
+      addSearch(normalizedFood);
+      // Log asynchronously
+      logSearch(normalizedFood, petType, cached.safetyLevel);
       return;
     }
 
     setIsLoading(true);
     setResult(null);
     setSearchSource(source);
-    setLastSearchedFood(food);
+    setLastSearchedFood(normalizedFood);
 
     try {
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
-        body: { food, petType, language: i18n.language },
+        body: { food: normalizedFood, petType, language: i18n.language },
       });
 
       if (error) {
@@ -130,23 +129,23 @@ const Index = () => {
         } else {
           toast.error(t('errors.generic', 'Failed to check food safety. Please try again.'));
         }
+        setIsLoading(false);
         return;
       }
 
       if (data?.error) {
         toast.error(data.error);
+        setIsLoading(false);
         return;
       }
 
       setResult(data);
-      // Cache the result for instant toggles
-      setCachedResult(food, petType, data);
+      // Cache for instant species toggle
+      setCachedResult(normalizedFood, petType, data);
       
-      // Add to recent searches on successful result
       if (data && !data.error) {
-        addSearch(food);
-        // Log search to database
-        logSearch(food, petType, data.safetyLevel);
+        addSearch(normalizedFood);
+        logSearch(normalizedFood, petType, data.safetyLevel);
       }
     } catch (err) {
       console.error("Error checking food safety:", err);
@@ -155,6 +154,9 @@ const Index = () => {
       setIsLoading(false);
     }
   }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t, getCachedResult, setCachedResult, logSearch]);
+
+  // Debounced search - 1 second minimum between searches
+  const handleSearch = useDebounce(handleSearchCore, 1000);
 
   // INSTANT toggle switch - use cache if available (target: <100ms)
   useEffect(() => {
