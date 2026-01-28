@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist, createJSONStorage } from 'zustand/middleware';
 import { SafetyResultData } from '@/components/SafetyResult';
 
 type PetType = "dog" | "cat";
@@ -32,76 +33,94 @@ interface SearchState {
   getCachedResult: (food: string, species: PetType) => SafetyResultData | null;
   setCachedResult: (food: string, species: PetType, result: SafetyResultData) => void;
   hasCachedResult: (food: string, species: PetType) => boolean;
-  
-  // Prefetch helper - cache both species at once
-  prefetchOppositeSpecies: (food: string, currentSpecies: PetType) => void;
+  clearExpiredCache: () => void;
 }
 
 const createCacheKey = (food: string, species: PetType): string => 
   `${food.toLowerCase().trim()}:${species}`;
 
-export const useSearchStore = create<SearchState>((set, get) => ({
-  // Initial state
-  petType: "dog",
-  result: null,
-  lastSearchedFood: null,
-  isLoading: false,
-  searchSource: null,
-  resultsCache: {},
-  
-  // Actions
-  setPetType: (type) => set({ petType: type }),
-  setResult: (result) => set({ result }),
-  setLastSearchedFood: (food) => set({ lastSearchedFood: food }),
-  setIsLoading: (loading) => set({ isLoading: loading }),
-  setSearchSource: (source) => set({ searchSource: source }),
-  clearResult: () => set({ result: null, searchSource: null }),
-  
-  // Cache actions - with 24-hour expiry check
-  getCachedResult: (food, species) => {
-    const key = createCacheKey(food, species);
-    const cached = get().resultsCache[key];
-    
-    if (!cached) return null;
-    
-    // Check if cache is still valid (within 24 hours)
-    const now = Date.now();
-    if (now - cached.timestamp > CACHE_EXPIRY_MS) {
-      // Cache expired, remove it
-      const { [key]: _, ...rest } = get().resultsCache;
-      set({ resultsCache: rest });
-      return null;
-    }
-    
-    console.info(`[Cache HIT] Using cached result for "${food}:${species}"`);
-    return cached.data;
-  },
-  
-  setCachedResult: (food, species, result) => {
-    const key = createCacheKey(food, species);
-    console.info(`[Cache SET] Storing result for "${food}:${species}"`);
-    set((state) => ({
-      resultsCache: {
-        ...state.resultsCache,
-        [key]: { data: result, timestamp: Date.now() },
+export const useSearchStore = create<SearchState>()(
+  persist(
+    (set, get) => ({
+      // Initial state
+      petType: "dog",
+      result: null,
+      lastSearchedFood: null,
+      isLoading: false,
+      searchSource: null,
+      resultsCache: {},
+      
+      // Actions
+      setPetType: (type) => set({ petType: type }),
+      setResult: (result) => set({ result }),
+      setLastSearchedFood: (food) => set({ lastSearchedFood: food }),
+      setIsLoading: (loading) => set({ isLoading: loading }),
+      setSearchSource: (source) => set({ searchSource: source }),
+      clearResult: () => set({ result: null, searchSource: null }),
+      
+      // Cache actions - with 24-hour expiry check
+      getCachedResult: (food, species) => {
+        const key = createCacheKey(food, species);
+        const cached = get().resultsCache[key];
+        
+        if (!cached) return null;
+        
+        // Check if cache is still valid (within 24 hours)
+        const now = Date.now();
+        if (now - cached.timestamp > CACHE_EXPIRY_MS) {
+          // Cache expired, remove it
+          const { [key]: _, ...rest } = get().resultsCache;
+          set({ resultsCache: rest });
+          return null;
+        }
+        
+        return cached.data;
       },
-    }));
-  },
-  
-  hasCachedResult: (food, species) => {
-    const key = createCacheKey(food, species);
-    const cached = get().resultsCache[key];
-    if (!cached) return false;
-    
-    // Check expiry
-    const now = Date.now();
-    return now - cached.timestamp <= CACHE_EXPIRY_MS;
-  },
-  
-  // Prefetch helper for background loading
-  prefetchOppositeSpecies: (food, currentSpecies) => {
-    // This is a placeholder for future background prefetching
-    // The actual prefetch would be done by the edge function or a separate call
-    console.info(`[Prefetch] Ready to prefetch ${food} for ${currentSpecies === 'dog' ? 'cat' : 'dog'}`);
-  },
-}));
+      
+      setCachedResult: (food, species, result) => {
+        const key = createCacheKey(food, species);
+        set((state) => ({
+          resultsCache: {
+            ...state.resultsCache,
+            [key]: { data: result, timestamp: Date.now() },
+          },
+        }));
+      },
+      
+      hasCachedResult: (food, species) => {
+        const key = createCacheKey(food, species);
+        const cached = get().resultsCache[key];
+        if (!cached) return false;
+        
+        // Check expiry
+        const now = Date.now();
+        return now - cached.timestamp <= CACHE_EXPIRY_MS;
+      },
+      
+      // Clear expired cache entries
+      clearExpiredCache: () => {
+        const now = Date.now();
+        const cache = get().resultsCache;
+        const validCache: ResultCache = {};
+        
+        for (const [key, value] of Object.entries(cache)) {
+          if (now - value.timestamp <= CACHE_EXPIRY_MS) {
+            validCache[key] = value;
+          }
+        }
+        
+        set({ resultsCache: validCache });
+      },
+    }),
+    {
+      name: 'petsafe-search-store',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state) => ({
+        // Only persist the cache and pet type preference
+        resultsCache: state.resultsCache,
+        petType: state.petType,
+        lastSearchedFood: state.lastSearchedFood,
+      }),
+    }
+  )
+);

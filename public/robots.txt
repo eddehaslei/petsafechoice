@@ -12,3 +12,13 @@ Allow: /
 
 User-agent: *
 Allow: /
+
+# Sitemap
+Sitemap: https://petsafechoice.lovable.app/sitemap.xml
+
+# Crawl-delay for non-major bots
+User-agent: *
+Crawl-delay: 1
+
+# Block access to internal paths
+Disallow: /api/

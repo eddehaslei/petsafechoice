@@ -5,7 +5,7 @@
 
 // Foods that should use "drink" instead of "eat"
 export const LIQUID_FOODS = new Set([
-  // English
+  // English - Common beverages
   "water",
   "milk",
   "broth",
@@ -24,7 +24,27 @@ export const LIQUID_FOODS = new Set([
   "tea",
   "coffee",
   
-  // Spanish
+  // Sodas & Drinks (The Pepsi Fix)
+  "pepsi",
+  "coca-cola",
+  "coke",
+  "soda",
+  "cola",
+  "sprite",
+  "fanta",
+  "7up",
+  "mountain dew",
+  "dr pepper",
+  "ginger ale",
+  "root beer",
+  "energy drink",
+  "sports drink",
+  "gatorade",
+  "lemonade",
+  "iced tea",
+  "smoothie",
+  
+  // Spanish - Common beverages
   "agua",
   "leche",
   "caldo",
@@ -42,7 +62,33 @@ export const LIQUID_FOODS = new Set([
   "leche de soja",
   "té",
   "café",
+  
+  // Spanish - Sodas
+  "refresco",
+  "gaseosa",
+  "bebida",
+  "bebida energética",
+  "limonada",
+  "batido",
 ]);
+
+// Partial matches for liquid detection
+const LIQUID_KEYWORDS = [
+  "juice",
+  "jugo",
+  "milk",
+  "leche",
+  "broth",
+  "caldo",
+  "tea",
+  "coffee",
+  "soda",
+  "cola",
+  "drink",
+  "bebida",
+  "smoothie",
+  "batido",
+];
 
 /**
  * Check if a food item is a liquid
@@ -50,7 +96,15 @@ export const LIQUID_FOODS = new Set([
  * @returns true if the food is a liquid
  */
 export function isLiquidFood(foodName: string): boolean {
-  return LIQUID_FOODS.has(foodName.toLowerCase().trim());
+  const lowerName = foodName.toLowerCase().trim();
+  
+  // Check exact match first
+  if (LIQUID_FOODS.has(lowerName)) {
+    return true;
+  }
+  
+  // Check for partial keyword matches
+  return LIQUID_KEYWORDS.some(keyword => lowerName.includes(keyword));
 }
 
 /**
@@ -68,6 +122,22 @@ export function getEatDrinkVerb(foodName: string, language: string): { eat: stri
       eat: 'comer',
       drink: 'beber',
       verb: isLiquid ? 'beber' : 'comer',
+    };
+  }
+  
+  if (lang === 'fr') {
+    return {
+      eat: 'manger',
+      drink: 'boire',
+      verb: isLiquid ? 'boire' : 'manger',
+    };
+  }
+  
+  if (lang === 'de') {
+    return {
+      eat: 'essen',
+      drink: 'trinken',
+      verb: isLiquid ? 'trinken' : 'essen',
     };
   }
   
