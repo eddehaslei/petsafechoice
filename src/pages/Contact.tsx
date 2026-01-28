@@ -48,8 +48,8 @@ const Contact = () => {
               <p className="text-muted-foreground mb-3">
                 {t('contact.email.description')}
               </p>
-              <a href="mailto:Hello@petsafechoice.com" className="text-primary hover:underline font-medium">
-                Hello@petsafechoice.com
+              <a href="mailto:hello@petsafechoice.com" className="text-primary hover:underline font-medium">
+                hello@petsafechoice.com
               </a>
             </div>
 

@@ -218,7 +218,7 @@ const Privacy = () => {
               </h2>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              {t('privacy.contact.content', 'For privacy-related questions or to exercise your rights, please contact us through our Contact page or email us at privacy@petsafechoice.com.')}
+              {t('privacy.contact.content', 'For privacy-related questions or to exercise your rights, please contact us at hello@petsafechoice.com.')}
             </p>
           </section>
         </div>

@@ -219,21 +219,22 @@ export const RelatedFoods = forwardRef<HTMLDivElement, RelatedFoodsProps>(
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-4 pb-8 animate-fade-in">
         <div className="bg-card/80 backdrop-blur border border-border/50 rounded-2xl p-5">
           <div className="flex items-center gap-2 mb-4">
-            <Search className="w-5 h-5 text-primary" />
+            <Search className="w-5 h-5 text-primary" aria-hidden="true" />
             <h3 className="font-heading font-semibold text-foreground">
               People Also Ask About
             </h3>
           </div>
           
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3" role="list">
             {relatedFoods.map((food) => (
               <button
                 key={food}
                 onClick={() => onFoodClick(food)}
                 className="group flex items-center justify-between gap-2 px-4 py-3 bg-background hover:bg-primary/5 border border-border hover:border-primary/30 rounded-xl text-sm font-medium text-foreground transition-all duration-200 hover:-translate-y-0.5 min-h-[48px]"
+                aria-label={`Check if ${food} is safe for your ${petType}`}
               >
                 <span className="capitalize">{food}</span>
-                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                <ArrowRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" aria-hidden="true" />
               </button>
             ))}
           </div>

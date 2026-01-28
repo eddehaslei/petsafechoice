@@ -154,7 +154,7 @@ const Terms = () => {
               </h2>
             </div>
             <p className="text-muted-foreground leading-relaxed">
-              {t('terms.contact.content', 'If you have questions about these Terms of Service, please contact us through our Contact page or email us at legal@petsafechoice.com.')}
+              {t('terms.contact.content', 'If you have questions about these Terms of Service, please contact us at hello@petsafechoice.com.')}
             </p>
           </section>
         </div>

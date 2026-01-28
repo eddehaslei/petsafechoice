@@ -319,47 +319,48 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
       
       // AUTO-SAVE: Store AI-generated response in the foods table for future use
       // This makes the database self-growing with every new search
-      (async () => {
-        try {
-          // Map API safetyLevel to database enum
-          const dbSafetyRating = safetyData.safetyLevel === "dangerous" ? "toxic" : 
-                                 safetyData.safetyLevel === "safe" ? "safe" : "caution";
-          
-          await supabase.from('foods').upsert({
-            name: foodLower,
-            species: petType,
-            safety_rating: dbSafetyRating,
-            short_answer: safetyData.summary || "",
-            long_desc: safetyData.details || null,
-            risks: safetyData.symptoms || [],
-            benefits: [],
-            serving_tips: safetyData.recommendations?.join(". ") || null,
-          }, { 
-            onConflict: 'name,species',
-            ignoreDuplicates: false 
-          });
-          console.log(`[${clientIP}] ✅ AI response auto-saved to database: ${foodLower} (${petType})`);
-        } catch (saveErr) {
-          console.error('Auto-save error (non-blocking):', saveErr);
+      try {
+        // Map API safetyLevel to database enum
+        const dbSafetyRating = safetyData.safetyLevel === "dangerous" ? "toxic" : 
+                               safetyData.safetyLevel === "safe" ? "safe" : "caution";
+        
+        const { error: upsertError } = await supabase.from('foods').upsert({
+          name: foodLower,
+          species: petType,
+          safety_rating: dbSafetyRating,
+          short_answer: safetyData.summary || "",
+          long_desc: safetyData.details || null,
+          risks: safetyData.symptoms || [],
+          benefits: [],
+          serving_tips: safetyData.recommendations?.join(". ") || null,
+        }, { 
+          onConflict: 'name,species',
+          ignoreDuplicates: false 
+        });
+        
+        if (upsertError) {
+          console.error(`[${clientIP}] Auto-save error:`, upsertError.message);
+        } else {
+          console.log(`[${clientIP}] ✅ AI response saved to database: ${foodLower} (${petType})`);
         }
-      })();
+      } catch (saveErr) {
+        console.error('Auto-save error (non-blocking):', saveErr);
+      }
       
-      // Log AI search to analytics (async, don't block response)
-      (async () => {
-        try {
-          await supabase.from('search_logs').insert({
-            query: foodLower,
-            species: petType,
-            language: language,
-            country_code: countryCode,
-            result_safety_level: safetyData.safetyLevel,
-            source: 'ai'
-          });
-          console.log(`[${clientIP}] AI Search logged`);
-        } catch (logErr) {
-          console.error('AI Search log error:', logErr);
-        }
-      })();
+      // Log AI search to analytics
+      try {
+        await supabase.from('search_logs').insert({
+          query: foodLower,
+          species: petType,
+          language: language,
+          country_code: countryCode,
+          result_safety_level: safetyData.safetyLevel,
+          source: 'ai'
+        });
+        console.log(`[${clientIP}] AI Search logged`);
+      } catch (logErr) {
+        console.error('AI Search log error:', logErr);
+      }
     } catch (parseError) {
       console.error("Failed to parse AI response:", content);
       return new Response(

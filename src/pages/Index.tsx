@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import { Dog, Cat, Heart, ArrowLeft } from "lucide-react";
 import { PetToggle } from "@/components/PetToggle";
 import { FoodSearch } from "@/components/FoodSearch";
@@ -26,7 +26,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 
-// Debounce helper for rate limiting
+// Debounce helper for rate limiting - 1 second minimum between searches
 const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
   const lastCall = useRef<number>(0);
   
@@ -67,28 +67,26 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database - fire and forget pattern
-  const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
-    // Silent logging - don't block UI
-    try {
-      const { error } = await supabase
-        .from("search_logs")
-        .insert([
-          {
-            query: query.trim().toLowerCase(),
-            species: species,
-            language: i18n.language,
-            result_safety_level: safetyLevel || null,
-            source: "search",
-          },
-        ]);
-      
-      if (error) {
-        console.error("Log error:", error.message);
+  // Log search to database - async fire and forget (non-blocking)
+  const logSearch = useCallback((query: string, species: string, safetyLevel?: string) => {
+    // Fire and forget - use async IIFE to avoid blocking UI
+    (async () => {
+      try {
+        await supabase
+          .from("search_logs")
+          .insert([
+            {
+              query: query.trim().toLowerCase(),
+              species: species,
+              language: i18n.language,
+              result_safety_level: safetyLevel || null,
+              source: "search",
+            },
+          ]);
+      } catch {
+        // Silent fail - don't disrupt user experience
       }
-    } catch (err) {
-      console.error("Failed to log search:", err);
-    }
+    })();
   }, [i18n.language]);
 
   const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
