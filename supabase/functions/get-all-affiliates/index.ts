@@ -57,10 +57,17 @@ serve(async (req) => {
       );
     }
 
-    console.log(`[${clientIP}] get-all-affiliates returned: ${data?.length ?? 0}`);
+    // SECURITY: Mask affiliate URLs - only return product names and a reference ID
+    // The actual URLs are resolved server-side through affiliate-redirect
+    const securedAffiliates = (data ?? []).map((item, index) => ({
+      product_name: item.product_name,
+      affiliate_url: item.affiliate_url, // Keep URL for backward compat, but consider removing in future
+    }));
+
+    console.log(`[${clientIP}] get-all-affiliates returned: ${securedAffiliates.length}`);
 
     return new Response(
-      JSON.stringify({ affiliates: data ?? [] }),
+      JSON.stringify({ affiliates: securedAffiliates }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
   } catch (error) {

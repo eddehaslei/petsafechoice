@@ -42,12 +42,17 @@ export function JsonLdSchema({ result }: JsonLdSchemaProps) {
     const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
     const currentUrl = window.location.href;
     const currentDate = new Date().toISOString().split('T')[0];
+    
+    // Detect liquid foods for eat/drink grammar
+    const liquidFoods = new Set(["water", "milk", "broth", "juice", "kefir", "tea", "coffee"]);
+    const isLiquid = liquidFoods.has(result.food.toLowerCase().trim());
+    const eatDrink = isLiquid ? "drink" : "eat";
 
-    // Build answer based on safety level
+    // Build answer based on safety level with correct eat/drink verb
     let quickAnswer = "";
     switch (result.safetyLevel) {
       case "safe":
-        quickAnswer = `Yes, ${petName} can safely eat ${foodName.toLowerCase()}. ${result.summary}`;
+        quickAnswer = `Yes, ${petName} can safely ${eatDrink} ${foodName.toLowerCase()}. ${result.summary}`;
         break;
       case "caution":
         quickAnswer = `${foodName} should be given to ${petName} with caution. ${result.summary}`;
@@ -57,14 +62,14 @@ export function JsonLdSchema({ result }: JsonLdSchemaProps) {
         break;
     }
 
-    // FAQ Schema - Great for featured snippets
+    // FAQ Schema - Great for featured snippets with dynamic eat/drink verb
     const faqSchema = {
       "@context": "https://schema.org",
       "@type": "FAQPage",
       "mainEntity": [
         {
           "@type": "Question",
-          "name": `Can ${petName} eat ${foodName.toLowerCase()}?`,
+          "name": `Can ${petName} ${eatDrink} ${foodName.toLowerCase()}?`,
           "acceptedAnswer": {
             "@type": "Answer",
             "text": quickAnswer
@@ -80,7 +85,7 @@ export function JsonLdSchema({ result }: JsonLdSchemaProps) {
         },
         ...(result.symptoms && result.symptoms.length > 0 ? [{
           "@type": "Question",
-          "name": `What are the symptoms if my ${petNameSingular} eats ${foodName.toLowerCase()}?`,
+          "name": `What are the symptoms if my ${petNameSingular} ${isLiquid ? "drinks" : "eats"} ${foodName.toLowerCase()}?`,
           "acceptedAnswer": {
             "@type": "Answer",
             "text": `Symptoms to watch for include: ${result.symptoms.join(', ')}. ${result.details}`
