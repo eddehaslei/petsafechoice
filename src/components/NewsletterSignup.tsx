@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, Check, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 export function NewsletterSignup() {
   const { t } = useTranslation();
@@ -19,13 +20,28 @@ export function NewsletterSignup() {
 
     setIsLoading(true);
     
-    // Simulate API call - in production, this would save to Supabase
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    setIsLoading(false);
-    setIsSubscribed(true);
-    toast.success(t('newsletter.success', 'Thanks for subscribing! Check your inbox for our welcome email.'));
-    setEmail("");
+    try {
+      const { error } = await supabase
+        .from('newsletter_subs')
+        .insert({ email: email.toLowerCase().trim() });
+      
+      if (error) {
+        if (error.code === '23505') {
+          // Unique constraint violation - already subscribed
+          toast.info(t('newsletter.alreadySubscribed', 'This email is already subscribed!'));
+        } else {
+          throw error;
+        }
+      } else {
+        setIsSubscribed(true);
+        toast.success(t('newsletter.success', 'Thanks for subscribing! Check your inbox for our welcome email.'));
+      }
+      setEmail("");
+    } catch (err) {
+      toast.error(t('newsletter.error', 'Failed to subscribe. Please try again.'));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   if (isSubscribed) {
