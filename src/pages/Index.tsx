@@ -17,6 +17,7 @@ import { JsonLdSchema } from "@/components/JsonLdSchema";
 import { VetMapWidget } from "@/components/VetMapWidget";
 import { VetVerifiedBadge } from "@/components/VetVerifiedBadge";
 import { TrendingSafetyTips } from "@/components/TrendingSafetyTips";
+import { TrendingIn2026 } from "@/components/TrendingIn2026";
 import { RecentSearches, useRecentSearches } from "@/components/RecentSearches";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { BackToTop } from "@/components/BackToTop";
@@ -290,6 +291,9 @@ const Index = () => {
             
             {/* Trending Safety Tips - Homepage Authority Content */}
             <TrendingSafetyTips onTopicClick={(keyword) => handleSearch(keyword, "trending")} />
+            
+            {/* 2026 Trends Section */}
+            <TrendingIn2026 />
           </>
         )}
 
