@@ -96,4 +96,4 @@ export const NewsletterSignup = forwardRef<HTMLDivElement>(function NewsletterSi
       </form>
     </div>
   );
-}
+});
