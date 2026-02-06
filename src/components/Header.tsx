@@ -1,8 +1,10 @@
-import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, PawPrint } from "lucide-react";
+import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, PawPrint, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export const Header = () => {
   const { t } = useTranslation();
