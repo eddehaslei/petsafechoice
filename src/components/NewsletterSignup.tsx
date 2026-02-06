@@ -63,7 +63,7 @@ export const NewsletterSignup = forwardRef<HTMLDivElement>(function NewsletterSi
   }
 
   return (
-    <div className="bg-card border border-border/50 rounded-xl p-4">
+    <div ref={ref} className="bg-card border border-border/50 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Mail className="w-4 h-4 text-primary" />
         <h4 className="font-semibold text-sm text-foreground">
