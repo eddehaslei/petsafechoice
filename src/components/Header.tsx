@@ -1,14 +1,26 @@
-import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, PawPrint } from "lucide-react";
+import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, PawPrint, LogIn, LogOut, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 export const Header = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    const { error } = await signOut();
+    if (error) {
+      toast.error("Failed to sign out");
+    } else {
+      toast.success("Signed out successfully");
+    }
+  };
 
   const handleGoHome = () => {
     if (isHomePage) {
@@ -103,6 +115,32 @@ export const Header = () => {
             </Link>
           </Button>
           <LanguageSwitcher />
+          
+          {/* Auth Button */}
+          {user ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground hover:text-foreground gap-1.5 min-h-[44px] min-w-[44px]"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden md:inline">Sign Out</span>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 min-h-[44px] min-w-[44px] border-primary/30 text-primary hover:bg-primary/10"
+              asChild
+            >
+              <Link to="/auth" aria-label="Sign in to your account">
+                <LogIn className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Sign In</span>
+              </Link>
+            </Button>
+          )}
         </nav>
       </div>
     </header>

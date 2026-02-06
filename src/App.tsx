@@ -17,6 +17,7 @@ import Disclaimer from "./pages/Disclaimer";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
+import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +40,7 @@ const App = () => (
               <Route path="/disclaimer" element={<Disclaimer />} />
               <Route path="/terms" element={<Terms />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/auth" element={<Auth />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
