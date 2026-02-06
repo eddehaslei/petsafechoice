@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function BackToTop() {
+export const BackToTop = forwardRef<HTMLButtonElement>(function BackToTop(_, ref) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
