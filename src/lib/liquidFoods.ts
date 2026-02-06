@@ -44,6 +44,15 @@ export const LIQUID_FOODS = new Set([
   "iced tea",
   "smoothie",
   
+  // Alcoholic beverages (always toxic, but still liquid grammar)
+  "wine",
+  "beer",
+  "whiskey",
+  "vodka",
+  "rum",
+  "tequila",
+  "champagne",
+  "cocktail",
   // Spanish - Common beverages
   "agua",
   "leche",

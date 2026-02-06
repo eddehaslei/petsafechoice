@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, forwardRef } from "react";
 import { Mail, Check, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 
-export function NewsletterSignup() {
+export const NewsletterSignup = forwardRef<HTMLDivElement>(function NewsletterSignup(_, ref) {
   const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +46,7 @@ export function NewsletterSignup() {
 
   if (isSubscribed) {
     return (
-      <div className="bg-safe/5 border border-safe/20 rounded-xl p-4 flex items-center gap-3">
+      <div ref={ref} className="bg-safe/5 border border-safe/20 rounded-xl p-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-safe/20 flex items-center justify-center shrink-0">
           <Check className="w-5 h-5 text-safe" />
         </div>
@@ -63,7 +63,7 @@ export function NewsletterSignup() {
   }
 
   return (
-    <div className="bg-card border border-border/50 rounded-xl p-4">
+    <div ref={ref} className="bg-card border border-border/50 rounded-xl p-4">
       <div className="flex items-center gap-2 mb-2">
         <Mail className="w-4 h-4 text-primary" />
         <h4 className="font-semibold text-sm text-foreground">
@@ -96,4 +96,4 @@ export function NewsletterSignup() {
       </form>
     </div>
   );
-}
+});

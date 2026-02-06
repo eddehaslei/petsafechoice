@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, forwardRef } from "react";
 import { ArrowUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export function BackToTop() {
+export const BackToTop = forwardRef<HTMLButtonElement>(function BackToTop(_, ref) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export function BackToTop() {
 
   return (
     <button
+      ref={ref}
       onClick={scrollToTop}
       className={cn(
         "fixed bottom-6 right-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg transition-all duration-300 hover:scale-110 active:scale-95 min-h-[48px] min-w-[48px]",
@@ -34,4 +35,4 @@ export function BackToTop() {
       <ArrowUp className="w-5 h-5" />
     </button>
   );
-}
+});
