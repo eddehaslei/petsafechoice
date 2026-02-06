@@ -115,6 +115,32 @@ export const Header = () => {
             </Link>
           </Button>
           <LanguageSwitcher />
+          
+          {/* Auth Button */}
+          {user ? (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground hover:text-foreground gap-1.5 min-h-[44px] min-w-[44px]"
+              onClick={handleSignOut}
+              aria-label="Sign out"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              <span className="hidden md:inline">Sign Out</span>
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-1.5 min-h-[44px] min-w-[44px] border-primary/30 text-primary hover:bg-primary/10"
+              asChild
+            >
+              <Link to="/auth" aria-label="Sign in to your account">
+                <LogIn className="h-4 w-4" aria-hidden="true" />
+                <span className="hidden sm:inline">Sign In</span>
+              </Link>
+            </Button>
+          )}
         </nav>
       </div>
     </header>
