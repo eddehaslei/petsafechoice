@@ -68,26 +68,29 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database - async fire and forget (non-blocking)
-  const logSearch = useCallback((query: string, species: string, safetyLevel?: string) => {
-    // Fire and forget - use async IIFE to avoid blocking UI
-    (async () => {
-      try {
-        await supabase
-          .from("search_logs")
-          .insert([
-            {
-              query: query.trim().toLowerCase(),
-              species: species,
-              language: i18n.language,
-              result_safety_level: safetyLevel || null,
-              source: "search",
-            },
-          ]);
-      } catch {
-        // Silent fail - don't disrupt user experience
+  // Log search to database - awaited with full error logging for debugging
+  const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
+    try {
+      const { error } = await supabase
+        .from("search_logs")
+        .insert([
+          {
+            query: query.trim().toLowerCase(),
+            species: species,
+            language: i18n.language,
+            result_safety_level: safetyLevel || null,
+            source: "search",
+          },
+        ]);
+      
+      if (error) {
+        console.error("[SearchLog] Insert failed:", JSON.stringify(error, null, 2));
+      } else {
+        console.log("[SearchLog] ✅ Logged:", query.trim().toLowerCase(), species);
       }
-    })();
+    } catch (err) {
+      console.error("[SearchLog] Network/unexpected error:", err);
+    }
   }, [i18n.language]);
 
   const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
