@@ -7,6 +7,7 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 import { GeoLanguageDetector } from "./components/GeoLanguageDetector";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { useConnectionTest } from "./hooks/useConnectionTest";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import FAQ from "./pages/FAQ";
@@ -21,6 +22,29 @@ import Auth from "./pages/Auth";
 
 const queryClient = new QueryClient();
 
+function AppInner() {
+  useConnectionTest();
+  
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Index />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/faq" element={<FAQ />} />
+        <Route path="/contact" element={<Contact />} />
+        <Route path="/safe-foods" element={<SafeFoods />} />
+        <Route path="/emergency" element={<Emergency />} />
+        <Route path="/disclaimer" element={<Disclaimer />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/auth" element={<Auth />} />
+        {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
 const App = () => (
   <ErrorBoundary>
     <I18nextProvider i18n={i18n}>
@@ -29,22 +53,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/faq" element={<FAQ />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/safe-foods" element={<SafeFoods />} />
-              <Route path="/emergency" element={<Emergency />} />
-              <Route path="/disclaimer" element={<Disclaimer />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/auth" element={<Auth />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <AppInner />
         </TooltipProvider>
       </QueryClientProvider>
     </I18nextProvider>
