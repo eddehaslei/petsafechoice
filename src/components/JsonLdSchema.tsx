@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { SafetyResultData } from "./SafetyResult";
+import { isLiquidFood } from "@/lib/liquidFoods";
 
 interface JsonLdSchemaProps {
   result: SafetyResultData | null;
