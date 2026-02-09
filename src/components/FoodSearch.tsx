@@ -39,9 +39,10 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
+    const sanitized = sanitizeSearchQuery(query);
+    if (sanitized && isValidFoodInput(sanitized)) {
       setShowSuggestions(false);
-      onSearch(query.trim());
+      onSearch(sanitized);
     }
   };
 
