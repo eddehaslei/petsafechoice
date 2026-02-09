@@ -14,6 +14,9 @@ export interface SafetyResultData {
   details: string;
   symptoms?: string[];
   recommendations?: string[];
+  ingredients?: string[];
+  toxicityThreshold?: string | null;
+  source?: { name: string; url: string } | null;
 }
 
 interface SafetyResultProps {
