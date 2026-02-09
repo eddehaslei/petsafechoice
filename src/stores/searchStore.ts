@@ -7,8 +7,8 @@ type PetType = "dog" | "cat";
 // Cache key format: "food:species" (e.g., "chocolate:dog")
 type ResultCache = Record<string, { data: SafetyResultData; timestamp: number }>;
 
-// Cache expiry: 24 hours (in milliseconds)
-const CACHE_EXPIRY_MS = 24 * 60 * 60 * 1000;
+// Cache expiry: 7 days (in milliseconds) - optimized for mobile storage
+const CACHE_EXPIRY_MS = 7 * 24 * 60 * 60 * 1000;
 
 interface SearchState {
   // Core search state
