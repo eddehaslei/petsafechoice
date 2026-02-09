@@ -122,6 +122,10 @@ const Index = () => {
     setLastSearchedFood(normalizedFood);
 
     try {
+      // Detect food state (frozen, raw, cooked, dried)
+      const { state: foodState, cleanName } = detectFoodState(normalizedFood);
+      const stateNote = getFoodStateNote(foodState, i18n.language);
+
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
         body: { food: normalizedFood, petType, language: i18n.language },
       });
@@ -144,6 +148,11 @@ const Index = () => {
         toast.error(data.error);
         setIsLoading(false);
         return;
+      }
+
+      // Append food state note to details if applicable
+      if (stateNote && data) {
+        data.details = `${data.details}\n\n${stateNote}`;
       }
 
       setResult(data);
