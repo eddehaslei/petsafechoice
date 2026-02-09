@@ -70,14 +70,15 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database - awaited with full error logging for debugging
+  // Log search to database - sanitized, awaited with full error logging
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
     try {
+      const sanitized = sanitizeSearchQuery(query);
       const { error } = await supabase
         .from("search_logs")
         .insert([
           {
-            query: query.trim().toLowerCase(),
+            query: sanitized.toLowerCase(),
             species: species,
             language: i18n.language,
             result_safety_level: safetyLevel || null,
@@ -87,11 +88,13 @@ const Index = () => {
       
       if (error) {
         console.error("[SearchLog] Insert failed:", JSON.stringify(error, null, 2));
+        toast.error("Failed to save search log. Please try again.");
       } else {
-        console.log("[SearchLog] ✅ Logged:", query.trim().toLowerCase(), species);
+        console.log("[SearchLog] ✅ Logged:", sanitized.toLowerCase(), species);
       }
     } catch (err) {
       console.error("[SearchLog] Network/unexpected error:", err);
+      toast.error("Connection timeout while saving search log.");
     }
   }, [i18n.language]);
 
