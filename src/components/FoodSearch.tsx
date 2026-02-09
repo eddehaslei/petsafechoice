@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useFoodAutocomplete } from "@/hooks/useFoodAutocomplete";
 import { cn } from "@/lib/utils";
+import { sanitizeSearchQuery, isValidFoodInput } from "@/lib/sanitize";
 
 interface FoodSearchProps {
   onSearch: (query: string) => void;
