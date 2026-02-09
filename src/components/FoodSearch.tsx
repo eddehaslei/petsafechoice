@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { useFoodAutocomplete } from "@/hooks/useFoodAutocomplete";
 import { cn } from "@/lib/utils";
+import { sanitizeSearchQuery, isValidFoodInput } from "@/lib/sanitize";
 
 interface FoodSearchProps {
   onSearch: (query: string) => void;
@@ -38,9 +39,10 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (query.trim()) {
+    const sanitized = sanitizeSearchQuery(query);
+    if (sanitized && isValidFoodInput(sanitized)) {
       setShowSuggestions(false);
-      onSearch(query.trim());
+      onSearch(sanitized);
     }
   };
 

@@ -312,15 +312,41 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
     let safetyData;
     try {
       const cleanContent = content.replace(/```json\n?|\n?```/g, "").trim();
-      safetyData = JSON.parse(cleanContent);
+      const parsed = JSON.parse(cleanContent);
+      
+      // Zod-style structural validation before DB insert
+      const requiredFields = ['food', 'petType', 'safetyLevel', 'summary', 'details'];
+      const validSafetyLevels = ['safe', 'caution', 'dangerous', 'unknown'];
+      
+      for (const field of requiredFields) {
+        if (!parsed[field] || typeof parsed[field] !== 'string') {
+          console.error(`[Validation] Missing or invalid field: ${field}`);
+          return new Response(
+            JSON.stringify({ error: "AI response failed validation" }),
+            { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          );
+        }
+      }
+      
+      if (!validSafetyLevels.includes(parsed.safetyLevel)) {
+        console.error(`[Validation] Invalid safetyLevel: ${parsed.safetyLevel}`);
+        parsed.safetyLevel = 'caution'; // Safe default
+      }
+      
+      if (parsed.symptoms && !Array.isArray(parsed.symptoms)) {
+        parsed.symptoms = [];
+      }
+      if (parsed.recommendations && !Array.isArray(parsed.recommendations)) {
+        parsed.recommendations = [];
+      }
+      
+      safetyData = parsed;
       safetyData.source = "ai";
       safetyData.countryCode = countryCode;
       safetyData.affiliate = affiliate;
       
       // AUTO-SAVE: Store AI-generated response in the foods table for future use
-      // This makes the database self-growing with every new search
       try {
-        // Map API safetyLevel to database enum
         const dbSafetyRating = safetyData.safetyLevel === "dangerous" ? "toxic" : 
                                safetyData.safetyLevel === "safe" ? "safe" : "caution";
         
@@ -328,11 +354,11 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
           name: foodLower,
           species: petType,
           safety_rating: dbSafetyRating,
-          short_answer: safetyData.summary || "",
-          long_desc: safetyData.details || null,
-          risks: safetyData.symptoms || [],
+          short_answer: (safetyData.summary || "").slice(0, 500),
+          long_desc: (safetyData.details || "").slice(0, 2000),
+          risks: (safetyData.symptoms || []).slice(0, 10),
           benefits: [],
-          serving_tips: safetyData.recommendations?.join(". ") || null,
+          serving_tips: (safetyData.recommendations || []).slice(0, 5).join(". ").slice(0, 1000) || null,
         }, { 
           onConflict: 'name,species',
           ignoreDuplicates: false 

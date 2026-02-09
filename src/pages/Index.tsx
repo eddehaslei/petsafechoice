@@ -26,6 +26,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
+import { sanitizeSearchQuery } from "@/lib/sanitize";
+import { detectFoodState, getFoodStateNote } from "@/lib/foodState";
 
 // Debounce helper for rate limiting - 1 second minimum between searches
 const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
@@ -68,14 +70,15 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database - awaited with full error logging for debugging
+  // Log search to database - sanitized, awaited with full error logging
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
     try {
+      const sanitized = sanitizeSearchQuery(query);
       const { error } = await supabase
         .from("search_logs")
         .insert([
           {
-            query: query.trim().toLowerCase(),
+            query: sanitized.toLowerCase(),
             species: species,
             language: i18n.language,
             result_safety_level: safetyLevel || null,
@@ -85,11 +88,13 @@ const Index = () => {
       
       if (error) {
         console.error("[SearchLog] Insert failed:", JSON.stringify(error, null, 2));
+        toast.error("Failed to save search log. Please try again.");
       } else {
-        console.log("[SearchLog] ✅ Logged:", query.trim().toLowerCase(), species);
+        console.log("[SearchLog] ✅ Logged:", sanitized.toLowerCase(), species);
       }
     } catch (err) {
       console.error("[SearchLog] Network/unexpected error:", err);
+      toast.error("Connection timeout while saving search log.");
     }
   }, [i18n.language]);
 
@@ -117,6 +122,10 @@ const Index = () => {
     setLastSearchedFood(normalizedFood);
 
     try {
+      // Detect food state (frozen, raw, cooked, dried)
+      const { state: foodState, cleanName } = detectFoodState(normalizedFood);
+      const stateNote = getFoodStateNote(foodState, i18n.language);
+
       const { data, error } = await supabase.functions.invoke("check-food-safety", {
         body: { food: normalizedFood, petType, language: i18n.language },
       });
@@ -139,6 +148,11 @@ const Index = () => {
         toast.error(data.error);
         setIsLoading(false);
         return;
+      }
+
+      // Append food state note to details if applicable
+      if (stateNote && data) {
+        data.details = `${data.details}\n\n${stateNote}`;
       }
 
       setResult(data);
