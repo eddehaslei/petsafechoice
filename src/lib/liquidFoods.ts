@@ -111,14 +111,20 @@ const LIQUID_KEYWORDS = [
  * @returns true if the food is a liquid
  */
 export function isLiquidFood(foodName: string): boolean {
-  const lowerName = foodName.toLowerCase().trim();
+  let lowerName = foodName.toLowerCase().trim();
   
   // Check exact match first
   if (LIQUID_FOODS.has(lowerName)) {
     return true;
   }
   
-  // Check for partial keyword matches
+  // Strip trailing 's' or 'es' for plural handling (e.g., "sodas" → "soda", "juices" → "juice")
+  const depluralized = lowerName.replace(/(?:es|s)$/i, '');
+  if (depluralized !== lowerName && LIQUID_FOODS.has(depluralized)) {
+    return true;
+  }
+  
+  // Check for partial keyword matches (handles compounds like "orange juices")
   return LIQUID_KEYWORDS.some(keyword => lowerName.includes(keyword));
 }
 
