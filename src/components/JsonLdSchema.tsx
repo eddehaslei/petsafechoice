@@ -44,9 +44,8 @@ export function JsonLdSchema({ result }: JsonLdSchemaProps) {
     const currentUrl = window.location.href;
     const currentDate = new Date().toISOString().split('T')[0];
     
-    // Detect liquid foods for eat/drink grammar
-    const liquidFoods = new Set(["water", "milk", "broth", "juice", "kefir", "tea", "coffee"]);
-    const isLiquid = liquidFoods.has(result.food.toLowerCase().trim());
+    // Detect liquid foods for eat/drink grammar using shared utility
+    const isLiquid = isLiquidFood(result.food);
     const eatDrink = isLiquid ? "drink" : "eat";
 
     // Build answer based on safety level with correct eat/drink verb
