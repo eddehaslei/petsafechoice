@@ -81,7 +81,7 @@ export const LIQUID_FOODS = new Set([
   "batido",
 ]);
 
-// Partial matches for liquid detection
+// Partial matches for liquid detection (handles plurals automatically via .includes())
 const LIQUID_KEYWORDS = [
   "juice",
   "jugo",
@@ -97,6 +97,12 @@ const LIQUID_KEYWORDS = [
   "bebida",
   "smoothie",
   "batido",
+  "lemonade",
+  "limonada",
+  "agua",
+  "water",
+  "kefir",
+  "kéfir",
 ];
 
 /**
