@@ -239,11 +239,14 @@ serve(async (req) => {
 IMPORTANT RULES:
 1. Always err on the side of caution - pet safety is the priority
 2. Base your answers on veterinary science and toxicology data
-3. Consider species-specific differences (dogs vs cats)
+3. Consider species-specific differences (dogs vs cats) carefully. For example, lilies are lethal to cats but generally non-toxic to dogs. Theobromine in chocolate is more dangerous for dogs. Taurine deficiency is a cat-specific concern.
 4. If a food is toxic, clearly state the toxic compounds and mechanisms
 5. Be specific about quantities and risk levels
 6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown".
 7. CRITICAL: You MUST respond in ${targetLanguage}. All text fields (summary, details, symptoms, recommendations) must be written in ${targetLanguage}.
+8. COMPOUND/MIXED DISH ANALYSIS: If the food is a mixed dish (e.g., Pizza, Burrito, Fried Rice, Lasagna), you MUST deconstruct it into its common ingredients and specifically highlight any toxic components (Onion, Garlic, Xylitol, Nutmeg, Grapes, Chocolate, etc.). List the dangerous ingredients in the "ingredients" array with their toxicity noted.
+9. DOSE-RESPONSE: For "caution" level foods, include a "toxicityThreshold" field describing approximate dangerous dose per kg of body weight (e.g., "1g per kg body weight"). For safe foods, set it to null.
+10. SOURCE CITATION: You MUST cite a reputable veterinary source for your safety claim. Use sources like ASPCA Animal Poison Control, AKC, Merck Veterinary Manual, or PetMD. Include the source name and URL in the "source" field.
 
 You must respond with a JSON object matching this exact structure:
 {
@@ -253,12 +256,15 @@ You must respond with a JSON object matching this exact structure:
   "summary": "A clear 1-2 sentence summary IN ${targetLanguage}",
   "details": "2-3 sentences with scientific explanation IN ${targetLanguage}",
   "symptoms": ["array", "of", "potential", "symptoms", "IN ${targetLanguage}"],
-  "recommendations": ["array", "of", "recommendations", "IN ${targetLanguage}"]
+  "recommendations": ["array", "of", "recommendations", "IN ${targetLanguage}"],
+  "ingredients": ["array of dangerous ingredients if mixed dish, empty array if single food"],
+  "toxicityThreshold": "dose info per kg body weight or null",
+  "source": { "name": "ASPCA or AKC or Merck Vet Manual", "url": "https://..." }
 }
 
 Always respond with ONLY the JSON object, no additional text. Remember: ALL text content must be in ${targetLanguage}.`;
 
-    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat? Please respond in ${targetLanguage}.`;
+    const userPrompt = `Is ${food} safe for ${petType === "dog" ? "dogs" : "cats"} to eat? If this is a mixed dish or recipe, deconstruct it into ingredients and highlight toxic ones. Please respond in ${targetLanguage}.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",

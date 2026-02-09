@@ -21,6 +21,11 @@ import { TrendingIn2026 } from "@/components/TrendingIn2026";
 import { RecentSearches, useRecentSearches } from "@/components/RecentSearches";
 import { SkeletonLoader } from "@/components/SkeletonLoader";
 import { BackToTop } from "@/components/BackToTop";
+import { SafetyMeter } from "@/components/SafetyMeter";
+import { DoseResponseSlider } from "@/components/DoseResponseSlider";
+import { EmergencyVetButton } from "@/components/EmergencyVetButton";
+import { IngredientBreakdown } from "@/components/IngredientBreakdown";
+import { SourceCitation } from "@/components/SourceCitation";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -324,8 +329,25 @@ const Index = () => {
                 {/* Featured Snippet - Google-optimized answer box */}
                 <FeaturedSnippet data={result} />
                 
+                {/* Safety Meter - Animated gauge */}
+                <SafetyMeter safetyLevel={result.safetyLevel} />
+                
                 {/* Main Safety Result */}
                 <SafetyResult data={result} />
+                
+                {/* Source Citation */}
+                <SourceCitation source={result.source} />
+                
+                {/* Ingredient Breakdown for mixed dishes */}
+                <IngredientBreakdown ingredients={result.ingredients || []} foodName={result.food} />
+                
+                {/* Dose-Response Calculator */}
+                <DoseResponseSlider
+                  safetyLevel={result.safetyLevel}
+                  toxicityThreshold={result.toxicityThreshold}
+                  foodName={result.food}
+                  petType={result.petType}
+                />
                 
                 {/* Vet-Verified Badge - Trust signal */}
                 <div className="w-full max-w-2xl mx-auto mt-4">
@@ -335,14 +357,16 @@ const Index = () => {
                 {/* Social Share */}
                 <SocialShareCard data={result} />
                 
-                {/* Conversion hooks based on safety level */}
+                {/* Emergency actions for dangerous foods */}
                 {result.safetyLevel === "dangerous" && (
                   <>
+                    <div className="w-full max-w-2xl mx-auto">
+                      <EmergencyVetButton petType={result.petType} />
+                    </div>
                     <EmergencyBanner 
                       foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
                       petType={result.petType} 
                     />
-                    {/* Vet Map Widget - Phase 7 requirement */}
                     <VetMapWidget 
                       foodName={result.food.charAt(0).toUpperCase() + result.food.slice(1)} 
                       petType={result.petType} 
