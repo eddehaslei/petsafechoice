@@ -408,14 +408,26 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     };
 
     useEffect(() => {
-      // If food is dangerous, skip fetching and show safe alternative immediately
+      // If food is dangerous, show a specific safe alternative or generic safe treats
       if (isDangerous) {
-        setAffiliateLink({
-          productName: currentLanguage.startsWith('es') ? "Snacks Naturales Seguros" : "Natural Freeze-Dried Treats",
-          url: getSafeTreatsUrl(currentLanguage, petType)
-        });
+        const alt = getSafeAlternative(foodName, currentLanguage, petType);
+        const config = getAmazonConfig(currentLanguage);
+        
+        if (alt) {
+          // Smart alternative: e.g., Carob Treats for Chocolate
+          setAffiliateLink({
+            productName: alt.name,
+            url: `https://www.${config.domain}/s?k=${encodeURIComponent(alt.amazonQuery)}&tag=${config.tag}`,
+          });
+        } else {
+          // Generic safe treats fallback
+          setAffiliateLink({
+            productName: currentLanguage.startsWith('es') ? "Snacks Naturales Seguros" : "Natural Freeze-Dried Treats",
+            url: getSafeTreatsUrl(currentLanguage, petType),
+          });
+        }
         setIsLoading(false);
-        console.log('Affiliate Status: Safe Alternative (Dangerous Food)');
+        console.log('Affiliate Status: Safe Alternative (Dangerous Food)', alt?.name || 'generic');
         return;
       }
       
