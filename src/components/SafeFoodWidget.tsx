@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { supabase } from "@/integrations/supabase/client";
 import { AffiliateButton } from "./AffiliateButton";
 import type { SafetyLevel } from "./SafetyResult";
+import { getSafeAlternative } from "@/lib/safeAlternatives";
 
 // Food category detection for icon display
 type FoodCategory = "fruit" | "vegetable" | "protein" | "dairy" | "supplement" | "grain" | "toxic" | "unknown";
