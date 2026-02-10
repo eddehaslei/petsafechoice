@@ -46,6 +46,7 @@ export const useSearchStore = create<SearchState>()(
     (set, get) => ({
       // Initial state
       petType: "dog",
+      petWeight: 10,
       result: null,
       lastSearchedFood: null,
       isLoading: false,
