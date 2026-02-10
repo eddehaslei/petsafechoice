@@ -55,6 +55,7 @@ export const useSearchStore = create<SearchState>()(
       
       // Actions
       setPetType: (type) => set({ petType: type }),
+      setPetWeight: (weight) => set({ petWeight: weight }),
       setResult: (result) => set({ result }),
       setLastSearchedFood: (food) => set({ lastSearchedFood: food }),
       setIsLoading: (loading) => set({ isLoading: loading }),
