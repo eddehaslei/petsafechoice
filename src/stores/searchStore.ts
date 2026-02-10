@@ -24,6 +24,7 @@ interface SearchState {
   
   // Actions
   setPetType: (type: PetType) => void;
+  setPetWeight: (weight: number) => void;
   setResult: (result: SafetyResultData | null) => void;
   setLastSearchedFood: (food: string | null) => void;
   setIsLoading: (loading: boolean) => void;
