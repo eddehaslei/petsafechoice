@@ -17,6 +17,7 @@ interface SearchState {
   lastSearchedFood: string | null;
   isLoading: boolean;
   searchSource: "trending" | "search" | null;
+  petWeight: number;
   
   // Results cache - keyed by "food:species" with timestamp for INSTANT toggle (<50ms)
   resultsCache: ResultCache;
