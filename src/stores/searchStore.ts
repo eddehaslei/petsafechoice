@@ -123,6 +123,7 @@ export const useSearchStore = create<SearchState>()(
         // Only persist the cache and pet type preference
         resultsCache: state.resultsCache,
         petType: state.petType,
+        petWeight: state.petWeight,
         lastSearchedFood: state.lastSearchedFood,
       }),
     }
