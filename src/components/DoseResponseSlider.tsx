@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { Weight, AlertTriangle, CheckCircle2, Info } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
+import { useSearchStore } from "@/stores/searchStore";
 
 interface DoseResponseSliderProps {
   safetyLevel: "safe" | "caution" | "dangerous";
@@ -13,14 +13,19 @@ interface DoseResponseSliderProps {
 
 export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, petType }: DoseResponseSliderProps) {
   const { t } = useTranslation();
-  const [weight, setWeight] = useState([10]);
+  const { petWeight, setPetWeight } = useSearchStore();
 
-  // Only show for caution foods with threshold info
-  if (safetyLevel !== "caution" || !toxicityThreshold) return null;
+  // Show for caution AND dangerous foods
+  if (safetyLevel === "safe") return null;
 
-  const kg = weight[0];
+  const kg = petWeight;
 
   const getRiskLevel = () => {
+    if (safetyLevel === "dangerous") {
+      if (kg <= 10) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
+      if (kg <= 30) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
+      return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: "Moderate Risk — Still Dangerous" };
+    }
     if (kg <= 5) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
     if (kg <= 15) return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: "Moderate Risk" };
     return { level: "low", color: "text-safe", bg: "bg-safe/10", label: "Low Risk" };
@@ -45,8 +50,8 @@ export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, p
               <span className="text-lg font-bold text-foreground">{kg} kg</span>
             </div>
             <Slider
-              value={weight}
-              onValueChange={setWeight}
+              value={[petWeight]}
+              onValueChange={(v) => setPetWeight(v[0])}
               min={1}
               max={60}
               step={1}
@@ -70,9 +75,11 @@ export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, p
               <p className={cn("font-semibold text-sm", risk.color)}>
                 At {kg}kg: {risk.label}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">
-                {toxicityThreshold}
-              </p>
+              {toxicityThreshold && (
+                <p className="text-xs text-muted-foreground mt-1">
+                  {toxicityThreshold}
+                </p>
+              )}
             </div>
           </div>
         </div>

@@ -17,12 +17,14 @@ interface SearchState {
   lastSearchedFood: string | null;
   isLoading: boolean;
   searchSource: "trending" | "search" | null;
+  petWeight: number;
   
   // Results cache - keyed by "food:species" with timestamp for INSTANT toggle (<50ms)
   resultsCache: ResultCache;
   
   // Actions
   setPetType: (type: PetType) => void;
+  setPetWeight: (weight: number) => void;
   setResult: (result: SafetyResultData | null) => void;
   setLastSearchedFood: (food: string | null) => void;
   setIsLoading: (loading: boolean) => void;
@@ -44,6 +46,7 @@ export const useSearchStore = create<SearchState>()(
     (set, get) => ({
       // Initial state
       petType: "dog",
+      petWeight: 10,
       result: null,
       lastSearchedFood: null,
       isLoading: false,
@@ -52,6 +55,7 @@ export const useSearchStore = create<SearchState>()(
       
       // Actions
       setPetType: (type) => set({ petType: type }),
+      setPetWeight: (weight) => set({ petWeight: weight }),
       setResult: (result) => set({ result }),
       setLastSearchedFood: (food) => set({ lastSearchedFood: food }),
       setIsLoading: (loading) => set({ isLoading: loading }),
@@ -119,6 +123,7 @@ export const useSearchStore = create<SearchState>()(
         // Only persist the cache and pet type preference
         resultsCache: state.resultsCache,
         petType: state.petType,
+        petWeight: state.petWeight,
         lastSearchedFood: state.lastSearchedFood,
       }),
     }
