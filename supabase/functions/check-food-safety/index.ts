@@ -356,32 +356,37 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
       safetyData.countryCode = countryCode;
       safetyData.affiliate = affiliate;
       
-      // AUTO-SAVE: Store AI-generated response in the foods table for future use
-      try {
-        const dbSafetyRating = safetyData.safetyLevel === "dangerous" ? "toxic" : 
-                               safetyData.safetyLevel === "safe" ? "safe" : "caution";
-        
-        const { error: upsertError } = await supabase.from('foods').upsert({
-          name: foodLower,
-          species: petType,
-          safety_rating: dbSafetyRating,
-          short_answer: (safetyData.summary || "").slice(0, 500),
-          long_desc: (safetyData.details || "").slice(0, 2000),
-          risks: (safetyData.symptoms || []).slice(0, 10),
-          benefits: [],
-          serving_tips: (safetyData.recommendations || []).slice(0, 5).join(". ").slice(0, 1000) || null,
-        }, { 
-          onConflict: 'name,species',
-          ignoreDuplicates: false 
-        });
-        
-        if (upsertError) {
-          console.error(`[${clientIP}] Auto-save error:`, upsertError.message);
-        } else {
-          console.log(`[${clientIP}] ✅ AI response saved to database: ${foodLower} (${petType})`);
+      // AUTO-SAVE: Only store English AI responses to prevent language contamination
+      // Non-English responses would overwrite English cache and serve wrong language to future users
+      if (language === "en") {
+        try {
+          const dbSafetyRating = safetyData.safetyLevel === "dangerous" ? "toxic" : 
+                                 safetyData.safetyLevel === "safe" ? "safe" : "caution";
+          
+          const { error: upsertError } = await supabase.from('foods').upsert({
+            name: foodLower,
+            species: petType,
+            safety_rating: dbSafetyRating,
+            short_answer: (safetyData.summary || "").slice(0, 500),
+            long_desc: (safetyData.details || "").slice(0, 2000),
+            risks: (safetyData.symptoms || []).slice(0, 10),
+            benefits: [],
+            serving_tips: (safetyData.recommendations || []).slice(0, 5).join(". ").slice(0, 1000) || null,
+          }, { 
+            onConflict: 'name,species',
+            ignoreDuplicates: false 
+          });
+          
+          if (upsertError) {
+            console.error(`[${clientIP}] Auto-save error:`, upsertError.message);
+          } else {
+            console.log(`[${clientIP}] ✅ AI response saved to database: ${foodLower} (${petType})`);
+          }
+        } catch (saveErr) {
+          console.error('Auto-save error (non-blocking):', saveErr);
         }
-      } catch (saveErr) {
-        console.error('Auto-save error (non-blocking):', saveErr);
+      } else {
+        console.log(`[${clientIP}] ⏭️ Skipping DB save for non-English response (${language})`);
       }
       
       // Log AI search to analytics
