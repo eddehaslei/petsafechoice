@@ -49,6 +49,9 @@
     "safeAnswer": "Oui, les {{petType}} peuvent manger {{food}} en toute sécurité !",
     "cautionAnswer": "{{food}} doit être donné aux {{petType}} avec prudence.",
     "dangerousAnswer": "Non ! {{food}} est toxique pour les {{petType}}.",
+    "safeDrinkAnswer": "Oui, les {{petType}} peuvent boire {{food}} en toute sécurité !",
+    "cautionDrinkAnswer": "{{food}} doit être donné à boire aux {{petType}} avec prudence.",
+    "dangerousDrinkAnswer": "Non ! {{food}} est toxique pour les {{petType}}.",
     "updated": "Mis à jour {{date}}"
   },
   "about": {

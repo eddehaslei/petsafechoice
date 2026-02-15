@@ -171,8 +171,9 @@ serve(async (req) => {
       console.error("Affiliate lookup error:", affErr);
     }
 
-    // If found in database, return immediately (no AI cost!)
-    if (dbFood) {
+    // If found in database AND language is English (DB stores in English), return immediately (no AI cost!)
+    // For non-English languages, skip DB cache and use AI to get translated response
+    if (dbFood && language === "en") {
       console.log(`[${clientIP}] ✅ Found in database: ${dbFood.name} (${dbFood.safety_rating}) - FREE`);
       
       // Log search to analytics (async, don't block response)
@@ -210,6 +211,10 @@ serve(async (req) => {
       return new Response(JSON.stringify(safetyData), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
+    }
+
+    if (dbFood && language !== "en") {
+      console.log(`[${clientIP}] ⚠️ Found in DB but language is ${language}, using AI for translation`);
     }
 
     // STEP 2: Not in database - use AI (costs credits)

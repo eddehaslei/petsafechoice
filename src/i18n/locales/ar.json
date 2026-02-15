@@ -49,6 +49,9 @@
     "safeAnswer": "نعم، يمكن لـ{{petType}} أكل {{food}} بأمان!",
     "cautionAnswer": "يجب إعطاء {{food}} لـ{{petType}} بحذر.",
     "dangerousAnswer": "لا! {{food}} سام لـ{{petType}}.",
+    "safeDrinkAnswer": "نعم، يمكن لـ{{petType}} شرب {{food}} بأمان!",
+    "cautionDrinkAnswer": "يجب إعطاء {{food}} لـ{{petType}} للشرب بحذر.",
+    "dangerousDrinkAnswer": "لا! {{food}} سام لـ{{petType}}.",
     "updated": "تم التحديث {{date}}"
   },
   "about": {

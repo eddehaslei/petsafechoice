@@ -11,8 +11,7 @@ export function VerifiedDataBadge({ className = "" }: VerifiedDataBadgeProps) {
   // Format date based on locale
   const formatDate = () => {
     const date = new Date();
-    const locale = i18n.language.startsWith('es') ? 'es-ES' : 'en-US';
-    return date.toLocaleDateString(locale, { 
+    return date.toLocaleDateString(i18n.language, { 
       month: 'short', 
       year: 'numeric' 
     });

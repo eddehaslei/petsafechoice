@@ -16,32 +16,20 @@ export function FeaturedSnippet({ data }: FeaturedSnippetProps) {
   const isLiquid = isLiquidFood(data.food);
 
   const getAnswer = () => {
-    const lang = i18n.language.split('-')[0];
-    
     switch (data.safetyLevel) {
       case "safe":
         if (isLiquid) {
-          // Use "drink" for liquids
-          if (lang === 'es') {
-            return `Sí, los ${petName} pueden beber ${foodName.toLowerCase()} de forma segura.`;
-          }
-          return `Yes, ${petName} can safely drink ${foodName.toLowerCase()}.`;
+          return t('featuredSnippet.safeDrinkAnswer', { petType: petName, food: foodName.toLowerCase() });
         }
         return t('featuredSnippet.safeAnswer', { petType: petName, food: foodName.toLowerCase() });
       case "caution":
         if (isLiquid) {
-          if (lang === 'es') {
-            return `${foodName} debe darse a los ${petName} con precaución.`;
-          }
-          return `${foodName} should be given to ${petName} with caution.`;
+          return t('featuredSnippet.cautionDrinkAnswer', { petType: petName, food: foodName });
         }
         return t('featuredSnippet.cautionAnswer', { petType: petName, food: foodName });
       case "dangerous":
         if (isLiquid) {
-          if (lang === 'es') {
-            return `¡No! ${foodName} es tóxico para los ${petName}.`;
-          }
-          return `No! ${foodName} is toxic to ${petName}.`;
+          return t('featuredSnippet.dangerousDrinkAnswer', { petType: petName, food: foodName });
         }
         return t('featuredSnippet.dangerousAnswer', { petType: petName, food: foodName });
     }
