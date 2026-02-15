@@ -15,20 +15,18 @@ export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, p
   const { t } = useTranslation();
   const { petWeight, setPetWeight } = useSearchStore();
 
-  // Show for caution AND dangerous foods
   if (safetyLevel === "safe") return null;
 
   const kg = petWeight;
 
   const getRiskLevel = () => {
     if (safetyLevel === "dangerous") {
-      if (kg <= 10) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
-      if (kg <= 30) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
-      return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: "Moderate Risk — Still Dangerous" };
+      if (kg <= 30) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: t('doseResponse.highRisk') };
+      return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: `${t('doseResponse.moderateRisk')} — ${t('doseResponse.stillDangerous')}` };
     }
-    if (kg <= 5) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: "High Risk" };
-    if (kg <= 15) return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: "Moderate Risk" };
-    return { level: "low", color: "text-safe", bg: "bg-safe/10", label: "Low Risk" };
+    if (kg <= 5) return { level: "high", color: "text-danger", bg: "bg-danger/10", label: t('doseResponse.highRisk') };
+    if (kg <= 15) return { level: "medium", color: "text-caution", bg: "bg-caution/10", label: t('doseResponse.moderateRisk') };
+    return { level: "low", color: "text-safe", bg: "bg-safe/10", label: t('doseResponse.lowRisk') };
   };
 
   const risk = getRiskLevel();
@@ -39,14 +37,14 @@ export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, p
         <div className="flex items-center gap-2 mb-4">
           <Weight className="w-5 h-5 text-primary" />
           <h4 className="font-heading font-semibold text-sm">
-            Dose-Response Calculator
+            {t('doseResponse.title')}
           </h4>
         </div>
 
         <div className="space-y-4">
           <div>
             <div className="flex justify-between items-center mb-2">
-              <span className="text-sm text-muted-foreground">Pet Weight</span>
+              <span className="text-sm text-muted-foreground">{t('doseResponse.petWeight')}</span>
               <span className="text-lg font-bold text-foreground">{kg} kg</span>
             </div>
             <Slider
@@ -73,7 +71,7 @@ export function DoseResponseSlider({ safetyLevel, toxicityThreshold, foodName, p
             )}
             <div>
               <p className={cn("font-semibold text-sm", risk.color)}>
-                At {kg}kg: {risk.label}
+                {t('doseResponse.atWeight', { weight: kg })} {risk.label}
               </p>
               {toxicityThreshold && (
                 <p className="text-xs text-muted-foreground mt-1">

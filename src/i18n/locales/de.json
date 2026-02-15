@@ -180,5 +180,41 @@
       "keyword": "Luftgetrocknetes Rohfutter",
       "summary": "Proteinreicher Topper – der sicherste Mittelweg zwischen Trockenfutter und roh."
     }
+  },
+  "errors": {
+    "tooManyRequests": "Zu viele Anfragen. Bitte warten Sie einen Moment und versuchen Sie es erneut.",
+    "serviceUnavailable": "Dienst vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut.",
+    "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+  },
+  "ingredientBreakdown": {
+    "title": "Zutatenanalyse: {{food}}"
+  },
+  "relatedFoods": {
+    "title": "Andere Fragen Dazu",
+    "clickToCheck": "Klicken Sie, um zu prüfen, ob diese Lebensmittel für Ihren {{petType}} sicher sind"
+  },
+  "doseResponse": {
+    "title": "Dosis-Wirkungs-Rechner",
+    "petWeight": "Tiergewicht",
+    "highRisk": "Hohes Risiko",
+    "moderateRisk": "Mäßiges Risiko",
+    "lowRisk": "Geringes Risiko",
+    "stillDangerous": "Immer noch Gefährlich",
+    "atWeight": "Bei {{weight}}kg:"
+  },
+  "emergencyVet": {
+    "findNearest": "NOTFALL: NÄCHSTEN TIERARZT FINDEN",
+    "title": "Nottierärzte in Ihrer Nähe",
+    "showingNear": "Kliniken in der Nähe von {{city}}",
+    "viewMap": "Karte Anzeigen",
+    "callNow": "Jetzt Anrufen",
+    "directions": "Wegbeschreibung",
+    "rating": "Bewertung",
+    "noClinics": "Keine Kliniken in Ihrer Gegend gefunden",
+    "findOnMaps": "Nottierärzte auf Google Maps finden",
+    "footerWarning": "Wenn Ihr {{petType}} {{food}} gefressen hat, ist die Zeit entscheidend. Rufen Sie sofort eine Klinik an."
+  },
+  "sourceCitation": {
+    "source": "Quelle"
   }
 }
