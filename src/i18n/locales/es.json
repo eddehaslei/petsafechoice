@@ -263,7 +263,9 @@
   "errors": {
     "tooManyRequests": "Demasiadas solicitudes. Por favor espera un momento e inténtalo de nuevo.",
     "serviceUnavailable": "Servicio temporalmente no disponible. Por favor inténtalo más tarde.",
-    "generic": "Algo salió mal. Por favor inténtalo de nuevo."
+    "generic": "Algo salió mal. Por favor inténtalo de nuevo.",
+    "genericWithSupport": "Algo salió mal. Inténtalo de nuevo o contacta soporte.",
+    "contactSupport": "Enviar Email"
   },
   "ingredientBreakdown": {
     "title": "Análisis de Ingredientes: {{food}}"

@@ -187,7 +187,9 @@
   "errors": {
     "tooManyRequests": "Trop de requêtes. Veuillez patienter un moment et réessayer.",
     "serviceUnavailable": "Service temporairement indisponible. Veuillez réessayer plus tard.",
-    "generic": "Une erreur est survenue. Veuillez réessayer."
+    "generic": "Une erreur est survenue. Veuillez réessayer.",
+    "genericWithSupport": "Une erreur est survenue. Réessayez ou contactez le support.",
+    "contactSupport": "Envoyer un Email"
   },
   "ingredientBreakdown": {
     "title": "Analyse des Ingrédients : {{food}}"

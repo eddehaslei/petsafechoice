@@ -75,11 +75,11 @@ const Index = () => {
   const previousPetType = useRef(petType);
   const previousLanguage = useRef(i18n.language);
 
-  // Log search to database - sanitized, awaited with full error logging
+  // Log search to database
   const logSearch = useCallback(async (query: string, species: string, safetyLevel?: string) => {
     try {
       const sanitized = sanitizeSearchQuery(query);
-      const { error } = await supabase
+      await supabase
         .from("search_logs")
         .insert([
           {
@@ -90,16 +90,8 @@ const Index = () => {
             source: "search",
           },
         ]);
-      
-      if (error) {
-        console.error("[SearchLog] Insert failed:", JSON.stringify(error, null, 2));
-        toast.error("Failed to save search log. Please try again.");
-      } else {
-        console.log("[SearchLog] ✅ Logged:", sanitized.toLowerCase(), species);
-      }
-    } catch (err) {
-      console.error("[SearchLog] Network/unexpected error:", err);
-      toast.error("Connection timeout while saving search log.");
+    } catch {
+      // Silent fail for analytics
     }
   }, [i18n.language]);
 
@@ -136,14 +128,17 @@ const Index = () => {
       });
 
       if (error) {
-        console.error("Edge function error:", error);
-        
         if (error.message?.includes("429") || error.status === 429) {
-          toast.error(t('errors.tooManyRequests', 'Too many requests. Please wait a moment and try again.'));
+          toast.error(t('errors.tooManyRequests'));
         } else if (error.message?.includes("402") || error.status === 402) {
-          toast.error(t('errors.serviceUnavailable', 'Service temporarily unavailable. Please try again later.'));
+          toast.error(t('errors.serviceUnavailable'));
         } else {
-          toast.error(t('errors.generic', 'Failed to check food safety. Please try again.'));
+          toast.error(t('errors.genericWithSupport'), {
+            action: {
+              label: t('errors.contactSupport', 'Email Support'),
+              onClick: () => window.location.href = '/contact',
+            },
+          });
         }
         setIsLoading(false);
         return;
@@ -168,9 +163,13 @@ const Index = () => {
         addSearch(normalizedFood);
         logSearch(normalizedFood, petType, data.safetyLevel);
       }
-    } catch (err) {
-      console.error("Error checking food safety:", err);
-      toast.error(t('errors.generic', 'Something went wrong. Please try again.'));
+    } catch {
+      toast.error(t('errors.genericWithSupport'), {
+        action: {
+          label: t('errors.contactSupport', 'Email Support'),
+          onClick: () => window.location.href = '/contact',
+        },
+      });
     } finally {
       setIsLoading(false);
     }

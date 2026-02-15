@@ -11,6 +11,8 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
   const { t, i18n } = useTranslation();
 
   useEffect(() => {
+    const lang = i18n.language.split('-')[0];
+
     if (result) {
       const petName = result.petType === "dog" ? t('petToggle.dog') + "s" : t('petToggle.cat') + "s";
       const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
@@ -57,6 +59,19 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
       updateMetaTag("twitter:title", t('seo.defaultTitle'));
       updateMetaTag("twitter:description", defaultDesc);
     }
+
+    // Canonical tag — prevents duplicate content across languages
+    let canonical = document.querySelector('link[rel="canonical"]') as HTMLLinkElement | null;
+    if (!canonical) {
+      canonical = document.createElement("link");
+      canonical.setAttribute("rel", "canonical");
+      document.head.appendChild(canonical);
+    }
+    canonical.setAttribute("href", window.location.origin + window.location.pathname);
+
+    // HTML lang attribute
+    document.documentElement.setAttribute("lang", lang);
+    document.documentElement.setAttribute("dir", lang === "ar" ? "rtl" : "ltr");
   }, [result, i18n.language, t]);
 
   return null;
