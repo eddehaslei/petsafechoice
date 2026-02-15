@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { SafetyResultData } from "./SafetyResult";
 import { isLiquidFood } from "@/lib/liquidFoods";
 
@@ -7,39 +8,31 @@ interface DynamicSEOProps {
 }
 
 export function DynamicSEO({ result }: DynamicSEOProps) {
+  const { t, i18n } = useTranslation();
+
   useEffect(() => {
     if (result) {
-      const petName = result.petType === "dog" ? "Dogs" : "Cats";
+      const petName = result.petType === "dog" ? t('petToggle.dog') + "s" : t('petToggle.cat') + "s";
       const foodName = result.food.charAt(0).toUpperCase() + result.food.slice(1);
       
-      // Determine if food is liquid - use "Drink" instead of "Eat"
-      const verb = isLiquidFood(result.food) ? "Drink" : "Eat";
-      
-      // Dynamic title: "Can Dogs Eat/Drink Chocolate? | PetSafeChoice"
-      const newTitle = `Can ${petName} ${verb} ${foodName}? | PetSafeChoice`;
-      
-      // Social sharing title (OG/Twitter)
-      const socialTitle = `Can ${petName} ${verb} ${foodName}? | PetSafeChoice`;
-      
-      // Dynamic meta description based on safety level
+      const newTitle = `${t('resultHeader.canEat', { petName, foodName })} | PetSafeChoice`;
+
       let description = "";
-      const verbLower = verb.toLowerCase();
+      const pet = petName.toLowerCase();
       switch (result.safetyLevel) {
         case "safe":
-          description = `${foodName} is safe for ${petName.toLowerCase()}! Learn about the health benefits, proper serving sizes, and expert tips for feeding ${foodName.toLowerCase()} to your ${result.petType}.`;
+          description = t('seo.safeDesc', { food: foodName, pet });
           break;
         case "caution":
-          description = `${foodName} requires caution when feeding to ${petName.toLowerCase()}. Understand the risks, safe amounts, and what to watch for. Veterinary-reviewed guidance.`;
+          description = t('seo.cautionDesc', { food: foodName, pet });
           break;
         case "dangerous":
-          description = `WARNING: ${foodName} is toxic to ${petName.toLowerCase()}! Learn why it's dangerous, symptoms to watch for, and what to do if your ${result.petType} consumed ${foodName.toLowerCase()}.`;
+          description = t('seo.dangerousDesc', { food: foodName, pet });
           break;
       }
 
-      // Update document title
       document.title = newTitle;
 
-      // Update or create meta description
       let metaDescription = document.querySelector('meta[name="description"]');
       if (!metaDescription) {
         metaDescription = document.createElement("meta");
@@ -48,35 +41,30 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
       }
       metaDescription.setAttribute("content", description);
 
-      // Update Open Graph tags - use social-optimized title
-      updateMetaTag("og:title", socialTitle);
+      updateMetaTag("og:title", newTitle);
       updateMetaTag("og:description", description);
       updateMetaTag("og:type", "article");
       updateMetaTag("og:site_name", "PetSafeChoice");
-
-      // Update Twitter tags - use social-optimized title
-      updateMetaTag("twitter:title", socialTitle);
+      updateMetaTag("twitter:title", newTitle);
       updateMetaTag("twitter:description", description);
       updateMetaTag("twitter:card", "summary_large_image");
     } else {
-      // Reset to default when no result
-      document.title = "Can My Pet Eat This? | Pet Food Safety Checker";
-      updateMetaTag("description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
-      updateMetaTag("og:title", "Can My Pet Eat This? | Pet Food Safety Checker");
-      updateMetaTag("og:description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
-      updateMetaTag("twitter:title", "Can My Pet Eat This? | Pet Food Safety Checker");
-      updateMetaTag("twitter:description", "Science-backed food safety information for dogs and cats. Know what's safe before you share!");
+      document.title = t('seo.defaultTitle');
+      const defaultDesc = t('seo.defaultDescription');
+      updateMetaTag("description", defaultDesc);
+      updateMetaTag("og:title", t('seo.defaultTitle'));
+      updateMetaTag("og:description", defaultDesc);
+      updateMetaTag("twitter:title", t('seo.defaultTitle'));
+      updateMetaTag("twitter:description", defaultDesc);
     }
-  }, [result]);
+  }, [result, i18n.language, t]);
 
-  return null; // This component only manages document head, no visual output
+  return null;
 }
 
 function updateMetaTag(name: string, content: string) {
-  // Check both name and property attributes
   let meta = document.querySelector(`meta[name="${name}"]`) || 
              document.querySelector(`meta[property="${name}"]`);
-  
   if (!meta) {
     meta = document.createElement("meta");
     if (name.startsWith("og:") || name.startsWith("twitter:")) {

@@ -216,5 +216,28 @@
   },
   "sourceCitation": {
     "source": "Quelle"
+  },
+  "recentSearches": {
+    "title": "Kürzlich Überprüft",
+    "clear": "Löschen"
+  },
+  "share": {
+    "button": "Ergebnis Teilen",
+    "safe": "SICHER",
+    "caution": "VORSICHT",
+    "dangerous": "GIFTIG",
+    "isSafetyFor": "{{food}} ist {{safety}} für {{petName}}",
+    "checkedOn": "Geprüft auf {{site}}",
+    "copied": "Link in die Zwischenablage kopiert!",
+    "copyFailed": "Link konnte nicht kopiert werden",
+    "copyLink": "Link Kopieren",
+    "copied_short": "Kopiert!"
+  },
+  "seo": {
+    "defaultTitle": "Darf mein Haustier das essen? | Lebensmittelsicherheitsprüfer",
+    "defaultDescription": "Wissenschaftlich fundierte Lebensmittelsicherheit für Hunde und Katzen.",
+    "safeDesc": "{{food}} ist sicher für {{pet}}! Erfahren Sie mehr über Vorteile und Portionsgrößen.",
+    "cautionDesc": "{{food}} erfordert Vorsicht bei {{pet}}. Verstehen Sie die Risiken.",
+    "dangerousDesc": "WARNUNG: {{food}} ist giftig für {{pet}}! Erfahren Sie warum."
   }
 }
