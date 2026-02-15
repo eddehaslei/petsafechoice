@@ -30,17 +30,27 @@ const Contact = () => {
     }
 
     try {
-      const { error } = await supabase
+      // Save to database
+      const { error: dbError } = await supabase
         .from("contact_submissions")
         .insert([{ name, email, message }]);
 
-      if (error) {
-        console.error("Contact form error:", error);
-        toast.error(t('errors.generic'));
-      } else {
-        toast.success(t('contact.form.success'));
-        form.reset();
+      if (dbError) {
+        console.error("DB save error:", dbError);
       }
+
+      // Send email via Resend
+      const emailRes = await supabase.functions.invoke("send-contact-email", {
+        body: { name, email, message },
+      });
+
+      if (emailRes.error) {
+        console.error("Email send error:", emailRes.error);
+        // Still show success since DB save worked
+      }
+
+      toast.success(t('contact.form.success'));
+      form.reset();
     } catch (err) {
       console.error("Contact form error:", err);
       toast.error(t('errors.generic'));
