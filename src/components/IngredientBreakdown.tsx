@@ -1,5 +1,6 @@
 import { AlertTriangle, Leaf } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 interface IngredientBreakdownProps {
   ingredients: string[];
@@ -9,6 +10,8 @@ interface IngredientBreakdownProps {
 const KNOWN_TOXINS = ["onion", "garlic", "xylitol", "nutmeg", "chocolate", "grapes", "raisins", "avocado", "caffeine", "alcohol", "macadamia"];
 
 export function IngredientBreakdown({ ingredients, foodName }: IngredientBreakdownProps) {
+  const { t } = useTranslation();
+  
   if (!ingredients || ingredients.length === 0) return null;
 
   return (
@@ -17,7 +20,7 @@ export function IngredientBreakdown({ ingredients, foodName }: IngredientBreakdo
         <div className="flex items-center gap-2 mb-3">
           <Leaf className="w-5 h-5 text-primary" />
           <h4 className="font-heading font-semibold text-sm">
-            Ingredient Analysis: {foodName}
+            {t('ingredientBreakdown.title', { food: foodName })}
           </h4>
         </div>
         <div className="flex flex-wrap gap-2">

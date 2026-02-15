@@ -261,5 +261,36 @@
     "tooManyRequests": "Too many requests. Please wait a moment and try again.",
     "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
     "generic": "Something went wrong. Please try again."
+  },
+  "ingredientBreakdown": {
+    "title": "Ingredient Analysis: {{food}}"
+  },
+  "relatedFoods": {
+    "title": "People Also Ask About",
+    "clickToCheck": "Click to check if these foods are safe for your {{petType}}"
+  },
+  "doseResponse": {
+    "title": "Dose-Response Calculator",
+    "petWeight": "Pet Weight",
+    "highRisk": "High Risk",
+    "moderateRisk": "Moderate Risk",
+    "lowRisk": "Low Risk",
+    "stillDangerous": "Still Dangerous",
+    "atWeight": "At {{weight}}kg:"
+  },
+  "emergencyVet": {
+    "findNearest": "EMERGENCY: FIND NEAREST VET",
+    "title": "Emergency Vets Near You",
+    "showingNear": "Showing clinics near {{city}}",
+    "viewMap": "View Map",
+    "callNow": "Call Now",
+    "directions": "Directions",
+    "rating": "rating",
+    "noClinics": "No clinics found for your area",
+    "findOnMaps": "Find Emergency Vets on Google Maps",
+    "footerWarning": "If your {{petType}} ate {{food}}, time is critical. Call a clinic immediately."
+  },
+  "sourceCitation": {
+    "source": "Source"
   }
 }

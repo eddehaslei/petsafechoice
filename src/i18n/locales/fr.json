@@ -180,5 +180,41 @@
       "keyword": "Nourriture Crue Séchée à l'Air",
       "summary": "Topper Riche en Protéines – le juste milieu le plus sûr entre croquettes et cru."
     }
+  },
+  "errors": {
+    "tooManyRequests": "Trop de requêtes. Veuillez patienter un moment et réessayer.",
+    "serviceUnavailable": "Service temporairement indisponible. Veuillez réessayer plus tard.",
+    "generic": "Une erreur est survenue. Veuillez réessayer."
+  },
+  "ingredientBreakdown": {
+    "title": "Analyse des Ingrédients : {{food}}"
+  },
+  "relatedFoods": {
+    "title": "Les Gens Demandent Aussi",
+    "clickToCheck": "Cliquez pour vérifier si ces aliments sont sûrs pour votre {{petType}}"
+  },
+  "doseResponse": {
+    "title": "Calculateur Dose-Réponse",
+    "petWeight": "Poids de l'Animal",
+    "highRisk": "Risque Élevé",
+    "moderateRisk": "Risque Modéré",
+    "lowRisk": "Risque Faible",
+    "stillDangerous": "Toujours Dangereux",
+    "atWeight": "À {{weight}}kg :"
+  },
+  "emergencyVet": {
+    "findNearest": "URGENCE : TROUVER LE VÉTÉRINAIRE LE PLUS PROCHE",
+    "title": "Vétérinaires d'Urgence Près de Vous",
+    "showingNear": "Cliniques près de {{city}}",
+    "viewMap": "Voir la Carte",
+    "callNow": "Appeler",
+    "directions": "Itinéraire",
+    "rating": "note",
+    "noClinics": "Aucune clinique trouvée dans votre zone",
+    "findOnMaps": "Chercher des Vétérinaires d'Urgence sur Google Maps",
+    "footerWarning": "Si votre {{petType}} a mangé {{food}}, le temps est critique. Appelez une clinique immédiatement."
+  },
+  "sourceCitation": {
+    "source": "Source"
   }
 }

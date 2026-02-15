@@ -261,5 +261,36 @@
     "tooManyRequests": "Demasiadas solicitudes. Por favor espera un momento e inténtalo de nuevo.",
     "serviceUnavailable": "Servicio temporalmente no disponible. Por favor inténtalo más tarde.",
     "generic": "Algo salió mal. Por favor inténtalo de nuevo."
+  },
+  "ingredientBreakdown": {
+    "title": "Análisis de Ingredientes: {{food}}"
+  },
+  "relatedFoods": {
+    "title": "También Preguntan Sobre",
+    "clickToCheck": "Haz clic para verificar si estos alimentos son seguros para tu {{petType}}"
+  },
+  "doseResponse": {
+    "title": "Calculadora Dosis-Respuesta",
+    "petWeight": "Peso de la Mascota",
+    "highRisk": "Riesgo Alto",
+    "moderateRisk": "Riesgo Moderado",
+    "lowRisk": "Riesgo Bajo",
+    "stillDangerous": "Aún Peligroso",
+    "atWeight": "A {{weight}}kg:"
+  },
+  "emergencyVet": {
+    "findNearest": "EMERGENCIA: ENCONTRAR VETERINARIO MÁS CERCANO",
+    "title": "Veterinarios de Emergencia Cerca de Ti",
+    "showingNear": "Mostrando clínicas cerca de {{city}}",
+    "viewMap": "Ver Mapa",
+    "callNow": "Llamar Ahora",
+    "directions": "Direcciones",
+    "rating": "calificación",
+    "noClinics": "No se encontraron clínicas en tu zona",
+    "findOnMaps": "Buscar Veterinarios de Emergencia en Google Maps",
+    "footerWarning": "Si tu {{petType}} comió {{food}}, el tiempo es crítico. Llama a una clínica inmediatamente."
+  },
+  "sourceCitation": {
+    "source": "Fuente"
   }
 }
