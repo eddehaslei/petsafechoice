@@ -36,7 +36,7 @@ const Contact = () => {
         .insert([{ name, email, message }]);
 
       if (dbError) {
-        console.error("DB save error:", dbError);
+        // DB save failed silently — email still attempted
       }
 
       // Send email via Resend
@@ -45,14 +45,12 @@ const Contact = () => {
       });
 
       if (emailRes.error) {
-        console.error("Email send error:", emailRes.error);
         // Still show success since DB save worked
       }
 
       toast.success(t('contact.form.success'));
       form.reset();
-    } catch (err) {
-      console.error("Contact form error:", err);
+    } catch {
       toast.error(t('errors.generic'));
     } finally {
       setIsSubmitting(false);

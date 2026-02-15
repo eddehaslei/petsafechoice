@@ -263,7 +263,9 @@
   "errors": {
     "tooManyRequests": "Too many requests. Please wait a moment and try again.",
     "serviceUnavailable": "Service temporarily unavailable. Please try again later.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "genericWithSupport": "Something went wrong. Please try again or contact support.",
+    "contactSupport": "Email Support"
   },
   "ingredientBreakdown": {
     "title": "Ingredient Analysis: {{food}}"

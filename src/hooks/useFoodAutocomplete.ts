@@ -22,14 +22,11 @@ export function useFoodAutocomplete(query: string) {
           .select('name, species')
           .order('name');
         
-        if (error) {
-          console.error('Error fetching foods:', error);
-          return;
-        }
+        if (error) return;
         
         setAllFoods(data || []);
-      } catch (err) {
-        console.error('Error fetching foods:', err);
+      } catch {
+        // Silent fail
       } finally {
         setIsLoading(false);
       }
