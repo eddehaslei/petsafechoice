@@ -7,21 +7,46 @@ import { Textarea } from "@/components/ui/textarea";
 import { useState } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    // Simulate form submission
-    setTimeout(() => {
-      toast.success(t('contact.form.success'));
+
+    const form = e.target as HTMLFormElement;
+    const formData = new FormData(form);
+    const name = (formData.get("name") as string)?.trim();
+    const email = (formData.get("email") as string)?.trim();
+    const message = (formData.get("message") as string)?.trim();
+
+    if (!name || !email || !message) {
+      toast.error(t('errors.generic'));
       setIsSubmitting(false);
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from("contact_submissions")
+        .insert([{ name, email, message }]);
+
+      if (error) {
+        console.error("Contact form error:", error);
+        toast.error(t('errors.generic'));
+      } else {
+        toast.success(t('contact.form.success'));
+        form.reset();
+      }
+    } catch (err) {
+      console.error("Contact form error:", err);
+      toast.error(t('errors.generic'));
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -69,6 +94,7 @@ const Contact = () => {
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <Input 
+                  name="name"
                   placeholder={t('contact.form.namePlaceholder')}
                   required 
                   className="bg-background"
@@ -76,6 +102,7 @@ const Contact = () => {
               </div>
               <div>
                 <Input 
+                  name="email"
                   type="email" 
                   placeholder={t('contact.form.emailPlaceholder')}
                   required 
@@ -84,6 +111,7 @@ const Contact = () => {
               </div>
               <div>
                 <Textarea 
+                  name="message"
                   placeholder={t('contact.form.messagePlaceholder')}
                   required 
                   rows={5}
