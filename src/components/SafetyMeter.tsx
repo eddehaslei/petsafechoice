@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 import type { SafetyLevel } from "./SafetyResult";
 
 interface SafetyMeterProps {
@@ -8,9 +9,10 @@ interface SafetyMeterProps {
 
 export function SafetyMeter({ safetyLevel }: SafetyMeterProps) {
   const [animatedDeg, setAnimatedDeg] = useState(0);
+  const { t } = useTranslation();
 
   const targetDeg = safetyLevel === "safe" ? 30 : safetyLevel === "caution" ? 90 : 150;
-  const label = safetyLevel === "safe" ? "SAFE" : safetyLevel === "caution" ? "CAUTION" : "DANGER";
+  const label = safetyLevel === "safe" ? t('safety.safe').toUpperCase() : safetyLevel === "caution" ? t('safety.caution').toUpperCase() : t('safety.dangerous').toUpperCase();
 
   useEffect(() => {
     const timer = setTimeout(() => setAnimatedDeg(targetDeg), 100);
