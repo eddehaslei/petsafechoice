@@ -216,5 +216,28 @@
   },
   "sourceCitation": {
     "source": "المصدر"
+  },
+  "recentSearches": {
+    "title": "تم التحقق مؤخراً",
+    "clear": "مسح"
+  },
+  "share": {
+    "button": "مشاركة هذه النتيجة",
+    "safe": "آمن",
+    "caution": "احتياط",
+    "dangerous": "سام",
+    "isSafetyFor": "{{food}} {{safety}} لـ{{petName}}",
+    "checkedOn": "تم التحقق على {{site}}",
+    "copied": "تم نسخ الرابط!",
+    "copyFailed": "فشل نسخ الرابط",
+    "copyLink": "نسخ الرابط",
+    "copied_short": "تم النسخ!"
+  },
+  "seo": {
+    "defaultTitle": "هل يمكن لحيواني الأليف أكل هذا؟ | فاحص سلامة الغذاء",
+    "defaultDescription": "معلومات سلامة الغذاء المبنية على العلم للكلاب والقطط.",
+    "safeDesc": "{{food}} آمن لـ{{pet}}! تعرف على الفوائد والحصص المناسبة.",
+    "cautionDesc": "{{food}} يتطلب حذراً عند تقديمه لـ{{pet}}. افهم المخاطر.",
+    "dangerousDesc": "تحذير: {{food}} سام لـ{{pet}}! تعرف لماذا هو خطير."
   }
 }

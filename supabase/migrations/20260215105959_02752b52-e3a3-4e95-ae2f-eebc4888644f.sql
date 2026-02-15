@@ -1,0 +1,1 @@
+CREATE POLICY "Newsletter subs deny public SELECT" ON newsletter_subs FOR SELECT USING (false);

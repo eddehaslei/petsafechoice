@@ -292,5 +292,28 @@
   },
   "sourceCitation": {
     "source": "Source"
+  },
+  "recentSearches": {
+    "title": "Recently Checked",
+    "clear": "Clear"
+  },
+  "share": {
+    "button": "Share This Result",
+    "safe": "SAFE",
+    "caution": "USE CAUTION",
+    "dangerous": "TOXIC",
+    "isSafetyFor": "{{food}} is {{safety}} for {{petName}}",
+    "checkedOn": "Checked on {{site}}",
+    "copied": "Link copied to clipboard!",
+    "copyFailed": "Failed to copy link",
+    "copyLink": "Copy Link",
+    "copied_short": "Copied!"
+  },
+  "seo": {
+    "defaultTitle": "Can My Pet Eat This? | Pet Food Safety Checker",
+    "defaultDescription": "Science-backed food safety information for dogs and cats. Know what's safe before you share!",
+    "safeDesc": "{{food}} is safe for {{pet}}! Learn about health benefits, proper serving sizes, and expert tips.",
+    "cautionDesc": "{{food}} requires caution when feeding to {{pet}}. Understand the risks and safe amounts. Veterinary-reviewed guidance.",
+    "dangerousDesc": "WARNING: {{food}} is toxic to {{pet}}! Learn why it's dangerous, symptoms to watch for, and what to do."
   }
 }

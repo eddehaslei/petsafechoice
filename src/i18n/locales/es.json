@@ -292,5 +292,28 @@
   },
   "sourceCitation": {
     "source": "Fuente"
+  },
+  "recentSearches": {
+    "title": "Verificados Recientemente",
+    "clear": "Limpiar"
+  },
+  "share": {
+    "button": "Compartir Este Resultado",
+    "safe": "SEGURO",
+    "caution": "PRECAUCIÓN",
+    "dangerous": "TÓXICO",
+    "isSafetyFor": "{{food}} es {{safety}} para {{petName}}",
+    "checkedOn": "Verificado en {{site}}",
+    "copied": "¡Enlace copiado al portapapeles!",
+    "copyFailed": "Error al copiar el enlace",
+    "copyLink": "Copiar Enlace",
+    "copied_short": "¡Copiado!"
+  },
+  "seo": {
+    "defaultTitle": "¿Puede mi mascota comer esto? | Verificador de Seguridad Alimentaria",
+    "defaultDescription": "Información de seguridad alimentaria respaldada por la ciencia para perros y gatos. ¡Sabe qué es seguro antes de compartir!",
+    "safeDesc": "¡{{food}} es seguro para {{pet}}! Conoce los beneficios, porciones adecuadas y consejos de expertos.",
+    "cautionDesc": "{{food}} requiere precaución al alimentar a {{pet}}. Comprende los riesgos y cantidades seguras.",
+    "dangerousDesc": "¡ADVERTENCIA: {{food}} es tóxico para {{pet}}! Aprende por qué es peligroso y qué hacer."
   }
 }

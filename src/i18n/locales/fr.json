@@ -216,5 +216,28 @@
   },
   "sourceCitation": {
     "source": "Source"
+  },
+  "recentSearches": {
+    "title": "Vérifiés Récemment",
+    "clear": "Effacer"
+  },
+  "share": {
+    "button": "Partager Ce Résultat",
+    "safe": "SÛR",
+    "caution": "PRÉCAUTION",
+    "dangerous": "TOXIQUE",
+    "isSafetyFor": "{{food}} est {{safety}} pour les {{petName}}",
+    "checkedOn": "Vérifié sur {{site}}",
+    "copied": "Lien copié dans le presse-papiers !",
+    "copyFailed": "Impossible de copier le lien",
+    "copyLink": "Copier le Lien",
+    "copied_short": "Copié !"
+  },
+  "seo": {
+    "defaultTitle": "Mon Animal Peut-il Manger Ça ? | Vérificateur de Sécurité Alimentaire",
+    "defaultDescription": "Information de sécurité alimentaire basée sur la science pour chiens et chats.",
+    "safeDesc": "{{food}} est sûr pour les {{pet}} ! Découvrez les bienfaits et les portions adaptées.",
+    "cautionDesc": "{{food}} nécessite de la prudence pour les {{pet}}. Comprenez les risques.",
+    "dangerousDesc": "ATTENTION : {{food}} est toxique pour les {{pet}} ! Apprenez pourquoi."
   }
 }
