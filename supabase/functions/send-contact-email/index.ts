@@ -36,7 +36,7 @@ serve(async (req) => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: "PetSafeChoice <onboarding@resend.dev>",
+        from: "PetSafeChoice <hello@safepetchoice.com>",
         to: "hello@petsafechoice.com",
         subject: `New Contact from ${name} (${email})`,
         html: `
