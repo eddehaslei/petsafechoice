@@ -84,10 +84,13 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
     ? `Ver ${displayName} para ${petLabel} en Amazon`
     : `Shop ${displayName} for ${petLabel}s on Amazon`;
 
-  // Generate Amazon.com fallback URL for Spanish users
+  // Generate Amazon.com fallback URL for non-English users
+  // Always use English keywords for Amazon.com (Global) for better search results
   const getGlobalFallbackUrl = () => {
     const petWord = petType === 'dog' ? 'dog' : 'cat';
-    const searchTerm = encodeURIComponent(`best ${productName} ${petWord}`);
+    // Use the original English product name, not the translated one
+    const englishName = productName;
+    const searchTerm = encodeURIComponent(`best ${englishName} ${petWord}`);
     return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
   };
 

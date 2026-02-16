@@ -7,6 +7,7 @@ import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 import { GeoLanguageDetector } from "./components/GeoLanguageDetector";
 import { ErrorBoundary } from "./components/ErrorBoundary";
+import { ScrollToTop } from "./components/ScrollToTop";
 import { useConnectionTest } from "./hooks/useConnectionTest";
 import Index from "./pages/Index";
 import About from "./pages/About";
@@ -28,6 +29,7 @@ function AppInner() {
   
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/:lang/food/:foodName" element={<FoodResult />} />
