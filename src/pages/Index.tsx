@@ -103,9 +103,20 @@ const Index = () => {
 
   // Client-side blacklist for non-food items — bypass AI entirely
   const NON_FOOD_BLACKLIST = [
-    'bleach', 'lejía', 'lejia', 'batteries', 'pilas', 'glass', 'vidrio',
-    'detergent', 'detergente', 'antifreeze', 'anticongelante', 'paint', 'pintura',
-    'gasoline', 'gasolina', 'rat poison', 'veneno para ratas', 'pesticide', 'pesticida',
+    // Chemicals & cleaning
+    'bleach', 'lejía', 'lejia', 'detergent', 'detergente', 'antifreeze', 'anticongelante',
+    'paint', 'pintura', 'gasoline', 'gasolina', 'pesticide', 'pesticida',
+    'rat poison', 'veneno para ratas', 'cleaning supplies', 'productos de limpieza',
+    'fertilizer', 'fertilizante', 'insecticide', 'insecticida', 'turpentine', 'ammonia',
+    // Drugs & medications
+    'weed', 'marijuana', 'marihuana', 'meth', 'cocaine', 'cocaína', 'cocaina',
+    'pills', 'pastillas', 'ibuprofen', 'ibuprofeno', 'acetaminophen', 'aspirin', 'aspirina',
+    'thc', 'cbd oil', 'xanax', 'adderall', 'opioids', 'fentanyl', 'heroin', 'heroína',
+    'medication', 'medicamento', 'medicine', 'medicina', 'drugs', 'drogas',
+    // Objects
+    'glass', 'vidrio', 'coins', 'monedas', 'socks', 'calcetines', 'batteries', 'pilas',
+    'plastic', 'plástico', 'plastico', 'rubber', 'goma', 'fabric', 'tela',
+    'string', 'yarn', 'hilo', 'rocks', 'piedras', 'paper', 'papel',
   ];
 
   const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
