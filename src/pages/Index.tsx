@@ -401,9 +401,6 @@ const Index = () => {
                 {/* Safety Meter - Animated gauge */}
                 <SafetyMeter safetyLevel={result.safetyLevel} />
                 
-                {/* Visual spacing between gauge and affiliate CTA */}
-                <div className="h-6" />
-                
                 {/* Affiliate Widget - HIGH VISIBILITY: directly under safety indicator */}
                 <SafeFoodWidget 
                   foodName={result.food} 
