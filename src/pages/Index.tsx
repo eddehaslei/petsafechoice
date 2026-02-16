@@ -102,29 +102,38 @@ const Index = () => {
   }, [i18n.language]);
 
   // Client-side blacklist for non-food items — bypass AI entirely
-  const NON_FOOD_BLACKLIST = [
+  // Uses FUZZY matching: if the search query CONTAINS any of these keywords, block it
+  const NON_FOOD_KEYWORDS = [
     // Chemicals & cleaning
     'bleach', 'lejía', 'lejia', 'detergent', 'detergente', 'antifreeze', 'anticongelante',
     'paint', 'pintura', 'gasoline', 'gasolina', 'pesticide', 'pesticida',
-    'rat poison', 'veneno para ratas', 'cleaning supplies', 'productos de limpieza',
+    'poison', 'veneno', 'cleaning', 'limpieza', 'cleaner', 'limpiador',
     'fertilizer', 'fertilizante', 'insecticide', 'insecticida', 'turpentine', 'ammonia',
+    'chemical', 'químico', 'quimico', 'solvent', 'disolvente', 'acid', 'ácido',
     // Drugs & medications
     'weed', 'marijuana', 'marihuana', 'meth', 'cocaine', 'cocaína', 'cocaina',
-    'pills', 'pastillas', 'ibuprofen', 'ibuprofeno', 'acetaminophen', 'aspirin', 'aspirina',
-    'thc', 'cbd oil', 'xanax', 'adderall', 'opioids', 'fentanyl', 'heroin', 'heroína',
-    'medication', 'medicamento', 'medicine', 'medicina', 'drugs', 'drogas',
+    'pill', 'pastilla', 'ibuprofen', 'ibuprofeno', 'acetaminophen', 'aspirin', 'aspirina',
+    'thc', 'cbd', 'xanax', 'adderall', 'opioid', 'fentanyl', 'heroin', 'heroína',
+    'medication', 'medicamento', 'medicine', 'medicina', 'drug', 'droga',
     // Objects
-    'glass', 'vidrio', 'coins', 'monedas', 'socks', 'calcetines', 'batteries', 'pilas',
+    'glass', 'vidrio', 'coin', 'moneda', 'sock', 'calcetín', 'calcetines',
+    'battery', 'batteries', 'pila', 'pilas',
     'plastic', 'plástico', 'plastico', 'rubber', 'goma', 'fabric', 'tela',
-    'string', 'yarn', 'hilo', 'rocks', 'piedras', 'paper', 'papel',
+    'string', 'yarn', 'hilo', 'rock', 'piedra', 'liquid', 'líquido',
   ];
+
+  // FUZZY CHECK: if query contains ANY blacklisted keyword, block immediately
+  const isNonFoodItem = (query: string): boolean => {
+    const lower = query.toLowerCase().trim();
+    return NON_FOOD_KEYWORDS.some(keyword => lower.includes(keyword));
+  };
 
   const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
     const normalizedFood = food.trim();
     if (!normalizedFood) return;
 
-    // BLACKLIST CHECK: Immediately flag non-food items as dangerous
-    if (NON_FOOD_BLACKLIST.includes(normalizedFood.toLowerCase())) {
+    // FUZZY BLACKLIST CHECK: block anything containing a non-food keyword
+    if (isNonFoodItem(normalizedFood)) {
       const dangerResult = {
         food: normalizedFood,
         petType,

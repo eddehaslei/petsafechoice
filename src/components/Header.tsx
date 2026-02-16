@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { useAuth } from "@/hooks/useAuth";
+import { useSearchStore } from "@/stores/searchStore";
 import { toast } from "sonner";
 
 export const Header = () => {
@@ -12,6 +13,8 @@ export const Header = () => {
   const navigate = useNavigate();
   const isHomePage = location.pathname === "/";
   const { user, signOut } = useAuth();
+  const clearResult = useSearchStore((s) => s.clearResult);
+  const setLastSearchedFood = useSearchStore((s) => s.setLastSearchedFood);
 
   const handleSignOut = async () => {
     const { error } = await signOut();
@@ -23,6 +26,9 @@ export const Header = () => {
   };
 
   const handleGoHome = () => {
+    // Clear all search state so homepage shows clean search bar
+    clearResult();
+    setLastSearchedFood(null);
     if (isHomePage) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
