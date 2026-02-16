@@ -320,5 +320,11 @@
     "safeDesc": "{{food}} is safe for {{pet}}! Learn about health benefits, proper serving sizes, and expert tips.",
     "cautionDesc": "{{food}} requires caution when feeding to {{pet}}. Understand the risks and safe amounts. Veterinary-reviewed guidance.",
     "dangerousDesc": "WARNING: {{food}} is toxic to {{pet}}! Learn why it's dangerous, symptoms to watch for, and what to do."
+  },
+  "requestFood": {
+    "button": "Request '{{food}}' to be reviewed",
+    "success": "Thanks! We'll review this food soon.",
+    "error": "Failed to submit request. Please try again.",
+    "received": "Request received! We'll add this food to our database soon."
   }
 }

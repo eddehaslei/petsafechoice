@@ -26,6 +26,8 @@ import { DoseResponseSlider } from "@/components/DoseResponseSlider";
 import { EmergencyVetButton } from "@/components/EmergencyVetButton";
 import { IngredientBreakdown } from "@/components/IngredientBreakdown";
 import { SourceCitation } from "@/components/SourceCitation";
+import { RequestFood } from "@/components/RequestFood";
+import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -325,6 +327,9 @@ const Index = () => {
               <SkeletonLoader variant="result" />
             ) : result ? (
               <>
+                {/* Breadcrumbs for SEO hierarchy */}
+                <Breadcrumbs foodName={result.food} safetyLevel={result.safetyLevel} />
+                
                 {/* Featured Snippet - Google-optimized answer box */}
                 <FeaturedSnippet data={result} />
                 
@@ -392,6 +397,11 @@ const Index = () => {
                   onFoodClick={(food) => handleSearch(food, "search")} 
                   currentFood={result.food}
                 />
+                
+                {/* Request a Food - shows when result might be AI-generated */}
+                {result.source?.name === "AI" && (
+                  <RequestFood foodName={result.food} petType={result.petType} />
+                )}
               </>
             ) : null}
           </div>

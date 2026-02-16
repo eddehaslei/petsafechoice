@@ -71,6 +71,30 @@ export type Database = {
         }
         Relationships: []
       }
+      food_requests: {
+        Row: {
+          created_at: string
+          food_name: string
+          id: string
+          language: string | null
+          species: string
+        }
+        Insert: {
+          created_at?: string
+          food_name: string
+          id?: string
+          language?: string | null
+          species?: string
+        }
+        Update: {
+          created_at?: string
+          food_name?: string
+          id?: string
+          language?: string | null
+          species?: string
+        }
+        Relationships: []
+      }
       foods: {
         Row: {
           benefits: string[] | null
@@ -118,18 +142,21 @@ export type Database = {
           created_at: string
           email: string
           id: string
+          language: string | null
           status: string
         }
         Insert: {
           created_at?: string
           email: string
           id?: string
+          language?: string | null
           status?: string
         }
         Update: {
           created_at?: string
           email?: string
           id?: string
+          language?: string | null
           status?: string
         }
         Relationships: []

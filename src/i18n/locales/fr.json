@@ -244,5 +244,11 @@
     "safeDesc": "{{food}} est sûr pour les {{pet}} ! Découvrez les bienfaits et les portions adaptées.",
     "cautionDesc": "{{food}} nécessite de la prudence pour les {{pet}}. Comprenez les risques.",
     "dangerousDesc": "ATTENTION : {{food}} est toxique pour les {{pet}} ! Apprenez pourquoi."
+  },
+  "requestFood": {
+    "button": "Demander la vérification de '{{food}}'",
+    "success": "Merci ! Nous examinerons cet aliment bientôt.",
+    "error": "Échec de l'envoi. Veuillez réessayer.",
+    "received": "Demande reçue ! Nous ajouterons cet aliment bientôt."
   }
 }
