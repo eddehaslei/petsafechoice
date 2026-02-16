@@ -119,13 +119,20 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
     : `Shop ${displayName} for ${petLabel}s on Amazon`;
 
   // Generate Amazon.com fallback URL for non-English users
-  // Always use English keywords for Amazon.com (Global) for better search results
+  // ALWAYS use English keywords for Amazon.com (Global) for better search results
   const getGlobalFallbackUrl = () => {
     const petWord = petType === 'dog' ? 'dog' : 'cat';
-    // Translate non-English product names to English for better Amazon.com results
+    // Multi-word match first, then single-word fallback
     const lowerName = productName.toLowerCase().trim();
-    const englishName = REVERSE_TRANSLATIONS[lowerName] || productName;
-    const searchTerm = encodeURIComponent(`best ${englishName} ${petWord}`);
+    let englishName = REVERSE_TRANSLATIONS[lowerName];
+    if (!englishName) {
+      // Try matching individual words for partial translations
+      const words = lowerName.split(/\s+/);
+      const translated = words.map(w => REVERSE_TRANSLATIONS[w] || w);
+      englishName = translated.join(' ');
+    }
+    // If still looks non-English (same as input), use productName as-is
+    const searchTerm = encodeURIComponent(`best ${englishName} ${petWord} treats`);
     return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
   };
 

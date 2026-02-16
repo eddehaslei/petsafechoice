@@ -101,12 +101,49 @@ const Index = () => {
     }
   }, [i18n.language]);
 
+  // Client-side blacklist for non-food items — bypass AI entirely
+  const NON_FOOD_BLACKLIST = [
+    'bleach', 'lejía', 'lejia', 'batteries', 'pilas', 'glass', 'vidrio',
+    'detergent', 'detergente', 'antifreeze', 'anticongelante', 'paint', 'pintura',
+    'gasoline', 'gasolina', 'rat poison', 'veneno para ratas', 'pesticide', 'pesticida',
+  ];
+
   const handleSearchCore = useCallback(async (food: string, source: "trending" | "search" = "search") => {
     const normalizedFood = food.trim();
     if (!normalizedFood) return;
+
+    // BLACKLIST CHECK: Immediately flag non-food items as dangerous
+    if (NON_FOOD_BLACKLIST.includes(normalizedFood.toLowerCase())) {
+      const dangerResult = {
+        food: normalizedFood,
+        petType,
+        safetyLevel: "dangerous" as const,
+        summary: t('safety.nonFoodSummary', `🚨 "${normalizedFood}" is NOT a food item and is extremely hazardous to pets. Do NOT let your pet ingest this substance.`),
+        details: t('safety.nonFoodDetails', `This is a dangerous chemical/object. If your pet has ingested "${normalizedFood}", contact an emergency veterinarian or animal poison control immediately.`),
+        symptoms: [
+          t('safety.nonFoodSymptom1', 'Severe poisoning or chemical burns'),
+          t('safety.nonFoodSymptom2', 'Vomiting, seizures, difficulty breathing'),
+          t('safety.nonFoodSymptom3', 'Internal organ damage'),
+        ],
+        recommendations: [
+          t('safety.nonFoodRec1', 'Call your emergency vet immediately'),
+          t('safety.nonFoodRec2', 'Do NOT induce vomiting unless instructed by a vet'),
+          t('safety.nonFoodRec3', 'Bring the product packaging to the vet'),
+        ],
+        ingredients: [],
+        toxicityThreshold: null,
+        source: { name: "Safety Guardrail", url: "https://www.aspca.org/pet-care/animal-poison-control" },
+      };
+      setResult(dangerResult);
+      setLastSearchedFood(normalizedFood);
+      setSearchSource(source);
+      setIsLoading(false);
+      addSearch(normalizedFood);
+      return;
+    }
     
     // INSTANT: Check cache first for <50ms response
-    const cached = getCachedResult(normalizedFood, petType);
+    const cached = getCachedResult(normalizedFood, petType, i18n.language);
     if (cached) {
       // No loading state - instant switch
       setResult(cached);
@@ -163,7 +200,7 @@ const Index = () => {
 
       setResult(data);
       // Cache for instant species toggle
-      setCachedResult(normalizedFood, petType, data);
+      setCachedResult(normalizedFood, petType, data, i18n.language);
       
       if (data && !data.error) {
         addSearch(normalizedFood);
@@ -194,7 +231,7 @@ const Index = () => {
     // Only trigger if petType actually changed and we have a previous search
     if (previousPetType.current !== petType && lastSearchedFood) {
       // Check cache first for instant switch
-      const cached = getCachedResult(lastSearchedFood, petType);
+      const cached = getCachedResult(lastSearchedFood, petType, i18n.language);
       if (cached) {
         // INSTANT: No loading state, just swap the data
         setIsLoading(false);
@@ -209,13 +246,17 @@ const Index = () => {
     previousPetType.current = petType;
   }, [petType, lastSearchedFood, searchSource, handleSearch, getCachedResult, setResult, setIsLoading, logSearch]);
 
-  // Auto-refresh when language changes (if there's an active search)
+  // FORCE re-fetch when language changes (clear result, show spinner, re-query)
   useEffect(() => {
-    if (previousLanguage.current !== i18n.language && lastSearchedFood && result) {
-      handleSearch(lastSearchedFood, searchSource || "search");
+    if (previousLanguage.current !== i18n.language && lastSearchedFood) {
+      // Clear stale result immediately so old-language text is never shown
+      setResult(null);
+      setIsLoading(true);
+      // Re-fetch in new language (bypass debounce by calling core directly)
+      handleSearchCore(lastSearchedFood, searchSource || "search");
     }
     previousLanguage.current = i18n.language;
-  }, [i18n.language, lastSearchedFood, result, searchSource, handleSearch]);
+  }, [i18n.language, lastSearchedFood, searchSource, handleSearchCore, setResult, setIsLoading]);
 
   const handleBackToDiscovery = () => {
     clearResult();
