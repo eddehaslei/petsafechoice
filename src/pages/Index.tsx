@@ -387,7 +387,7 @@ const Index = () => {
 
         {/* Results Section */}
         {(result || isLoading) && (
-          <div className="mt-8">
+          <div className="mt-4">
             {isLoading ? (
               <SkeletonLoader variant="result" />
             ) : result ? (
