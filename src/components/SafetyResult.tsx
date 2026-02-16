@@ -77,40 +77,8 @@ export function SafetyResult({ data }: SafetyResultProps) {
           config.borderClass
         )}
       >
-        {/* Header */}
-        <div className="p-6 pb-4 flex items-center gap-4">
-          <div
-            className={cn(
-              "w-16 h-16 rounded-2xl flex items-center justify-center",
-              data.safetyLevel === "safe" && "bg-safe/20",
-              data.safetyLevel === "caution" && "bg-caution/20",
-              data.safetyLevel === "dangerous" && "bg-danger/20"
-            )}
-          >
-            <Icon className={cn("w-8 h-8", config.iconClass)} />
-          </div>
-          <div className="flex-1">
-            <div className="flex items-center gap-3 mb-1 flex-wrap">
-              <h2 className="text-2xl font-heading font-bold capitalize">
-                {data.food}
-              </h2>
-              <span
-                className={cn(
-                  "px-3 py-1 rounded-full text-sm font-semibold",
-                  config.badgeClass
-                )}
-              >
-                {config.title}
-              </span>
-            </div>
-            <p className="text-sm text-muted-foreground">
-              {t('safety.forYour')} {data.petType === "dog" ? t('petToggle.dog').toLowerCase() : t('petToggle.cat').toLowerCase()}
-            </p>
-          </div>
-        </div>
-
         {/* Verified Data Badge */}
-        <div className="px-6 pb-3">
+        <div className="px-6 pt-4 pb-3">
           <VerifiedDataBadge />
         </div>
 
