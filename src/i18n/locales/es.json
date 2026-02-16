@@ -326,5 +326,12 @@
     "success": "¡Gracias! Revisaremos este alimento pronto.",
     "error": "Error al enviar la solicitud. Inténtalo de nuevo.",
     "received": "¡Solicitud recibida! Agregaremos este alimento a nuestra base de datos pronto."
+  },
+  "notFound": {
+    "message": "¡Ups! Esta página no existe.",
+    "backHome": "Volver al inicio"
+  },
+  "rateLimit": {
+    "tooFast": "¡Estás buscando muy rápido! Espera un momento."
   }
 }

@@ -326,5 +326,12 @@
     "success": "Thanks! We'll review this food soon.",
     "error": "Failed to submit request. Please try again.",
     "received": "Request received! We'll add this food to our database soon."
+  },
+  "notFound": {
+    "message": "Oops! This page doesn't exist.",
+    "backHome": "Back to Home"
+  },
+  "rateLimit": {
+    "tooFast": "You're searching fast! Please wait a moment."
   }
 }
