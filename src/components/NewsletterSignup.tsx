@@ -3,9 +3,8 @@ import { Mail, Check, Loader2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-
 export const NewsletterSignup = forwardRef<HTMLDivElement>(function NewsletterSignup(_, ref) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubscribed, setIsSubscribed] = useState(false);
@@ -23,7 +22,7 @@ export const NewsletterSignup = forwardRef<HTMLDivElement>(function NewsletterSi
     try {
       const { error } = await supabase
         .from('newsletter_subs')
-        .insert({ email: email.toLowerCase().trim() });
+        .insert({ email: email.toLowerCase().trim(), language: i18n.language } as any);
       
       if (error) {
         if (error.code === '23505') {

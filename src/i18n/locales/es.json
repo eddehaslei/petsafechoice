@@ -320,5 +320,11 @@
     "safeDesc": "¡{{food}} es seguro para {{pet}}! Conoce los beneficios, porciones adecuadas y consejos de expertos.",
     "cautionDesc": "{{food}} requiere precaución al alimentar a {{pet}}. Comprende los riesgos y cantidades seguras.",
     "dangerousDesc": "¡ADVERTENCIA: {{food}} es tóxico para {{pet}}! Aprende por qué es peligroso y qué hacer."
+  },
+  "requestFood": {
+    "button": "Solicitar revisión de '{{food}}'",
+    "success": "¡Gracias! Revisaremos este alimento pronto.",
+    "error": "Error al enviar la solicitud. Inténtalo de nuevo.",
+    "received": "¡Solicitud recibida! Agregaremos este alimento a nuestra base de datos pronto."
   }
 }
