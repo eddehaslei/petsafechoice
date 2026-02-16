@@ -38,16 +38,31 @@ export function SkeletonLoader({ variant = "result", className }: SkeletonLoader
     <div className={cn("w-full max-w-2xl mx-auto animate-fade-in", className)}>
       {/* Main Result Card Skeleton */}
       <div className="rounded-3xl border-2 border-border/30 bg-card overflow-hidden">
-        {/* Header */}
-        <div className="p-6 pb-4 flex items-center gap-4">
-          <div className="w-16 h-16 bg-muted animate-pulse rounded-2xl" />
-          <div className="flex-1 space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="h-7 bg-muted animate-pulse rounded-md w-32" />
-              <div className="h-6 bg-muted animate-pulse rounded-full w-24" />
+      {/* Safety Gauge Skeleton - circular arc shape */}
+        <div className="py-3 flex justify-center">
+          <div className="flex flex-col items-center">
+            <div className="w-48 h-28 relative">
+              {/* Semicircular arc placeholder */}
+              <svg viewBox="0 0 200 120" className="w-48 h-28">
+                <path
+                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  fill="none"
+                  stroke="hsl(var(--muted))"
+                  strokeWidth="16"
+                  strokeLinecap="round"
+                  className="animate-pulse"
+                />
+                <circle cx="100" cy="100" r="6" fill="hsl(var(--muted))" className="animate-pulse" />
+              </svg>
             </div>
-            <div className="h-4 bg-muted animate-pulse rounded-md w-24" />
+            <div className="h-3 bg-muted animate-pulse rounded-md w-16 mt-3" />
           </div>
+        </div>
+
+        {/* Affiliate Button Skeleton */}
+        <div className="px-6 pb-4">
+          <div className="h-14 bg-muted animate-pulse rounded-2xl w-full" />
+          <div className="h-2 bg-muted animate-pulse rounded-md w-48 mx-auto mt-2" />
         </div>
 
         {/* Content */}
@@ -69,19 +84,6 @@ export function SkeletonLoader({ variant = "result", className }: SkeletonLoader
                 <div className="h-3 bg-muted animate-pulse rounded-md" />
                 <div className="h-3 bg-muted animate-pulse rounded-md w-4/5" />
               </div>
-            </div>
-          </div>
-
-          {/* Recommendations skeleton */}
-          <div className="bg-background/60 rounded-2xl p-4 border border-border/20">
-            <div className="h-4 bg-muted animate-pulse rounded-md w-32 mb-3" />
-            <div className="space-y-2">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 bg-muted animate-pulse rounded-full" />
-                  <div className="h-3 bg-muted animate-pulse rounded-md flex-1" />
-                </div>
-              ))}
             </div>
           </div>
         </div>

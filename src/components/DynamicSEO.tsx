@@ -54,10 +54,12 @@ export function DynamicSEO({ result }: DynamicSEOProps) {
       updateMetaTag("twitter:card", "summary_large_image");
       updateMetaTag("twitter:image", `${window.location.origin}/og-preview.png`);
     } else {
-      document.title = t('seo.defaultTitle');
-      const defaultDesc = t('seo.defaultDescription');
+      const fallbackTitle = "PetSafe Choice | Global AI Food Scanner for Dogs";
+      const fallbackDesc = "Instant toxicology screening and vet-approved alternatives. Stop guessing, start scanning.";
+      document.title = t('seo.defaultTitle', fallbackTitle);
+      const defaultDesc = t('seo.defaultDescription', fallbackDesc);
       updateMetaTag("description", defaultDesc);
-      updateMetaTag("og:title", t('seo.defaultTitle'));
+      updateMetaTag("og:title", t('seo.defaultTitle', fallbackTitle));
       updateMetaTag("og:description", defaultDesc);
       updateMetaTag("og:locale", lang === "es" ? "es_ES" : lang === "fr" ? "fr_FR" : lang === "de" ? "de_DE" : lang === "ar" ? "ar_AR" : "en_US");
       updateMetaTag("og:image", `${window.location.origin}/og-preview.png`);
