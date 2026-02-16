@@ -4,14 +4,30 @@ import { Mail, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { t } = useTranslation();
+  const location = useLocation();
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+
+  // Auto-scroll to form and focus message if coming from FAQ
+  useEffect(() => {
+    if (location.hash === '#contact-form') {
+      setTimeout(() => {
+        const formEl = document.getElementById('contact-form');
+        if (formEl) {
+          formEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          setTimeout(() => messageRef.current?.focus(), 500);
+        }
+      }, 100);
+    }
+  }, [location.hash]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,7 +113,7 @@ const Contact = () => {
             </div>
           </div>
 
-          <div className="bg-card rounded-2xl p-6 border border-border">
+          <div id="contact-form" className="bg-card rounded-2xl p-6 border border-border">
             <h3 className="text-xl font-semibold text-foreground mb-4">{t('contact.form.submit')}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
@@ -119,6 +135,7 @@ const Contact = () => {
               </div>
               <div>
                 <Textarea 
+                  ref={messageRef}
                   name="message"
                   placeholder={t('contact.form.messagePlaceholder')}
                   required 

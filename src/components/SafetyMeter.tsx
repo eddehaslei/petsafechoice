@@ -79,7 +79,7 @@ export function SafetyMeter({ safetyLevel }: SafetyMeterProps) {
         </svg>
         <span
           className={cn(
-            "text-xs font-bold tracking-widest mt-1",
+            "text-xs font-bold tracking-widest mt-3 mb-2",
             safetyLevel === "safe" && "text-safe",
             safetyLevel === "caution" && "text-caution",
             safetyLevel === "dangerous" && "text-danger"

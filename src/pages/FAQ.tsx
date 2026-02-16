@@ -55,7 +55,10 @@ const FAQ = () => {
         <div className="mt-8 text-center">
           <p className="text-muted-foreground">
             {t('faq.stillHaveQuestions')}{" "}
-            <Link to="/contact" className="text-primary hover:underline font-medium">
+            <Link 
+              to="/contact#contact-form" 
+              className="text-primary hover:underline font-medium"
+            >
               {t('faq.contactUs')}
             </Link>
           </p>
