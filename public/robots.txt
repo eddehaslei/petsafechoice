@@ -13,8 +13,8 @@ Allow: /
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://petsafechoice.lovable.app/sitemap.xml
+# Dynamic sitemap (auto-updates when new foods are added)
+Sitemap: https://yvznzqvzkoiommrzwufr.supabase.co/functions/v1/generate-sitemap
 
 # Crawl-delay for non-major bots
 User-agent: *
