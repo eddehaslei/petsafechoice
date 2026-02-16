@@ -134,6 +134,16 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
     return `https://www.amazon.com/s?k=${searchTerm}&tag=${tag}`;
   };
 
+  // Generate Amazon.com Global fallback URL (always English keywords)
+  const getGlobalFallbackUrl = () => {
+    const petWord = petType === 'dog' ? 'dog' : 'cat';
+    const tag = 'petsafechoice-20';
+    const lowerName = productName.toLowerCase().trim();
+    const englishName = REVERSE_TRANSLATIONS[lowerName] || productName;
+    const searchTerm = encodeURIComponent(`${englishName} ${petWord} treats`);
+    return `https://www.amazon.com/s?k=${searchTerm}&tag=${tag}`;
+  };
+
   return (
     <div className="flex flex-col items-center w-full gap-2">
       <button
@@ -146,6 +156,22 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
         <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
       </button>
       
+      {/* Regional fallback for Spanish users */}
+      {currentLanguage === 'es' && (
+        <a
+          href={getGlobalFallbackUrl()}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
+        >
+          ¿No lo encuentras? Ver en Amazon Global (.com)
+        </a>
+      )}
+
+      {/* Legal disclosure */}
+      <p className="text-[10px] text-muted-foreground/70 text-center mt-1">
+        Paid link. As an Amazon Associate I earn from qualifying purchases.
+      </p>
     </div>
   );
 }
