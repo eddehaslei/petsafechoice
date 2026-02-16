@@ -32,8 +32,14 @@ export function SocialShareCard({ data }: SocialShareCardProps) {
     }
   };
 
+  const { i18n } = useTranslation();
+  const lang = i18n.language.split("-")[0];
+  const foodSlug = data.food.toLowerCase().trim().replace(/\s+/g, "-");
+  
   const shareText = `${getSafetyEmoji()} ${t('share.isSafetyFor', { food: foodName, safety: getSafetyText(), petName })}`;
-  const shareUrl = typeof window !== "undefined" ? window.location.href : "";
+  const shareUrl = typeof window !== "undefined" 
+    ? `${window.location.origin}/${lang}/food/${encodeURIComponent(foodSlug)}`
+    : "";
   const siteName = "PetSafeChoice";
 
   const shareLinks = {

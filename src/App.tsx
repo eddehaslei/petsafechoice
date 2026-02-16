@@ -19,6 +19,7 @@ import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
+import FoodResult from "./pages/FoodResult";
 
 const queryClient = new QueryClient();
 
@@ -29,6 +30,7 @@ function AppInner() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/:lang/food/:foodName" element={<FoodResult />} />
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/contact" element={<Contact />} />
