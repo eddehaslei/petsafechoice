@@ -2,7 +2,7 @@ import { ShoppingBag, ExternalLink } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useSearchStore } from "@/stores/searchStore";
 
-// Common food name translations for button display
+// Common food name translations for button display (EN → ES)
 const FOOD_TRANSLATIONS_ES: Record<string, string> = {
   "apple": "Manzana",
   "banana": "Plátano",
@@ -49,6 +49,40 @@ const FOOD_TRANSLATIONS_ES: Record<string, string> = {
   "natural freeze-dried treats": "Snacks Liofilizados Naturales",
 };
 
+// Reverse translations: non-English food names → English (for Amazon.com Global search)
+const REVERSE_TRANSLATIONS: Record<string, string> = {
+  // Spanish → English
+  "manzana": "apple", "plátano": "banana", "platano": "banana",
+  "arándano": "blueberry", "arándanos": "blueberries",
+  "zanahoria": "carrot", "zanahorias": "carrots",
+  "pollo": "chicken", "huevo": "egg", "huevos": "eggs",
+  "pescado": "fish", "uvas": "grapes", "uva": "grape",
+  "carne": "meat", "leche": "milk", "cebolla": "onion", "cebollas": "onions",
+  "mantequilla de maní": "peanut butter", "calabaza": "pumpkin",
+  "arroz": "rice", "salmón": "salmon", "aceite de salmón": "salmon oil",
+  "espinaca": "spinach", "fresa": "strawberry", "fresas": "strawberries",
+  "batata": "sweet potato", "atún": "tuna", "pavo": "turkey",
+  "sandía": "watermelon", "sandia": "watermelon",
+  "yogur": "yogurt", "queso": "cheese", "carne de res": "beef",
+  "cerdo": "pork", "miel": "honey", "avena": "oatmeal",
+  "brócoli": "broccoli", "pepino": "cucumber", "coco": "coconut",
+  "aceite de coco": "coconut oil", "hígado": "liver", "camarones": "shrimp",
+  "galletas de algarrobo": "carob cookies", "algarrobo": "carob",
+  "snacks liofilizados naturales": "natural freeze-dried treats",
+  // French → English
+  "pomme": "apple", "poulet": "chicken",
+  "oeuf": "egg", "oeufs": "eggs", "poisson": "fish", "raisins": "grapes",
+  "viande": "meat", "lait": "milk", "oignon": "onion",
+  "riz": "rice", "saumon": "salmon", "dinde": "turkey",
+  "pastèque": "watermelon", "fromage": "cheese",
+  // German → English
+  "apfel": "apple", "hähnchen": "chicken",
+  "ei": "egg", "eier": "eggs", "fisch": "fish", "trauben": "grapes",
+  "fleisch": "meat", "milch": "milk", "zwiebel": "onion",
+  "reis": "rice", "lachs": "salmon", "truthahn": "turkey",
+  "wassermelone": "watermelon", "käse": "cheese", "honig": "honey",
+};
+
 interface AffiliateButtonProps {
   productName: string;
   affiliateUrl: string;
@@ -88,8 +122,9 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   // Always use English keywords for Amazon.com (Global) for better search results
   const getGlobalFallbackUrl = () => {
     const petWord = petType === 'dog' ? 'dog' : 'cat';
-    // Use the original English product name, not the translated one
-    const englishName = productName;
+    // Translate non-English product names to English for better Amazon.com results
+    const lowerName = productName.toLowerCase().trim();
+    const englishName = REVERSE_TRANSLATIONS[lowerName] || productName;
     const searchTerm = encodeURIComponent(`best ${englishName} ${petWord}`);
     return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
   };
