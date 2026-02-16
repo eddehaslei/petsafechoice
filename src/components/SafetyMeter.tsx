@@ -25,7 +25,7 @@ export function SafetyMeter({ safetyLevel }: SafetyMeterProps) {
     "hsl(var(--danger))";
 
   return (
-    <div className="w-full max-w-2xl mx-auto py-8 flex justify-center animate-fade-in">
+    <div className="w-full max-w-2xl mx-auto py-3 flex justify-center animate-fade-in">
       <div className="flex flex-col items-center">
         <svg viewBox="0 0 200 120" className="w-48 h-28">
           {/* Background arc */}
