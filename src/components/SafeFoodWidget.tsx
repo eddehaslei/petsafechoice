@@ -495,20 +495,6 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
     return (
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">
         <div className={`${containerBg} border-2 rounded-2xl overflow-hidden relative`}>
-          {/* Food Icon Section - PURE ICONS, NO PHOTOS */}
-          <div className={`relative w-full h-[120px] sm:h-[140px] bg-gradient-to-br ${getIconBgColor()} overflow-hidden flex items-center justify-center`}>
-            <div className="flex flex-col items-center justify-center">
-              <div className="p-4 rounded-2xl bg-background/60 shadow-sm border border-border/30 backdrop-blur-sm">
-                {getCategoryIcon()}
-              </div>
-              <span className="mt-3 text-sm font-semibold text-foreground capitalize">
-                {foodName}
-              </span>
-            </div>
-            {/* Decorative circles */}
-            <div className="absolute -top-6 -right-6 w-24 h-24 rounded-full bg-background/20" />
-            <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-background/20" />
-          </div>
 
           <div className="relative p-4 sm:p-5">
             <div className="flex items-center gap-3 mb-4 px-1">
