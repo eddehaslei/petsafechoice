@@ -401,6 +401,13 @@ const Index = () => {
                 {/* Safety Meter - Animated gauge */}
                 <SafetyMeter safetyLevel={result.safetyLevel} />
                 
+                {/* Affiliate Widget - HIGH VISIBILITY: directly under safety indicator */}
+                <SafeFoodWidget 
+                  foodName={result.food} 
+                  petType={result.petType}
+                  safetyLevel={result.safetyLevel}
+                />
+                
                 {/* Main Safety Result */}
                 <SafetyResult data={result} />
                 
@@ -442,13 +449,6 @@ const Index = () => {
                     />
                   </>
                 )}
-                
-                {/* Affiliate Widget - shows for ALL safety levels with safety intelligence */}
-                <SafeFoodWidget 
-                  foodName={result.food} 
-                  petType={result.petType}
-                  safetyLevel={result.safetyLevel}
-                />
                 
                 {/* Related Foods - drives engagement */}
                 <RelatedFoods 
