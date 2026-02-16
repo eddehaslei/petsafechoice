@@ -21,6 +21,7 @@ import Privacy from "./pages/Privacy";
 import NotFound from "./pages/NotFound";
 import Auth from "./pages/Auth";
 import FoodResult from "./pages/FoodResult";
+import FoodArticle from "./pages/FoodArticle";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,8 @@ function AppInner() {
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/:lang/food/:foodName" element={<FoodResult />} />
+        <Route path="/can-dogs-eat/:foodSlug" element={<FoodArticle />} />
+        <Route path="/can-cats-eat/:foodSlug" element={<FoodArticle />} />
         <Route path="/about" element={<About />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/contact" element={<Contact />} />

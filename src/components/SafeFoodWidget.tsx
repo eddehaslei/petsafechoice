@@ -522,8 +522,9 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
             </div>
 
             {isLoading ? (
-              <div className="flex items-center justify-center py-8">
-                <Loader2 className={`w-6 h-6 animate-spin ${loaderColor}`} />
+              <div className="space-y-3 py-4">
+                <div className="w-full h-14 rounded-2xl bg-muted animate-pulse" />
+                <div className="w-3/4 h-3 rounded bg-muted animate-pulse mx-auto" />
               </div>
             ) : affiliateLink ? (
               <AffiliateButton productName={affiliateLink.productName} affiliateUrl={affiliateLink.url} />
