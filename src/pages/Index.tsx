@@ -35,6 +35,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { sanitizeSearchQuery } from "@/lib/sanitize";
 import { detectFoodState, getFoodStateNote } from "@/lib/foodState";
+import { usePermalink } from "@/hooks/usePermalink";
 
 // Debounce helper for rate limiting - 1 second minimum between searches
 const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
@@ -55,7 +56,7 @@ const Index = () => {
   const { t, i18n } = useTranslation();
   const { addSearch } = useRecentSearches();
   
-  // Global state from Zustand store - persists across navigation
+  // Global state from Zustand store
   const {
     petType,
     result,
@@ -71,6 +72,9 @@ const Index = () => {
     getCachedResult,
     setCachedResult,
   } = useSearchStore();
+
+  // Permalink - updates URL to /[lang]/food/[food-name]
+  usePermalink(result);
 
   // Track if we should trigger auto-refresh on toggle changes
   const isFirstRender = useRef(true);
