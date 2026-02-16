@@ -32,14 +32,14 @@ interface SearchState {
   clearResult: () => void;
   
   // Cache actions - ZERO-LATENCY retrieval for species toggle
-  getCachedResult: (food: string, species: PetType) => SafetyResultData | null;
-  setCachedResult: (food: string, species: PetType, result: SafetyResultData) => void;
-  hasCachedResult: (food: string, species: PetType) => boolean;
+  getCachedResult: (food: string, species: PetType, language?: string) => SafetyResultData | null;
+  setCachedResult: (food: string, species: PetType, result: SafetyResultData, language?: string) => void;
+  hasCachedResult: (food: string, species: PetType, language?: string) => boolean;
   clearExpiredCache: () => void;
 }
 
-const createCacheKey = (food: string, species: PetType): string => 
-  `${food.toLowerCase().trim()}:${species}`;
+const createCacheKey = (food: string, species: PetType, language?: string): string => 
+  `${food.toLowerCase().trim()}:${species}:${language || 'en'}`;
 
 export const useSearchStore = create<SearchState>()(
   persist(
@@ -63,16 +63,14 @@ export const useSearchStore = create<SearchState>()(
       clearResult: () => set({ result: null, searchSource: null }),
       
       // Cache actions - with 24-hour expiry check
-      getCachedResult: (food, species) => {
-        const key = createCacheKey(food, species);
+      getCachedResult: (food, species, language) => {
+        const key = createCacheKey(food, species, language);
         const cached = get().resultsCache[key];
         
         if (!cached) return null;
         
-        // Check if cache is still valid (within 24 hours)
         const now = Date.now();
         if (now - cached.timestamp > CACHE_EXPIRY_MS) {
-          // Cache expired, remove it
           const { [key]: _, ...rest } = get().resultsCache;
           set({ resultsCache: rest });
           return null;
@@ -81,8 +79,8 @@ export const useSearchStore = create<SearchState>()(
         return cached.data;
       },
       
-      setCachedResult: (food, species, result) => {
-        const key = createCacheKey(food, species);
+      setCachedResult: (food, species, result, language) => {
+        const key = createCacheKey(food, species, language);
         set((state) => ({
           resultsCache: {
             ...state.resultsCache,
@@ -91,12 +89,11 @@ export const useSearchStore = create<SearchState>()(
         }));
       },
       
-      hasCachedResult: (food, species) => {
-        const key = createCacheKey(food, species);
+      hasCachedResult: (food, species, language) => {
+        const key = createCacheKey(food, species, language);
         const cached = get().resultsCache[key];
         if (!cached) return false;
         
-        // Check expiry
         const now = Date.now();
         return now - cached.timestamp <= CACHE_EXPIRY_MS;
       },
