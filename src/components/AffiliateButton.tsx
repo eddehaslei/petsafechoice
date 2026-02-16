@@ -94,7 +94,7 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   const currentLanguage = i18n.language?.split('-')[0] || 'en';
 
   const handleClick = () => {
-    window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
+    window.open(getAmazonUrl(), '_blank', 'noopener,noreferrer');
   };
 
   // Translate product name for display
@@ -118,26 +118,20 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
     ? `Ver ${displayName} para ${petLabel} en Amazon`
     : `Shop ${displayName} for ${petLabel}s on Amazon`;
 
-  // Generate Amazon.com fallback URL for non-English users
-  // ALWAYS use English keywords for Amazon.com (Global) for better search results
-  const getGlobalFallbackUrl = () => {
+  // Generate the correct Amazon URL based on language
+  const getAmazonUrl = () => {
     const petWord = petType === 'dog' ? 'dog' : 'cat';
-    const lowerName = productName.toLowerCase().trim();
-    
-    // IF amazon.com → use ONLY English keywords. No mixing.
-    let englishName = REVERSE_TRANSLATIONS[lowerName];
-    if (!englishName) {
-      // Try word-by-word translation
-      const words = lowerName.split(/\s+/);
-      const translated = words.map(w => REVERSE_TRANSLATIONS[w] || w);
-      englishName = translated.join(' ');
+    const tag = 'petsafechoice-20';
+
+    if (currentLanguage === 'es') {
+      // Spanish → amazon.es with Spanish keyword
+      const searchTerm = encodeURIComponent(`${displayName} ${petWord} treats`);
+      return `https://www.amazon.es/s?k=${searchTerm}&tag=${tag}`;
     }
-    
-    // Clean: capitalize first letter, use ONLY the English name
-    const cleanKeyword = englishName.charAt(0).toUpperCase() + englishName.slice(1);
-    // ABSOLUTE: English keyword only — never concatenate original + translation
-    const searchTerm = encodeURIComponent(`${cleanKeyword} ${petWord} treats`);
-    return `https://www.amazon.com/s?k=${searchTerm}&tag=petsafechoice-20`;
+
+    // English (and all others) → amazon.com with English keyword
+    const searchTerm = encodeURIComponent(`${productName} ${petWord} treats`);
+    return `https://www.amazon.com/s?k=${searchTerm}&tag=${tag}`;
   };
 
   return (
@@ -152,17 +146,6 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
         <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
       </button>
       
-      {/* Regional fallback for Spanish users */}
-      {currentLanguage === 'es' && (
-        <a
-          href={getGlobalFallbackUrl()}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2"
-        >
-          ¿No lo encuentras? Ver en Amazon Global (.com)
-        </a>
-      )}
     </div>
   );
 }
