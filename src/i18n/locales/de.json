@@ -250,5 +250,12 @@
     "success": "Danke! Wir werden dieses Lebensmittel bald überprüfen.",
     "error": "Anfrage fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "received": "Anfrage erhalten! Wir werden dieses Lebensmittel bald hinzufügen."
+  },
+  "notFound": {
+    "message": "Hoppla! Diese Seite existiert nicht.",
+    "backHome": "Zurück zur Startseite"
+  },
+  "rateLimit": {
+    "tooFast": "Du suchst zu schnell! Bitte warte einen Moment."
   }
 }

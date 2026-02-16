@@ -247,7 +247,7 @@ IMPORTANT RULES:
 3. Consider species-specific differences (dogs vs cats) carefully. For example, lilies are lethal to cats but generally non-toxic to dogs. Theobromine in chocolate is more dangerous for dogs. Taurine deficiency is a cat-specific concern.
 4. If a food is toxic, clearly state the toxic compounds and mechanisms
 5. Be specific about quantities and risk levels
-6. ONLY answer questions about food items. If the input is not a food, respond with safetyLevel "unknown".
+6. NON-FOOD ITEM GUARDRAIL: If the user searches for a non-food item (e.g., bleach, batteries, glass, rocks, medications, cleaning products, plastics, chemicals, coins, rubber, fabric), immediately flag it as "dangerous" with safetyLevel "dangerous". Do NOT attempt a nutritional analysis. Instead, warn that it is not a food and is extremely hazardous. Provide emergency vet contact advice in the summary and recommendations.
 7. CRITICAL: You MUST respond in ${targetLanguage}. All text fields (summary, details, symptoms, recommendations) must be written in ${targetLanguage}.
 8. COMPOUND/MIXED DISH ANALYSIS: If the food is a mixed dish (e.g., Pizza, Burrito, Fried Rice, Lasagna), you MUST deconstruct it into its common ingredients and specifically highlight any toxic components (Onion, Garlic, Xylitol, Nutmeg, Grapes, Chocolate, etc.). List the dangerous ingredients in the "ingredients" array with their toxicity noted.
 9. DOSE-RESPONSE: For "caution" level foods, include a "toxicityThreshold" field describing approximate dangerous dose per kg of body weight (e.g., "1g per kg body weight"). For safe foods, set it to null.

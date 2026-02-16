@@ -13,7 +13,7 @@ const rateLimitStore: Map<string, RateLimitEntry> = new Map();
 
 // Configuration
 const RATE_LIMITS = {
-  search: { maxRequests: 20, windowMs: 60 * 1000 },      // 20 searches per minute
+  search: { maxRequests: 5, windowMs: 60 * 1000 },       // 5 searches per minute
   affiliate: { maxRequests: 30, windowMs: 60 * 1000 },   // 30 affiliate fetches per minute
   log: { maxRequests: 30, windowMs: 60 * 1000 },         // 30 logs per minute
 } as const;

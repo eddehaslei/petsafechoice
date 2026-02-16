@@ -250,5 +250,12 @@
     "success": "Merci ! Nous examinerons cet aliment bientôt.",
     "error": "Échec de l'envoi. Veuillez réessayer.",
     "received": "Demande reçue ! Nous ajouterons cet aliment bientôt."
+  },
+  "notFound": {
+    "message": "Oups ! Cette page n'existe pas.",
+    "backHome": "Retour à l'accueil"
+  },
+  "rateLimit": {
+    "tooFast": "Vous cherchez trop vite ! Veuillez patienter un instant."
   }
 }

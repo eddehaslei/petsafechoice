@@ -38,7 +38,7 @@ import { detectFoodState, getFoodStateNote } from "@/lib/foodState";
 import { usePermalink } from "@/hooks/usePermalink";
 
 // Debounce helper for rate limiting - 1 second minimum between searches
-const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
+const useDebounce = (callback: (...args: any[]) => void, delay: number, rateLimitMessage?: string) => {
   const lastCall = useRef<number>(0);
   
   return useCallback((...args: any[]) => {
@@ -47,9 +47,9 @@ const useDebounce = (callback: (...args: any[]) => void, delay: number) => {
       lastCall.current = now;
       callback(...args);
     } else {
-      toast.info("Please wait a moment before searching again.");
+      toast.info(rateLimitMessage || "Please wait a moment before searching again.");
     }
-  }, [callback, delay]);
+  }, [callback, delay, rateLimitMessage]);
 };
 
 const Index = () => {
@@ -182,7 +182,7 @@ const Index = () => {
   }, [petType, i18n.language, setIsLoading, setResult, setSearchSource, setLastSearchedFood, addSearch, t, getCachedResult, setCachedResult, logSearch]);
 
   // Debounced search - 1 second minimum between searches
-  const handleSearch = useDebounce(handleSearchCore, 1000);
+  const handleSearch = useDebounce(handleSearchCore, 1000, t('rateLimit.tooFast'));
 
   // INSTANT toggle switch - use cache if available (target: <100ms)
   useEffect(() => {
