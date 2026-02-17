@@ -311,7 +311,7 @@ const Index = () => {
         <div className="absolute inset-x-0 top-0 h-[60vh] overflow-hidden pointer-events-none" aria-hidden="true">
           <div
             className="absolute inset-0 bg-cover bg-top"
-            style={{ backgroundImage: "url('/images/pet-bg.jpg')", opacity: 0.15, filter: "blur(1px) brightness(1.1)" }}
+            style={{ backgroundImage: "url('/images/pet-bg.jpg')", opacity: 0.20, filter: "blur(1px) brightness(1.1)" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
         </div>
