@@ -9,6 +9,15 @@ export const Footer = () => {
   return (
     <footer className="py-8 border-t border-border/50 bg-card/30">
       <div className="container max-w-4xl mx-auto px-4">
+
+        {/* About Us Section */}
+        <div className="mb-8 pb-8 border-b border-border/40">
+          <h4 className="font-semibold text-foreground mb-2 text-sm">{t('footer.aboutTitle')}</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+            {t('footer.aboutText')}
+          </p>
+        </div>
+
         {/* Newsletter Signup */}
         <div className="mb-8">
           <NewsletterSignup />
