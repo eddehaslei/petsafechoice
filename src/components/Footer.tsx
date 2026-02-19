@@ -9,6 +9,15 @@ export const Footer = () => {
   return (
     <footer className="py-8 border-t border-border/50 bg-card/30">
       <div className="container max-w-4xl mx-auto px-4">
+
+        {/* About Us Section */}
+        <div className="mb-8 pb-8 border-b border-border/40">
+          <h4 className="font-semibold text-foreground mb-2 text-sm">{t('footer.aboutTitle')}</h4>
+          <p className="text-sm text-muted-foreground leading-relaxed max-w-2xl">
+            {t('footer.aboutText')}
+          </p>
+        </div>
+
         {/* Newsletter Signup */}
         <div className="mb-8">
           <NewsletterSignup />
@@ -77,21 +86,22 @@ export const Footer = () => {
           </div>
         </div>
         
-        {/* Medical Disclaimer Banner - Phase 20 Legal Requirement */}
-        <div className="py-4 px-4 bg-muted/50 rounded-lg border border-border/50 mb-6">
-          <p className="text-xs text-muted-foreground text-center leading-relaxed">
-            <strong className="text-foreground">{t('footer.disclaimerTitle', 'Medical Disclaimer')}:</strong>{' '}
-            {t('footer.disclaimerText', 'PetSafeChoice is for educational use only. Always consult a licensed veterinarian before changing your pet\'s diet or in an emergency.')}{' '}
+        {/* Legal & Medical Disclaimer */}
+        <div className="py-4 px-4 bg-muted/50 rounded-lg border border-border/50 mb-4">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-foreground">{t('footer.disclaimerTitle')}:</strong>{' '}
+            {t('footer.disclaimerText')}{' '}
             <Link to="/disclaimer" className="text-primary hover:underline font-medium">
-              {t('footer.readMore', 'Read full disclaimer →')}
+              {t('footer.readMore')}
             </Link>
           </p>
         </div>
 
         {/* Amazon Affiliate Disclosure */}
-        <div className="py-3 px-4 bg-background/50 rounded-lg border border-border/30 mb-6">
-          <p className="text-[10px] text-muted-foreground/70 text-center leading-relaxed">
-            {t('footer.affiliateDisclosure', 'As an Amazon Associate I earn from qualifying purchases. Product prices and availability are accurate as of the date/time indicated and are subject to change.')}
+        <div className="py-3 px-4 bg-sage/10 rounded-lg border border-sage/20 mb-6">
+          <p className="text-xs text-muted-foreground leading-relaxed">
+            <strong className="text-foreground">{t('footer.affiliateTitle')}:</strong>{' '}
+            {t('footer.affiliateDisclosure')}
           </p>
         </div>
 

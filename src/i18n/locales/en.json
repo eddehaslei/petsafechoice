@@ -29,10 +29,13 @@
     "privacy": "Privacy",
     "terms": "Terms",
     "disclaimer": "Disclaimer",
+    "aboutTitle": "About PetSafe Choice",
+    "aboutText": "At PetSafe Choice, we believe every pet deserves a long, healthy life. Our mission is to empower pet owners with instant, AI-driven nutritional guidance. By combining veterinary-backed data with cutting-edge technology, we provide a real-time safety gauge to protect your furry family members from hidden kitchen dangers.",
     "disclaimerTitle": "Medical Disclaimer",
-    "disclaimerText": "PetSafeChoice is for educational use only. Always consult a licensed veterinarian before changing your pet's diet or in an emergency.",
+    "disclaimerText": "PetSafe Choice provides information for educational purposes only. Our AI-generated results are not a substitute for professional veterinary advice, diagnosis, or treatment. Always seek the advice of your veterinarian with any questions regarding a medical condition. If you suspect your pet has ingested something dangerous, contact an emergency vet immediately.",
     "readMore": "Read full disclaimer →",
-    "affiliateDisclosure": "As an Amazon Associate I earn from qualifying purchases. Product prices and availability are accurate as of the date/time indicated and are subject to change."
+    "affiliateTitle": "Amazon Affiliate Disclosure",
+    "affiliateDisclosure": "As an Amazon Associate, PetSafe Choice earns from qualifying purchases. When you click our recommended 'Safe Alternative' links, we may receive a small commission at no extra cost to you. This helps us keep our safety database free for pet parents worldwide."
   },
   "vetBadge": {
     "verified": "Vet-Verified",
