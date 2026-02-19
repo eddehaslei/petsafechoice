@@ -530,12 +530,6 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
               <AffiliateButton productName={affiliateLink.productName} affiliateUrl={affiliateLink.url} />
             ) : null}
 
-            <p className="mt-4 px-2 sm:px-0 text-xs text-muted-foreground text-center leading-relaxed">
-              {t('safeFoodWidget.disclosure')}
-            </p>
-            <p className="mt-2 px-2 sm:px-0 text-[10px] text-muted-foreground/60 text-center leading-relaxed">
-              {t('safeFoodWidget.amazonDisclosure')}
-            </p>
           </div>
         </div>
       </div>
