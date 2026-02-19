@@ -486,11 +486,23 @@ export const SafeFoodWidget = forwardRef<HTMLDivElement, SafeFoodWidgetProps>(
       };
     }, [foodName, isDangerous, currentLanguage, petType]);
 
-    // Dynamic styling based on safety
-    const containerBg = isDangerous ? "bg-primary/10 border-primary/30" : "bg-safe/10 border-safe/30";
-    const iconBg = isDangerous ? "bg-primary/20" : "bg-safe/20";
-    const iconColor = isDangerous ? "text-primary" : "text-safe";
-    const loaderColor = isDangerous ? "text-primary" : "text-safe";
+    // Dynamic styling based on safety — matches the 3-state color system (safe/caution/dangerous)
+    const containerBg = isDangerous
+      ? "bg-danger/10 border-danger/30"
+      : isCaution
+      ? "bg-caution/10 border-caution/30"
+      : "bg-safe/10 border-safe/30";
+    const iconBg = isDangerous
+      ? "bg-danger/20"
+      : isCaution
+      ? "bg-caution/20"
+      : "bg-safe/20";
+    const iconColor = isDangerous
+      ? "text-danger"
+      : isCaution
+      ? "text-caution"
+      : "text-safe";
+    const loaderColor = iconColor;
 
     return (
       <div ref={ref} className="w-full max-w-2xl mx-auto mt-6 px-2 sm:px-0 animate-slide-up">

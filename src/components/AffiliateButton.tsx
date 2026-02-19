@@ -94,10 +94,11 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   const currentLanguage = i18n.language?.split('-')[0] || 'en';
 
   const handleClick = () => {
-    window.open(getAmazonUrl(), '_blank', 'noopener,noreferrer');
+    // Use the pre-computed smart URL passed from SafeFoodWidget (category-aware logic)
+    window.open(affiliateUrl, '_blank', 'noopener,noreferrer');
   };
 
-  // Translate product name for display
+  // Translate product name for display only
   const getDisplayName = () => {
     if (currentLanguage === 'es') {
       const lowerName = productName.toLowerCase().trim();
@@ -107,7 +108,7 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   };
 
   const displayName = getDisplayName();
-  
+
   // Get pet type label
   const petLabel = currentLanguage === 'es'
     ? (petType === 'dog' ? 'Perro' : 'Gato')
@@ -117,22 +118,6 @@ export function AffiliateButton({ productName, affiliateUrl }: AffiliateButtonPr
   const buttonText = currentLanguage === 'es'
     ? `Ver ${displayName} para ${petLabel} en Amazon`
     : `Shop ${displayName} for ${petLabel}s on Amazon`;
-
-  // Generate the correct Amazon URL based on language
-  const getAmazonUrl = () => {
-    const petWord = petType === 'dog' ? 'dog' : 'cat';
-    const tag = 'petsafechoice-20';
-
-    if (currentLanguage === 'es') {
-      // Spanish → amazon.es with Spanish keyword
-      const searchTerm = encodeURIComponent(`${displayName} ${petWord} treats`);
-      return `https://www.amazon.es/s?k=${searchTerm}&tag=${tag}`;
-    }
-
-    // English (and all others) → amazon.com with English keyword
-    const searchTerm = encodeURIComponent(`${productName} ${petWord} treats`);
-    return `https://www.amazon.com/s?k=${searchTerm}&tag=${tag}`;
-  };
 
 
 
