@@ -161,7 +161,7 @@ const SafeFoods = () => {
                       )}
                     </div>
                     <a
-                      href="https://amazon.com"
+                      href={buildAmazonAffiliateUrl(food.name, "dog", countryCode)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-colors hover:bg-[#E64A19]/5 whitespace-nowrap"
