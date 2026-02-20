@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+import { Heart, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { NewsletterSignup } from "./NewsletterSignup";
