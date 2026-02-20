@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { useGeoLocation } from "@/hooks/useGeoLocation";
+import { buildAmazonAffiliateUrl } from "@/lib/amazonAffiliateUrl";
 
 interface FoodItem {
   name: string;
@@ -86,6 +88,7 @@ const SafeFoods = () => {
   const [dogItemsToShow, setDogItemsToShow] = useState(INITIAL_ITEMS);
   const [catItemsToShow, setCatItemsToShow] = useState(INITIAL_ITEMS);
   const { t } = useTranslation();
+  const { countryCode } = useGeoLocation();
 
   const handleShowMoreDogs = () => {
     setDogItemsToShow(prev => Math.min(prev + LOAD_MORE_COUNT, dogSafeFoods.length));
@@ -158,7 +161,7 @@ const SafeFoods = () => {
                       )}
                     </div>
                     <a
-                      href="https://amazon.com"
+                      href={buildAmazonAffiliateUrl(food.name, "dog", countryCode)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-colors hover:bg-[#E64A19]/5 whitespace-nowrap"
@@ -218,7 +221,7 @@ const SafeFoods = () => {
                       )}
                     </div>
                     <a
-                      href="https://amazon.com"
+                      href={buildAmazonAffiliateUrl(food.name, "cat", countryCode)}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-colors hover:bg-[#E64A19]/5 whitespace-nowrap"
