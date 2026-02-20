@@ -5,6 +5,8 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
+import { useGeoLocation } from "@/hooks/useGeoLocation";
+import { buildAmazonAffiliateUrl } from "@/lib/amazonAffiliateUrl";
 
 interface FoodItem {
   name: string;
