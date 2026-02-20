@@ -1,6 +1,6 @@
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Dog, Cat, Check, ChevronDown } from "lucide-react";
+import { Dog, Cat, Check, ChevronDown, ExternalLink } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useTranslation } from "react-i18next";
@@ -142,7 +142,7 @@ const SafeFoods = () => {
                 {visibleDogFoods.map((food, index) => (
                   <div 
                     key={food.name}
-                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
                   >
                     <span className="flex-shrink-0 w-8 h-8 bg-safe/10 rounded-full flex items-center justify-center text-sm font-semibold text-safe">
                       {index + 1}
@@ -157,6 +157,16 @@ const SafeFoods = () => {
                         </p>
                       )}
                     </div>
+                    <a
+                      href="https://amazon.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-colors hover:bg-[#E64A19]/5 whitespace-nowrap"
+                      style={{ color: '#E64A19', borderColor: '#E64A19' }}
+                    >
+                      Buy on Amazon
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   </div>
                 ))}
               </div>
@@ -192,7 +202,7 @@ const SafeFoods = () => {
                 {visibleCatFoods.map((food, index) => (
                   <div 
                     key={food.name}
-                    className="flex items-start gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
+                    className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 p-4 bg-background rounded-xl border border-border/50 hover:border-safe/30 transition-colors"
                   >
                     <span className="flex-shrink-0 w-8 h-8 bg-safe/10 rounded-full flex items-center justify-center text-sm font-semibold text-safe">
                       {index + 1}
@@ -207,6 +217,16 @@ const SafeFoods = () => {
                         </p>
                       )}
                     </div>
+                    <a
+                      href="https://amazon.com"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-semibold border transition-colors hover:bg-[#E64A19]/5 whitespace-nowrap"
+                      style={{ color: '#E64A19', borderColor: '#E64A19' }}
+                    >
+                      Buy on Amazon
+                      <ExternalLink className="w-3.5 h-3.5" />
+                    </a>
                   </div>
                 ))}
               </div>
