@@ -105,11 +105,20 @@ export const Footer = () => {
           </p>
         </div>
 
-        <div className="pt-6 border-t border-border/50 text-center">
+        <div className="pt-6 border-t border-border/50 text-center space-y-3">
+          <a
+            href="https://www.instagram.com/petsafechoice"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-primary/30 text-primary hover:bg-primary/10 transition-colors text-sm font-medium"
+          >
+            <Instagram className="w-4 h-4" />
+            Follow us on Instagram
+          </a>
           <p className="text-sm text-muted-foreground">
             {t('common.madeWithLove')} <Heart className="w-4 h-4 inline text-primary" /> {t('common.forPets')}
           </p>
-          <p className="text-xs text-muted-foreground/60 mt-2">
+          <p className="text-xs text-muted-foreground/60">
             © {new Date().getFullYear()} {t('common.appName')} {t('common.allRightsReserved')}
           </p>
         </div>
