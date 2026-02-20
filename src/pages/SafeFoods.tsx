@@ -88,6 +88,7 @@ const SafeFoods = () => {
   const [dogItemsToShow, setDogItemsToShow] = useState(INITIAL_ITEMS);
   const [catItemsToShow, setCatItemsToShow] = useState(INITIAL_ITEMS);
   const { t } = useTranslation();
+  const { countryCode } = useGeoLocation();
 
   const handleShowMoreDogs = () => {
     setDogItemsToShow(prev => Math.min(prev + LOAD_MORE_COUNT, dogSafeFoods.length));
