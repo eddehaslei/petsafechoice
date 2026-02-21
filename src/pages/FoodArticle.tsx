@@ -21,10 +21,8 @@ interface FoodData {
   safety_rating: "safe" | "caution" | "toxic";
   short_answer: string;
   long_desc: string | null;
-  benefits: string[] | null;
-  risks: string[] | null;
-  serving_tips: string | null;
-  updated_at: string;
+  category: string | null;
+  created_at: string;
 }
 
 const safetyMap: Record<string, SafetyLevel> = {
