@@ -21,10 +21,8 @@ interface FoodData {
   safety_rating: "safe" | "caution" | "toxic";
   short_answer: string;
   long_desc: string | null;
-  benefits: string[] | null;
-  risks: string[] | null;
-  serving_tips: string | null;
-  updated_at: string;
+  category: string | null;
+  created_at: string;
 }
 
 const safetyMap: Record<string, SafetyLevel> = {
@@ -54,13 +52,14 @@ export default function FoodArticle() {
         .from("foods")
         .select("*")
         .ilike("name", foodName)
-        .or(`species.eq.${petType},species.eq.both`)
+        .in("species", [petType, "both"])
+        .limit(1)
         .maybeSingle();
 
       if (error || !data) {
         setNotFound(true);
       } else {
-        setFood(data as FoodData);
+        setFood(data as unknown as FoodData);
       }
       setLoading(false);
     };
@@ -91,8 +90,8 @@ export default function FoodArticle() {
     safetyLevel,
     summary: food.short_answer,
     details: food.long_desc || "",
-    symptoms: food.risks || [],
-    recommendations: food.benefits || [],
+    symptoms: [],
+    recommendations: [],
     ingredients: [],
     toxicityThreshold: null,
     source: { name: "PetSafeChoice Database", url: "https://petsafechoice.lovable.app" },
@@ -144,7 +143,7 @@ export default function FoodArticle() {
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-6">
               <span className="inline-flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                Last Updated: {new Date(food.updated_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                Last Updated: {new Date(food.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
               </span>
               <VetVerifiedBadge variant="compact" />
             </div>
@@ -172,51 +171,6 @@ export default function FoodArticle() {
               )}
             </div>
 
-            {/* Benefits */}
-            {food.benefits && food.benefits.length > 0 && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-safe" />
-                  Benefits
-                </h2>
-                <ul className="space-y-2">
-                  {food.benefits.map((b, i) => (
-                    <li key={i} className="flex items-start gap-2 text-foreground/80">
-                      <span className="text-safe mt-1">✓</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {/* Risks */}
-            {food.risks && food.risks.length > 0 && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3 flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-caution" />
-                  Risks & Warnings
-                </h2>
-                <ul className="space-y-2">
-                  {food.risks.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-foreground/80">
-                      <span className="text-caution mt-1">⚠</span>
-                      {r}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {/* Serving Tips */}
-            {food.serving_tips && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3">🍽 Vet Tips for Serving</h2>
-                <p className="text-foreground/80 leading-relaxed bg-accent/30 p-4 rounded-xl">
-                  {food.serving_tips}
-                </p>
-              </section>
-            )}
 
             {/* Source */}
             <SourceCitation source={{ name: "PetSafeChoice Database", url: "https://petsafechoice.lovable.app" }} />
