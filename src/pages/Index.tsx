@@ -361,24 +361,9 @@ const Index = () => {
           <FoodSearch onSearch={(food) => handleSearch(food, "search")} isLoading={isLoading} />
         </div>
 
-        {/* Popular Foods */}
+        {/* Popular Food Safety Guides & Trending */}
         {!result && !isLoading && (
           <>
-            <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <p className="text-sm text-muted-foreground mb-3">{t('common.popularSearches')}</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
-                  <button
-                    key={food}
-                    onClick={() => handleSearch(food, "search")}
-                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5 min-h-[48px]"
-                  >
-                    {food}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
             {/* Popular Food Safety Guides */}
             <div className="mt-10 mb-8 animate-fade-in" style={{ animationDelay: "0.35s" }}>
               <h2 className="text-xl font-heading font-bold text-foreground text-center mb-4">
