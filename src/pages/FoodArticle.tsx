@@ -59,7 +59,7 @@ export default function FoodArticle() {
       if (error || !data) {
         setNotFound(true);
       } else {
-        setFood(data as FoodData);
+        setFood(data as unknown as FoodData);
       }
       setLoading(false);
     };
