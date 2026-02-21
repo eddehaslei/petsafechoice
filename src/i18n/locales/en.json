@@ -337,5 +337,20 @@
   },
   "rateLimit": {
     "tooFast": "You're searching fast! Please wait a moment."
+  },
+  "trends": {
+    "title": "🔥 Trending in 2026",
+    "salmonOil": {
+      "title": "Salmon Oil",
+      "desc": "Rich in Omega-3 fatty acids for coat health and joint support."
+    },
+    "cbd": {
+      "title": "CBD for Pets",
+      "desc": "Growing interest in pet-safe CBD for anxiety and pain management."
+    },
+    "rawDiet": {
+      "title": "Raw & Air-Dried Diets",
+      "desc": "Minimally processed foods gaining popularity among pet parents."
+    }
   }
 }

@@ -305,7 +305,8 @@ const Index = () => {
       {/* JSON-LD Schema for Google rich results */}
       <JsonLdSchema result={result} />
 
-      {/* Hero Background - warm gradient */}
+      {/* Decorative glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(234,88,12,0.07),transparent)] pointer-events-none" />
       
       <Header />
       

@@ -143,7 +143,7 @@ export function FoodSearch({ onSearch, isLoading }: FoodSearchProps) {
           type="submit"
           disabled={isLoading || !query.trim()}
           aria-label={t('search.buttonAriaLabel', 'Search for food safety information')}
-          className="w-full sm:w-auto sm:mx-auto h-12 min-h-[48px] px-10 rounded-2xl font-heading font-bold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
+          className="w-full sm:w-auto sm:mx-auto h-12 min-h-[48px] px-10 rounded-2xl bg-primary text-white font-heading font-semibold text-base shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-0.5"
         >
           {isLoading ? (
             <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />

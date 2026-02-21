@@ -334,5 +334,20 @@
   },
   "rateLimit": {
     "tooFast": "¡Estás buscando muy rápido! Espera un momento."
+  },
+  "trends": {
+    "title": "🔥 Tendencias en 2026",
+    "salmonOil": {
+      "title": "Aceite de Salmón",
+      "desc": "Rico en ácidos grasos Omega-3 para la salud del pelaje y el soporte articular."
+    },
+    "cbd": {
+      "title": "CBD para Mascotas",
+      "desc": "Creciente interés en CBD seguro para mascotas contra la ansiedad y el dolor."
+    },
+    "rawDiet": {
+      "title": "Dietas Crudas y Deshidratadas",
+      "desc": "Alimentos mínimamente procesados cada vez más populares entre los dueños de mascotas."
+    }
   }
 }
