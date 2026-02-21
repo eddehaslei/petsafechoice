@@ -54,7 +54,7 @@ export const Header = () => {
             onClick={handleGoHome}
             aria-label="PetSafeChoice - Go to homepage"
           >
-            <PawPrint className="h-5 w-5" aria-hidden="true" />
+            <img src={logoImg} alt="PetSafeChoice logo" className="h-8 w-auto" aria-hidden="true" />
             <span className="hidden sm:inline">PetSafeChoice</span>
           </Button>
 
