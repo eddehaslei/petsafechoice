@@ -221,6 +221,30 @@ export type Database = {
         }
         Relationships: []
       }
+      ui_translations: {
+        Row: {
+          created_at: string
+          id: string
+          language_code: string
+          language_name: string
+          translations: Json
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          language_code: string
+          language_name: string
+          translations: Json
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          language_code?: string
+          language_name?: string
+          translations?: Json
+        }
+        Relationships: []
+      }
       vets: {
         Row: {
           city: string
