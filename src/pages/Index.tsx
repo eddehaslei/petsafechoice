@@ -426,11 +426,6 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Trending Safety Tips - Homepage Authority Content */}
-            <TrendingSafetyTips onTopicClick={(keyword) => handleSearch(keyword, "trending")} />
-            
-            {/* 2026 Trends Section */}
-            <TrendingIn2026 />
           </>
         )}
 
