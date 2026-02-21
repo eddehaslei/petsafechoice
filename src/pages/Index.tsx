@@ -305,16 +305,7 @@ const Index = () => {
       {/* JSON-LD Schema for Google rich results */}
       <JsonLdSchema result={result} />
 
-      {/* Hero Background Image - only on landing */}
-      {!result && !isLoading && (
-        <div className="absolute inset-x-0 top-0 h-[60vh] overflow-hidden pointer-events-none" aria-hidden="true">
-          <div
-            className="absolute inset-0 bg-cover bg-top"
-            style={{ backgroundImage: "url('/images/pet-bg.jpg')", opacity: 0.20, filter: "blur(1px) brightness(1.1)" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-        </div>
-      )}
+      {/* Hero Background - warm gradient */}
       
       <Header />
       
