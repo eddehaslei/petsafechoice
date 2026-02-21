@@ -7,21 +7,39 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { languages, LanguageCode } from '@/i18n';
 import { useEffect } from 'react';
+
+const ALL_LANGUAGES = [
+  { code: 'en', name: 'English', dir: 'ltr' },
+  { code: 'es', name: 'Español', dir: 'ltr' },
+  { code: 'fr', name: 'Français', dir: 'ltr' },
+  { code: 'de', name: 'Deutsch', dir: 'ltr' },
+  { code: 'ar', name: 'العربية', dir: 'rtl' },
+  { code: 'tr', name: 'Türkçe', dir: 'ltr' },
+  { code: 'it', name: 'Italiano', dir: 'ltr' },
+  { code: 'pt', name: 'Português', dir: 'ltr' },
+  { code: 'nl', name: 'Nederlands', dir: 'ltr' },
+  { code: 'pl', name: 'Polski', dir: 'ltr' },
+  { code: 'ru', name: 'Русский', dir: 'ltr' },
+  { code: 'ja', name: '日本語', dir: 'ltr' },
+  { code: 'ko', name: '한국어', dir: 'ltr' },
+  { code: 'zh', name: '中文', dir: 'ltr' },
+  { code: 'sv', name: 'Svenska', dir: 'ltr' },
+  { code: 'ro', name: 'Română', dir: 'ltr' },
+  { code: 'hi', name: 'हिन्दी', dir: 'ltr' },
+  { code: 'id', name: 'Bahasa Indonesia', dir: 'ltr' },
+];
 
 export const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
 
-  const currentLanguage = languages.find(lang => lang.code === i18n.language) || languages[0];
+  const currentLanguage = ALL_LANGUAGES.find(lang => lang.code === i18n.language) || ALL_LANGUAGES[0];
 
-  const handleLanguageChange = (langCode: LanguageCode) => {
+  const handleLanguageChange = (langCode: string) => {
     i18n.changeLanguage(langCode);
-    // Mark that user has manually selected a language
     localStorage.setItem('languageManuallySet', 'true');
   };
 
-  // Update document direction when language changes
   useEffect(() => {
     const dir = currentLanguage.dir;
     document.documentElement.dir = dir;
@@ -36,8 +54,8 @@ export const LanguageSwitcher = () => {
           <span className="hidden sm:inline">{currentLanguage.name}</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        {languages.map((lang) => (
+      <DropdownMenuContent align="end" className="max-h-80 overflow-y-auto">
+        {ALL_LANGUAGES.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}

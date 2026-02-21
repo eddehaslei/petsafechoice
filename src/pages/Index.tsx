@@ -402,8 +402,10 @@ const Index = () => {
                   View all food guides →
                 </a>
               </div>
-            </div>
+             </div>
 
+            {/* Trending in 2026 */}
+            <TrendingIn2026 />
           </>
         )}
 

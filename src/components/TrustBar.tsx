@@ -7,16 +7,17 @@ interface TrustBarProps {
 }
 
 export function TrustBar({ 
-  author = "PetSafeChoice Team"
+  author
 }: TrustBarProps) {
   const { t } = useTranslation();
+  const authorName = author || t('trustBar.authorName', 'PetSafeChoice Team');
 
   return (
     <div className="inline-flex flex-wrap items-center justify-center gap-3 text-sm text-muted-foreground py-2 px-3 bg-secondary/50 rounded-lg border border-border/50">
       <div className="flex items-center gap-1.5">
         <Award className="w-4 h-4 text-primary" />
         <span>
-          {t('trustBar.writtenBy', { author })}
+          {t('trustBar.writtenBy', { author: authorName })}
         </span>
       </div>
       <span className="hidden sm:inline text-border/70">|</span>
