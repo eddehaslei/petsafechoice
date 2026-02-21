@@ -373,10 +373,8 @@ Always respond with ONLY the JSON object, no additional text. Remember: ALL text
             safety_rating: dbSafetyRating,
             short_answer: (safetyData.summary || "").slice(0, 500),
             long_desc: (safetyData.details || "").slice(0, 2000),
-            risks: (safetyData.symptoms || []).slice(0, 10),
-            benefits: [],
-            serving_tips: (safetyData.recommendations || []).slice(0, 5).join(". ").slice(0, 1000) || null,
-          }, { 
+            category: 'general'
+          }, {
             onConflict: 'name,species',
             ignoreDuplicates: false 
           });
