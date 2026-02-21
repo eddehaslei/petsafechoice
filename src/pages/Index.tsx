@@ -26,6 +26,7 @@ import { IngredientBreakdown } from "@/components/IngredientBreakdown";
 import { SourceCitation } from "@/components/SourceCitation";
 import { RequestFood } from "@/components/RequestFood";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { TrendingIn2026 } from "@/components/TrendingIn2026";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -283,7 +284,7 @@ const Index = () => {
 
   // Dynamic background based on safety level
   const getBackgroundClass = () => {
-    if (!result) return "hero-gradient";
+    if (!result) return "bg-gradient-to-b from-orange-50 via-amber-50 to-background";
     switch (result.safetyLevel) {
       case "safe":
         return "bg-gradient-to-b from-safe-bg via-background to-background";
@@ -304,24 +305,16 @@ const Index = () => {
       {/* JSON-LD Schema for Google rich results */}
       <JsonLdSchema result={result} />
 
-      {/* Hero Background Image - only on landing */}
-      {!result && !isLoading && (
-        <div className="absolute inset-x-0 top-0 h-[60vh] overflow-hidden pointer-events-none" aria-hidden="true">
-          <div
-            className="absolute inset-0 bg-cover bg-top"
-            style={{ backgroundImage: "url('/images/pet-bg.jpg')", opacity: 0.20, filter: "blur(1px) brightness(1.1)" }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-background" />
-        </div>
-      )}
+      {/* Hero Background - warm gradient */}
       
       <Header />
       
       {/* Hero Section */}
-      <main className="flex-1 container max-w-4xl mx-auto px-4 pt-4 pb-8 relative z-10">
+      <main className="flex-1 container max-w-4xl mx-auto px-4 py-16 md:py-24 relative z-10">
         {/* Header - show default or dynamic based on result */}
         {!result && !isLoading ? (
           <div className="text-center mb-8 animate-fade-in">
+            <p className="text-2xl mb-4 opacity-60">🐕 🐈 🐾</p>
             <div className="inline-flex items-center justify-center gap-3 mb-4">
               <div className="relative">
                 <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
@@ -368,24 +361,9 @@ const Index = () => {
           <FoodSearch onSearch={(food) => handleSearch(food, "search")} isLoading={isLoading} />
         </div>
 
-        {/* Popular Foods */}
+        {/* Popular Food Safety Guides & Trending */}
         {!result && !isLoading && (
           <>
-            <div className="mt-8 text-center animate-fade-in" style={{ animationDelay: "0.3s" }}>
-              <p className="text-sm text-muted-foreground mb-3">{t('common.popularSearches')}</p>
-              <div className="flex flex-wrap justify-center gap-2">
-                {["Chocolate", "Grapes", "Chicken", "Peanut Butter", "Bananas", "Avocado"].map((food) => (
-                  <button
-                    key={food}
-                    onClick={() => handleSearch(food, "search")}
-                    className="px-4 py-2 bg-card hover:bg-accent rounded-full text-sm font-medium text-foreground border border-border hover:border-primary/30 transition-all duration-200 hover:-translate-y-0.5 min-h-[48px]"
-                  >
-                    {food}
-                  </button>
-                ))}
-              </div>
-            </div>
-            
             {/* Popular Food Safety Guides */}
             <div className="mt-10 mb-8 animate-fade-in" style={{ animationDelay: "0.35s" }}>
               <h2 className="text-xl font-heading font-bold text-foreground text-center mb-4">
@@ -424,8 +402,10 @@ const Index = () => {
                   View all food guides →
                 </a>
               </div>
-            </div>
+             </div>
 
+            {/* Trending in 2026 */}
+            <TrendingIn2026 />
           </>
         )}
 

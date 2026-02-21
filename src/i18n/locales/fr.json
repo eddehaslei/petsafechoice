@@ -7,6 +7,12 @@
     "forPets": "pour les animaux partout",
     "allRightsReserved": "Tous droits réservés."
   },
+  "trustBar": {
+    "writtenBy": "Rédigé par {{author}}",
+    "authorName": "Équipe PetSafeChoice",
+    "reviewedBy": "Vérifié médicalement par le",
+    "boardName": "Conseil Vétérinaire Consultatif"
+  },
   "nav": {
     "about": "À propos",
     "safeFoods": "Aliments sûrs",
