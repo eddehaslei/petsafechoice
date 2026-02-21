@@ -143,7 +143,7 @@ export default function FoodArticle() {
             <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-6">
               <span className="inline-flex items-center gap-1">
                 <Clock className="w-4 h-4" />
-                Last Updated: {new Date(food.updated_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
+                Last Updated: {new Date(food.created_at).toLocaleDateString("en-US", { month: "long", year: "numeric" })}
               </span>
               <VetVerifiedBadge variant="compact" />
             </div>
