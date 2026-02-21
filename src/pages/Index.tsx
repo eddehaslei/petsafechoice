@@ -26,6 +26,7 @@ import { IngredientBreakdown } from "@/components/IngredientBreakdown";
 import { SourceCitation } from "@/components/SourceCitation";
 import { RequestFood } from "@/components/RequestFood";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { TrendingIn2026 } from "@/components/TrendingIn2026";
 import { useSearchStore } from "@/stores/searchStore";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
