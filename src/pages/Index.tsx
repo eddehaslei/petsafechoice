@@ -284,7 +284,7 @@ const Index = () => {
 
   // Dynamic background based on safety level
   const getBackgroundClass = () => {
-    if (!result) return "bg-gradient-to-b from-orange-50 via-amber-50 to-background";
+    if (!result) return "bg-[#FDF6EE]";
     switch (result.safetyLevel) {
       case "safe":
         return "bg-gradient-to-b from-safe-bg via-background to-background";
