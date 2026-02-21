@@ -52,7 +52,8 @@ export default function FoodArticle() {
         .from("foods")
         .select("*")
         .ilike("name", foodName)
-        .or(`species.eq.${petType},species.eq.both`)
+        .in("species", [petType, "both"])
+        .limit(1)
         .maybeSingle();
 
       if (error || !data) {
