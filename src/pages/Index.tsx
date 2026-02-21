@@ -388,6 +388,46 @@ const Index = () => {
               </div>
             </div>
             
+            {/* Popular Food Safety Guides */}
+            <div className="mt-10 mb-8 animate-fade-in" style={{ animationDelay: "0.35s" }}>
+              <h2 className="text-xl font-heading font-bold text-foreground text-center mb-4">
+                Popular Food Safety Guides 🔍
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+                {[
+                  { slug: "chocolate", name: "Chocolate", emoji: "🍫", status: "dangerous" as const },
+                  { slug: "grapes", name: "Grapes", emoji: "🍇", status: "dangerous" as const },
+                  { slug: "chicken", name: "Chicken", emoji: "🍗", status: "safe" as const },
+                  { slug: "avocado", name: "Avocado", emoji: "🥑", status: "caution" as const },
+                  { slug: "peanut-butter", name: "Peanut Butter", emoji: "🥜", status: "caution" as const },
+                  { slug: "bananas", name: "Bananas", emoji: "🍌", status: "safe" as const },
+                  { slug: "onions", name: "Onions", emoji: "🧅", status: "dangerous" as const },
+                  { slug: "strawberries", name: "Strawberries", emoji: "🍓", status: "safe" as const },
+                  { slug: "milk", name: "Milk", emoji: "🥛", status: "caution" as const },
+                  { slug: "watermelon", name: "Watermelon", emoji: "🍉", status: "safe" as const },
+                ].map((food) => (
+                  <a
+                    key={food.slug}
+                    href={`/foods/${food.slug}`}
+                    className={cn(
+                      "flex flex-col items-center p-3 rounded-xl border transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md",
+                      food.status === "safe" ? "border-safe/30 hover:border-safe/60 bg-safe-bg/30" :
+                      food.status === "caution" ? "border-caution/30 hover:border-caution/60 bg-caution-bg/30" :
+                      "border-danger/30 hover:border-danger/60 bg-danger-bg/30"
+                    )}
+                  >
+                    <span className="text-2xl mb-1">{food.emoji}</span>
+                    <span className="text-xs font-semibold text-foreground text-center">{food.name}</span>
+                  </a>
+                ))}
+              </div>
+              <div className="text-center mt-3">
+                <a href="/foods" className="text-sm text-primary hover:underline font-medium">
+                  View all food guides →
+                </a>
+              </div>
+            </div>
+
             {/* Trending Safety Tips - Homepage Authority Content */}
             <TrendingSafetyTips onTopicClick={(keyword) => handleSearch(keyword, "trending")} />
             
