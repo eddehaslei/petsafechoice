@@ -1,5 +1,4 @@
-import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, LogIn, LogOut, User } from "lucide-react";
-import logoImg from "@/assets/logo.png";
+import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, LogIn, LogOut, PawPrint } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -54,7 +53,8 @@ export const Header = () => {
             onClick={handleGoHome}
             aria-label="PetSafeChoice - Go to homepage"
           >
-            <img src={logoImg} alt="PetSafeChoice logo" className="h-10 w-auto" aria-hidden="true" />
+            <PawPrint className="h-6 w-6 text-primary" aria-hidden="true" />
+            <span className="font-heading font-bold text-lg text-primary">PetSafeChoice</span>
           </Button>
 
           {!isHomePage && (
