@@ -14,6 +14,17 @@ const STATIC_PAGES = [
   { path: "/contact", priority: "0.6", changefreq: "monthly" },
   { path: "/emergency", priority: "0.8", changefreq: "monthly" },
   { path: "/safe-foods", priority: "0.8", changefreq: "weekly" },
+  { path: "/foods", priority: "0.8", changefreq: "weekly" },
+  { path: "/foods/chocolate", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/grapes", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/chicken", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/avocado", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/peanut-butter", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/bananas", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/onions", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/strawberries", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/milk", priority: "0.9", changefreq: "monthly" },
+  { path: "/foods/watermelon", priority: "0.9", changefreq: "monthly" },
 ];
 
 function escapeXml(str: string): string {
