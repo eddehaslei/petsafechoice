@@ -171,51 +171,6 @@ export default function FoodArticle() {
               )}
             </div>
 
-            {/* Benefits */}
-            {food.benefits && food.benefits.length > 0 && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3 flex items-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-safe" />
-                  Benefits
-                </h2>
-                <ul className="space-y-2">
-                  {food.benefits.map((b, i) => (
-                    <li key={i} className="flex items-start gap-2 text-foreground/80">
-                      <span className="text-safe mt-1">✓</span>
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {/* Risks */}
-            {food.risks && food.risks.length > 0 && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3 flex items-center gap-2">
-                  <AlertTriangle className="w-5 h-5 text-caution" />
-                  Risks & Warnings
-                </h2>
-                <ul className="space-y-2">
-                  {food.risks.map((r, i) => (
-                    <li key={i} className="flex items-start gap-2 text-foreground/80">
-                      <span className="text-caution mt-1">⚠</span>
-                      {r}
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            )}
-
-            {/* Serving Tips */}
-            {food.serving_tips && (
-              <section className="mt-8">
-                <h2 className="text-xl font-heading font-bold mb-3">🍽 Vet Tips for Serving</h2>
-                <p className="text-foreground/80 leading-relaxed bg-accent/30 p-4 rounded-xl">
-                  {food.serving_tips}
-                </p>
-              </section>
-            )}
 
             {/* Source */}
             <SourceCitation source={{ name: "PetSafeChoice Database", url: "https://petsafechoice.lovable.app" }} />
