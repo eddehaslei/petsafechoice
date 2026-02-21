@@ -1,4 +1,5 @@
-import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, PawPrint, LogIn, LogOut, User } from "lucide-react";
+import { Info, ShieldCheck, Phone, HelpCircle, ArrowLeft, LogIn, LogOut, User } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
