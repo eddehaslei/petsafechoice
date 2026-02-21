@@ -20,7 +20,9 @@
     "safeFoods": "Safe Foods",
     "emergency": "Emergency",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "signIn": "Sign In",
+    "signOut": "Sign Out"
   },
   "footer": {
     "company": "Company",

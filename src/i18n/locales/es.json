@@ -20,7 +20,9 @@
     "safeFoods": "Alimentos Seguros",
     "emergency": "Emergencia",
     "faq": "Preguntas",
-    "contact": "Contacto"
+    "contact": "Contacto",
+    "signIn": "Iniciar Sesión",
+    "signOut": "Cerrar Sesión"
   },
   "footer": {
     "company": "Empresa",
