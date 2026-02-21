@@ -310,10 +310,11 @@ const Index = () => {
       <Header />
       
       {/* Hero Section */}
-      <main className="flex-1 container max-w-4xl mx-auto px-4 pt-4 pb-8 relative z-10">
+      <main className="flex-1 container max-w-4xl mx-auto px-4 py-16 md:py-24 relative z-10">
         {/* Header - show default or dynamic based on result */}
         {!result && !isLoading ? (
           <div className="text-center mb-8 animate-fade-in">
+            <p className="text-2xl mb-4 opacity-60">🐕 🐈 🐾</p>
             <div className="inline-flex items-center justify-center gap-3 mb-4">
               <div className="relative">
                 <Dog className="w-12 h-12 text-primary animate-bounce-gentle" />
