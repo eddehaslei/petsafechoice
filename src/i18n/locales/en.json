@@ -9,6 +9,7 @@
   },
   "trustBar": {
     "writtenBy": "Written by {{author}}",
+    "authorName": "PetSafeChoice Team",
     "reviewedBy": "Medically Reviewed by the",
     "boardName": "Veterinary Advisory Board"
   },

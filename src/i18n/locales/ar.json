@@ -7,6 +7,12 @@
     "forPets": "للحيوانات الأليفة في كل مكان",
     "allRightsReserved": "جميع الحقوق محفوظة."
   },
+  "trustBar": {
+    "writtenBy": "بقلم {{author}}",
+    "authorName": "فريق PetSafeChoice",
+    "reviewedBy": "تمت المراجعة الطبية بواسطة",
+    "boardName": "المجلس الاستشاري البيطري"
+  },
   "nav": {
     "about": "حول",
     "safeFoods": "الأطعمة الآمنة",

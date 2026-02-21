@@ -7,6 +7,12 @@
     "forPets": "für Haustiere überall gemacht",
     "allRightsReserved": "Alle Rechte vorbehalten."
   },
+  "trustBar": {
+    "writtenBy": "Geschrieben von {{author}}",
+    "authorName": "PetSafeChoice Team",
+    "reviewedBy": "Medizinisch geprüft von",
+    "boardName": "Veterinärmedizinischer Beirat"
+  },
   "nav": {
     "about": "Über uns",
     "safeFoods": "Sichere Lebensmittel",
