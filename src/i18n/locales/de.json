@@ -10,15 +10,19 @@
   "trustBar": {
     "writtenBy": "Geschrieben von {{author}}",
     "authorName": "PetSafeChoice Team",
-    "reviewedBy": "Medizinisch geprüft von",
-    "boardName": "Veterinärmedizinischer Beirat"
+    "reviewedBy": "Medizinisch überprüft vom",
+    "boardName": "Veterinärberatungsausschuss"
   },
   "nav": {
+    "back": "Zurück",
+    "home": "Startseite",
     "about": "Über uns",
     "safeFoods": "Sichere Lebensmittel",
     "emergency": "Notfall",
     "faq": "FAQ",
-    "contact": "Kontakt"
+    "contact": "Kontakt",
+    "signIn": "Anmelden",
+    "signOut": "Abmelden"
   },
   "footer": {
     "company": "Unternehmen",
@@ -27,7 +31,22 @@
     "legal": "Rechtliches",
     "privacy": "Datenschutz",
     "terms": "Nutzungsbedingungen",
-    "disclaimer": "Haftungsausschluss"
+    "disclaimer": "Haftungsausschluss",
+    "aboutTitle": "Über PetSafe Choice",
+    "aboutText": "Bei PetSafe Choice glauben wir, dass jedes Tier ein langes, gesundes Leben verdient.",
+    "disclaimerTitle": "Medizinischer Haftungsausschluss",
+    "disclaimerText": "PetSafe Choice bietet Informationen nur zu Bildungszwecken. Konsultieren Sie immer Ihren Tierarzt.",
+    "readMore": "Vollständigen Haftungsausschluss lesen →",
+    "affiliateTitle": "Amazon-Affiliate-Offenlegung",
+    "affiliateDisclosure": "Als Amazon-Partner verdient PetSafeChoice an qualifizierten Käufen."
+  },
+  "vetBadge": {
+    "verified": "Tierärztlich verifiziert",
+    "boardName": "PetSafeChoice Veterinärberatungsausschuss",
+    "reviewedBy": "Medizinisch überprüft von lizenzierten Tierärzten"
+  },
+  "verifiedBadge": {
+    "verified": "Geprüfte Daten"
   },
   "petToggle": {
     "dog": "Hund",
@@ -59,6 +78,66 @@
     "cautionDrinkAnswer": "{{food}} sollte {{petType}} mit Vorsicht zum Trinken gegeben werden.",
     "dangerousDrinkAnswer": "Nein! {{food}} ist giftig für {{petType}}.",
     "updated": "Aktualisiert {{date}}"
+  },
+  "resultHeader": {
+    "canEat": "Können {{petName}} {{foodName}} essen?",
+    "lastUpdated": "Zuletzt aktualisiert:",
+    "safetyGuide": "Sicherheits- und Gesundheitsleitfaden"
+  },
+  "safeFoodWidget": {
+    "safeAlternative": "Sichere Alternative",
+    "recommendedProduct": "Empfohlenes Produkt",
+    "tryThisInstead": "Probieren Sie diese tierärztlich empfohlenen Leckerlis!",
+    "matchFound": "Wir haben eine tolle Option gefunden!",
+    "disclosure": "Wir erhalten möglicherweise eine kleine Provision.",
+    "amazonDisclosure": "Als Amazon-Partner verdiene ich an qualifizierten Käufen.",
+    "shopOn": "{{food}} auf Amazon kaufen"
+  },
+  "categories": {
+    "fruit": "Obst",
+    "vegetable": "Gemüse",
+    "protein": "Protein",
+    "dairy": "Milchprodukt",
+    "supplement": "Ergänzung",
+    "grain": "Getreide",
+    "toxic": "Giftig"
+  },
+  "newsletter": {
+    "title": "Wöchentliche Sicherheitstipps",
+    "description": "Erhalten Sie Sicherheitstipps und Expertenrat per E-Mail.",
+    "placeholder": "E-Mail eingeben",
+    "subscribe": "Abonnieren",
+    "subscribed": "Sie sind abonniert!",
+    "checkInbox": "Überprüfen Sie Ihren Posteingang.",
+    "success": "Danke für Ihr Abonnement!",
+    "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein"
+  },
+  "emergency": {
+    "title": "Notfallkontakte",
+    "subtitle": "Wichtige Nummern, die Sie zur Hand haben sollten, wenn Ihr Haustier etwas Schädliches aufnimmt.",
+    "didYourPetEat": "Hat Ihr {{petType}} {{food}} gefressen?",
+    "timeIsCritical": "Zeit ist kritisch. Kontaktieren Sie sofort einen Tierarzt.",
+    "showingInfoFor": "Ergebnisse für: {{city}}",
+    "emergencyContacts": "Notfallkontakte",
+    "call": "Anrufen",
+    "callNow": "Jetzt anrufen",
+    "visitWebsite": "Website besuchen",
+    "immediateHelp": "Bei unmittelbarer Gefahr",
+    "callVet": "Rufen Sie sofort die nächste Notfall-Tierklinik an.",
+    "24hClinics": "24/7 Notfall-Tierkliniken",
+    "noClinicsFound": "Keine Kliniken gefunden. Suchen Sie online nach \"24h Tierarzt Notfall\".",
+    "searchMaps": "Auf Google Maps suchen",
+    "whatToDo": "Was tun im Tiernotfall",
+    "step1Title": "Ruhig bleiben.",
+    "step1Desc": "Ihr Tier spürt Ihren Stress.",
+    "step2Title": "Notieren Sie, was es gefressen hat",
+    "step2Desc": "und ungefähr wie viel.",
+    "step3Title": "Rufen Sie den Notfalltierarzt an",
+    "step3Desc": "bevor Sie hinfahren.",
+    "step4Title": "Kein Erbrechen auslösen",
+    "step4Desc": "außer auf tierärztliche Anweisung.",
+    "step5Title": "Bringen Sie die Verpackung mit",
+    "step5Desc": "oder eine Probe wenn möglich."
   },
   "about": {
     "title": "Über uns",
@@ -120,7 +199,7 @@
       },
       "dangerous": {
         "question": "Was soll ich tun, wenn mein Haustier etwas Gefährliches frisst?",
-        "answer": "Wenn Ihr Haustier ein gefährliches Lebensmittel konsumiert, geraten Sie nicht in Panik. Notieren Sie, was es gefressen hat und wie viel, und wenden Sie sich dann sofort an Ihren Tierarzt oder rufen Sie das ASPCA Animal Poison Control Center unter (888) 426-4435 (USA) an. Zeit ist bei Vergiftungsfällen entscheidend."
+        "answer": "Wenn Ihr Haustier ein gefährliches Lebensmittel konsumiert, geraten Sie nicht in Panik. Notieren Sie, was es gefressen hat und wie viel, und wenden Sie sich dann sofort an Ihren Tierarzt. Zeit ist bei Vergiftungsfällen entscheidend."
       }
     }
   },
@@ -154,14 +233,11 @@
     "catsTab": "Katzen",
     "benefits": "Vorteile:",
     "note": "Hinweis:",
+    "showMore": "Mehr anzeigen",
     "warning": {
       "title": "Wichtige Erinnerung",
       "description": "Obwohl diese Lebensmittel im Allgemeinen sicher sind, führen Sie neue Lebensmittel immer schrittweise und in Maßen ein. Jedes Haustier ist einzigartig, und einige können individuelle Empfindlichkeiten oder Allergien haben. Im Zweifelsfall konsultieren Sie Ihren Tierarzt."
     }
-  },
-  "emergency": {
-    "title": "Notfallkontakte",
-    "subtitle": "Wichtige Nummern, die Sie zur Hand haben sollten, wenn Ihr Haustier etwas Schädliches aufnimmt."
   },
   "trending": {
     "title": "Jetzt im Trend",
@@ -263,5 +339,20 @@
   },
   "rateLimit": {
     "tooFast": "Du suchst zu schnell! Bitte warte einen Moment."
+  },
+  "trends": {
+    "title": "🔥 Trends in 2026",
+    "salmonOil": {
+      "title": "Lachsöl",
+      "desc": "Reich an Omega-3-Fettsäuren für Fellgesundheit und Gelenkunterstützung."
+    },
+    "cbd": {
+      "title": "CBD für Haustiere",
+      "desc": "Wachsendes Interesse an haustiersicherem CBD gegen Angst und Schmerzen."
+    },
+    "rawDiet": {
+      "title": "Roh- und Trockendiäten",
+      "desc": "Minimal verarbeitete Lebensmittel werden bei Tierhaltern immer beliebter."
+    }
   }
 }

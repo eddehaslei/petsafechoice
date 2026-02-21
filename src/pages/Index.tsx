@@ -284,7 +284,7 @@ const Index = () => {
 
   // Dynamic background based on safety level
   const getBackgroundClass = () => {
-    if (!result) return "bg-gradient-to-b from-orange-50 via-amber-50 to-background";
+    if (!result) return "bg-[#FDF6EE]";
     switch (result.safetyLevel) {
       case "safe":
         return "bg-gradient-to-b from-safe-bg via-background to-background";
@@ -305,7 +305,8 @@ const Index = () => {
       {/* JSON-LD Schema for Google rich results */}
       <JsonLdSchema result={result} />
 
-      {/* Hero Background - warm gradient */}
+      {/* Decorative glow */}
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_0%,rgba(234,88,12,0.07),transparent)] pointer-events-none" />
       
       <Header />
       

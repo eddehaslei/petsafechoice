@@ -10,15 +10,19 @@
   "trustBar": {
     "writtenBy": "Rédigé par {{author}}",
     "authorName": "Équipe PetSafeChoice",
-    "reviewedBy": "Vérifié médicalement par le",
-    "boardName": "Conseil Vétérinaire Consultatif"
+    "reviewedBy": "Validé médicalement par le",
+    "boardName": "Conseil Consultatif Vétérinaire"
   },
   "nav": {
+    "back": "Retour",
+    "home": "Accueil",
     "about": "À propos",
     "safeFoods": "Aliments sûrs",
     "emergency": "Urgence",
     "faq": "FAQ",
-    "contact": "Contact"
+    "contact": "Contact",
+    "signIn": "Connexion",
+    "signOut": "Déconnexion"
   },
   "footer": {
     "company": "Entreprise",
@@ -27,7 +31,22 @@
     "legal": "Mentions légales",
     "privacy": "Confidentialité",
     "terms": "Conditions",
-    "disclaimer": "Avertissement"
+    "disclaimer": "Avertissement",
+    "aboutTitle": "À propos de PetSafe Choice",
+    "aboutText": "Chez PetSafe Choice, nous croyons que chaque animal mérite une vie longue et saine. Notre mission est de donner aux propriétaires d'animaux des conseils nutritionnels instantanés basés sur l'IA.",
+    "disclaimerTitle": "Avertissement médical",
+    "disclaimerText": "PetSafe Choice fournit des informations à des fins éducatives uniquement. Consultez toujours votre vétérinaire.",
+    "readMore": "Lire l'avertissement complet →",
+    "affiliateTitle": "Divulgation d'affiliation Amazon",
+    "affiliateDisclosure": "En tant qu'associé Amazon, PetSafe Choice gagne sur les achats éligibles."
+  },
+  "vetBadge": {
+    "verified": "Vérifié par un vétérinaire",
+    "boardName": "Conseil Consultatif Vétérinaire PetSafeChoice",
+    "reviewedBy": "Validé médicalement par des vétérinaires agréés"
+  },
+  "verifiedBadge": {
+    "verified": "Données vérifiées"
   },
   "petToggle": {
     "dog": "Chien",
@@ -59,6 +78,66 @@
     "cautionDrinkAnswer": "{{food}} doit être donné à boire aux {{petType}} avec prudence.",
     "dangerousDrinkAnswer": "Non ! {{food}} est toxique pour les {{petType}}.",
     "updated": "Mis à jour {{date}}"
+  },
+  "resultHeader": {
+    "canEat": "Les {{petName}} peuvent-ils manger {{foodName}} ?",
+    "lastUpdated": "Dernière mise à jour :",
+    "safetyGuide": "Guide de sécurité et santé"
+  },
+  "safeFoodWidget": {
+    "safeAlternative": "Alternative sûre",
+    "recommendedProduct": "Produit recommandé",
+    "tryThisInstead": "Essayez ces friandises approuvées par les vétérinaires !",
+    "matchFound": "Nous avons trouvé une excellente option pour vous !",
+    "disclosure": "Nous pouvons percevoir une petite commission.",
+    "amazonDisclosure": "En tant qu'associé Amazon, je gagne des achats éligibles.",
+    "shopOn": "Acheter {{food}} sur Amazon"
+  },
+  "categories": {
+    "fruit": "Fruit",
+    "vegetable": "Légume",
+    "protein": "Protéine",
+    "dairy": "Produit laitier",
+    "supplement": "Supplément",
+    "grain": "Céréale",
+    "toxic": "Toxique"
+  },
+  "newsletter": {
+    "title": "Conseils de sécurité hebdomadaires",
+    "description": "Recevez des conseils de sécurité alimentaire et des conseils d'experts.",
+    "placeholder": "Entrez votre email",
+    "subscribe": "S'abonner",
+    "subscribed": "Vous êtes abonné !",
+    "checkInbox": "Vérifiez votre boîte de réception.",
+    "success": "Merci de vous être abonné !",
+    "invalidEmail": "Veuillez entrer une adresse e-mail valide."
+  },
+  "emergency": {
+    "title": "Contacts d'urgence",
+    "subtitle": "Numéros importants à avoir sous la main si votre animal ingère quelque chose de nocif.",
+    "didYourPetEat": "Votre {{petType}} a-t-il mangé {{food}} ?",
+    "timeIsCritical": "Le temps est critique. Contactez immédiatement un vétérinaire.",
+    "showingInfoFor": "Résultats pour : {{city}}",
+    "emergencyContacts": "Contacts d'urgence",
+    "call": "Appeler",
+    "callNow": "Appeler maintenant",
+    "visitWebsite": "Visiter le site",
+    "immediateHelp": "Si votre animal est en danger immédiat",
+    "callVet": "Appelez immédiatement la clinique vétérinaire d'urgence la plus proche.",
+    "24hClinics": "Cliniques vétérinaires d'urgence 24h/7j",
+    "noClinicsFound": "Aucune clinique trouvée. Recherchez \"vétérinaire urgence 24h\" en ligne.",
+    "searchMaps": "Rechercher sur Google Maps",
+    "whatToDo": "Que faire en cas d'urgence",
+    "step1Title": "Restez calme.",
+    "step1Desc": "Votre animal perçoit votre stress.",
+    "step2Title": "Notez ce qu'il a mangé",
+    "step2Desc": "et approximativement la quantité.",
+    "step3Title": "Appelez le vétérinaire d'urgence",
+    "step3Desc": "avant de vous y rendre.",
+    "step4Title": "Ne provoquez pas de vomissements",
+    "step4Desc": "sauf instruction vétérinaire.",
+    "step5Title": "Apportez l'emballage",
+    "step5Desc": "ou un échantillon si possible."
   },
   "about": {
     "title": "À propos de nous",
@@ -120,7 +199,7 @@
       },
       "dangerous": {
         "question": "Que dois-je faire si mon animal mange quelque chose de dangereux ?",
-        "answer": "Si votre animal consomme un aliment dangereux, ne paniquez pas. Notez ce qu'il a mangé et en quelle quantité, puis contactez immédiatement votre vétérinaire ou appelez le Centre Antipoison Animal ASPCA au (888) 426-4435 (États-Unis). Le temps est crucial dans les cas d'empoisonnement."
+        "answer": "Si votre animal consomme un aliment dangereux, ne paniquez pas. Notez ce qu'il a mangé et en quelle quantité, puis contactez immédiatement votre vétérinaire. Le temps est crucial dans les cas d'empoisonnement."
       }
     }
   },
@@ -154,14 +233,11 @@
     "catsTab": "Chats",
     "benefits": "Avantages :",
     "note": "Note :",
+    "showMore": "Voir plus",
     "warning": {
       "title": "Rappel important",
       "description": "Bien que ces aliments soient généralement sûrs, introduisez toujours les nouveaux aliments progressivement et avec modération. Chaque animal est unique, et certains peuvent avoir des sensibilités ou des allergies individuelles. En cas de doute, consultez votre vétérinaire."
     }
-  },
-  "emergency": {
-    "title": "Contacts d'urgence",
-    "subtitle": "Numéros importants à avoir sous la main si votre animal ingère quelque chose de nocif."
   },
   "trending": {
     "title": "Tendances du Moment",
@@ -263,5 +339,20 @@
   },
   "rateLimit": {
     "tooFast": "Vous cherchez trop vite ! Veuillez patienter un instant."
+  },
+  "trends": {
+    "title": "🔥 Tendances en 2026",
+    "salmonOil": {
+      "title": "Huile de Saumon",
+      "desc": "Riche en acides gras Oméga-3 pour la santé du pelage et le soutien articulaire."
+    },
+    "cbd": {
+      "title": "CBD pour Animaux",
+      "desc": "Intérêt croissant pour le CBD sécurisé pour animaux contre l'anxiété et la douleur."
+    },
+    "rawDiet": {
+      "title": "Régimes Crus et Séchés",
+      "desc": "Aliments peu transformés de plus en plus populaires parmi les propriétaires d'animaux."
+    }
   }
 }
